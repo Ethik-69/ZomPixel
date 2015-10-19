@@ -144,12 +144,15 @@ class Humain(Character):
             self.isAlive = False
             if self.attacker == self.main.player:
                 self.going_zombie()
+                self.main.player.score += 2
+            else:
+                self.main.player.score += 1
             try:
                 self.attacker.is_feeding = False
                 self.attacker.image = self.attacker.stopFrame
             except Exception as E:
                 pass
-            self.main.player.score += 1
+
 
     def going_zombie(self):
         """Choisie si le citoyen se reveil en zombie"""

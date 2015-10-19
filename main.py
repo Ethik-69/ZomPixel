@@ -6,9 +6,7 @@ from levels import *
 from time_made_home import *
 from player import *
 from Character import *
-import pyjsdl as pygame
-from pyjsdl.locals import *
-#from pygame.locals import *
+from pygame.locals import *
 
 
 class Game(object):
@@ -312,8 +310,6 @@ class Game(object):
 
             test(self)  # affichage données de test
 
-            #print(self.levels.current_level.number)
-
             # -----------------------Change Lvl------------------------
 
             if self.levels.current_level.is_change_level:
@@ -322,8 +318,7 @@ class Game(object):
                     self.levels.current_level.pnj.remove_zombie()
                     self.levels.current_level.is_change_level = False
                     self.display_player_score()
-                    self.levels.current_level = self.levels.current_level.next_level()
-                    print(self.levels.current_level.number)
+                    self.levels = self.levels.current_level.next_level()
                 except Exception as E:
                     self.fin()
 
