@@ -27,7 +27,7 @@ def fps(main):
     main.frameCount += 1
     if main.frameCount % 500 == 0:
         t1 = time.clock()
-        main.frameRate = 500 / (t1 - main.t0Fps)
-        main.t0Fps = t1
+        main.frameRate = 500 / (t1 - main.time0_Fps)
+        main.time0_Fps = t1
     the_text = main.test_font0.render("Frame = {0},  rate = {1:.2f} fps".format(main.frameCount, main.frameRate), True, (0, 0, 0))
     main.window.blit(the_text, (10, 5))

@@ -22,27 +22,27 @@ LEVEL0 = {'number': 0,
           'pos_player': [512, 354]}
 
 LEVEL1 = {'number': 1,
-          'enemy': [citizen0, citizen1, citizen2, citizen3],
+          'enemy': [citizen0, citizen1, citizen2],
           'objects': [],
           'pos_level': [-1024, 0],
           'pos_player': [512, 354]}
 
 LEVEL2 = {'number': 2,
-          'enemy': [citizen0, citizen1, citizen2, citizen3, citizen4, citizen5],
+          'enemy': [citizen0, citizen1, citizen2, citizen3],
           'objects': [],
-          'pos_level': [0, -768],
+          'pos_level': [-1024, -768],
           'pos_player': [512, 354]}
 
 LEVEL3 = {'number': 3,
-          'enemy': [citizen0, citizen1, citizen2, citizen3, citizen4, citizen5, citizen6],
+          'enemy': [citizen0, citizen1, citizen2, citizen3, citizen4],
           'objects': [],
-          'pos_level': [-2048, 0],
+          'pos_level': [-1024, -1536],
           'pos_player': [512, 354]}
 
 LEVEL4 = {'number': 4,
-          'enemy': [citizen0, citizen1, citizen2, citizen3, citizen4, citizen5, citizen6],
+          'enemy': [citizen0, citizen1, citizen2, citizen3, citizen4, citizen5],
           'objects': [],
-          'pos_level': [-1024, -768],
+          'pos_level': [0, -1536],
           'pos_player': [512, 354]}
 
 LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4]

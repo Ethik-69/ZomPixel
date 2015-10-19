@@ -30,6 +30,7 @@ class Game(object):
         self.click_pos_y = None
         self.display_score = None
         self.enemy_hit_list = None
+        self.is_mouse_button_down = False
         self.game_background_image = None
         self.accueil_background_image = None
 
@@ -258,18 +259,16 @@ class Game(object):
                     self.display_score = False
 
     def fin(self):
-        pass
+        print('[*] Fin')
 
     #########################################
     """Boucle Principal"""
     #########################################
 
     def main(self):
-        print('[*] Main Init in Progress')
+        print('[*] Launch Main')
         self.run = True
-        self.is_mouse_button_down = False
-        self.t0Fps = time.clock()
-        print('[*] Main Init Ok')
+        self.time0_Fps = time.clock()
         self.levels.current_level.start()
 
         while self.run:
@@ -319,15 +318,15 @@ class Game(object):
                     self.levels.current_level.is_change_level = False
                     self.display_player_score()
                     self.levels = self.levels.current_level.next_level()
+                    if not self.levels:
+                        self.fin()
                 except Exception as E:
-                    self.fin()
+                    pass
 
             # ----------------------------------------------------------
 
             pygame.display.flip()
             self.clock.tick(100)
-
-# changement lvl 0 -> 1 ok 1 -> 2 !ok
 
 if __name__ == '__main__':
     game = Game()

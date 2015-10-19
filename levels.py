@@ -18,7 +18,9 @@ class Levels(object):
     def init_level(self):
         """Initialisation des niveaux"""
         print('[*] Generation in Progress')
-        self.current_level = Level(self.main, constants.LEVELS_LIST[self.current_level_number], self.current_level_number)
+        self.current_level = Level(self.main,
+                                   constants.LEVELS_LIST[self.current_level_number],
+                                   self.current_level_number)
         print('     - Ok')
 
     def next_level(self):
@@ -26,6 +28,8 @@ class Levels(object):
         self.is_started = False
         self.current_level_number += 1
         print('[*] Next Level Number ' + str(self.current_level_number))
+        if self.current_level_number == len(constants.LEVELS_LIST):
+            return False
         self.main.background.fill((0, 0, 0))
         self.init_level()
         self.current_level.start()
@@ -36,7 +40,7 @@ class Level(Levels):
     """Class secondaire des niveau"""
     def __init__(self, main, lvl, lvl_number):
         Levels.__init__(self, main)
-        self.current_level_number = lvl_number
+        self.current_level_number = lvl_number  # d'un niveau a l'autre garde le numéro du lvl en cour
         self.number = lvl['number']
         self.pos_x, self.pos_y = lvl['pos_level'][0], lvl['pos_level'][1]
         self.pos_player_x, self.pos_player_y = lvl['pos_player'][0], lvl['pos_player'][1]
