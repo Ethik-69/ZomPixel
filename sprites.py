@@ -8,7 +8,7 @@ class SpriteSheet(object):
     def __init__(self, file_name):
         self.sheet = pygame.image.load(file_name).convert()
 
-    def get_frames(self, walking_frames, x, y, width, height, flip=False):
+    def get_character_frames(self, walking_frames, x, y, width, height, flip=False):
         for x in x:
             img = self.get_image(x, y, width, height)
             if flip:

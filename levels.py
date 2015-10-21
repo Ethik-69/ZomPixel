@@ -15,6 +15,8 @@ class Levels(object):
         self.main = main
         self.main.time.add_chrono('current_level')
 
+        self.obstacles = Obstacles(self.main)
+
     def init_level(self):
         """Initialisation des niveaux"""
         print('[*] Generation in Progress')
@@ -42,10 +44,14 @@ class Level(Levels):
         Levels.__init__(self, main)
         self.current_level_number = lvl_number  # d'un niveau a l'autre garde le numéro du lvl en cour
         self.number = lvl['number']
+        self.objects_pos = lvl['objects']
+
         self.pos_x, self.pos_y = lvl['pos_level'][0], lvl['pos_level'][1]
         self.pos_player_x, self.pos_player_y = lvl['pos_player'][0], lvl['pos_player'][1]
+
         self.is_change_level = False
         self.main.time.chronos['current_level'].start()
+
         print('[*] Init obj PNJ')
         self.pnj = PNJ(main, lvl['enemy'], self)
         print('[*] Init obj PNJ Ok')
@@ -55,6 +61,13 @@ class Level(Levels):
         print('[*] Level Start')
         self.main.player.rect.x, self.main.player.rect.y = self.pos_player_x, self.pos_player_y
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
+
+        self.obstacles.create_all(self.objects_pos)
+
         self.is_started = True
         self.main.time.chronos['current_level'].reset()
         print('     - Ok')
+
+
+
+

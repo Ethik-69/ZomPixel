@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from sprites import *
 from Character import *
+from constants import *
 
 
 class PNJ(object):
@@ -17,7 +19,7 @@ class PNJ(object):
         print('     - PNJ Init in Progress')
         for enemy in start_enemy_list:
             new_enemy = Humain(self.main, enemy['nom'], enemy['img'],
-                               enemy['pos_x'], enemy['pos_y'])
+                               enemy['pos_x'], enemy['pos_y'], enemy['attack_img'])
             self.enemy_list.add(new_enemy)
             print('.'),
 
@@ -68,3 +70,45 @@ class PNJ(object):
             for zombie in self.feeding_zombie_list:
                 self.zombie_list.add(zombie)
                 self.feeding_zombie_list.remove(zombie)
+
+
+class Obstacles(object):
+    def __init__(self, main):
+        """
+        Obstacle initialiser avec les position des objets sur la feuille de sprite
+        Remplacés par [image, rect] correspondantent juste en dessous
+        """
+        self.main = main
+        self.objects_list = pygame.sprite.Group()
+
+        self.sprites = SpriteSheet('data/img/objets.png')
+
+    def create_all(self, objects_pos):
+        for key in objects_pos.keys():
+            for pos in objects_pos[key]:
+                obstacle = Object(self.main, key, constants.OBJECTS[key], pos, self.sprites)
+                obstacle.display()
+                self.objects_list.add(obstacle)
+
+
+class Object(pygame.sprite.Sprite):
+    def __init__(self, main, name, sprite_sheet_data, pos, sprite_sheet):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.main = main
+        self.name = name
+        self.pos = pos
+
+        self.image = sprite_sheet.get_image(sprite_sheet_data[0],
+                                            sprite_sheet_data[1],
+                                            sprite_sheet_data[2],
+                                            sprite_sheet_data[3])
+
+        self.rect = self.image.get_rect()
+        self.rect.x = self.pos[0]
+        self.rect.y = self.pos[1]
+
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def display(self):
+        self.main.background.blit(self.image, self.pos)

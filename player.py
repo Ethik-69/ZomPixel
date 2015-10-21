@@ -47,10 +47,10 @@ class Player(pygame.sprite.Sprite):
         """Charge les frames du joueur"""
         self.spriteSheet = SpriteSheet('data/img/' + self.imgName)
 
-        self.walkingFramesLeft = self.spriteSheet.get_frames(self.walkingFramesLeft, constants.MOVING_SPRITE_X, 0, 75, 125)
-        self.walkingFramesRight = self.spriteSheet.get_frames(self.walkingFramesRight, constants.MOVING_SPRITE_X, 0, 75, 125, True)
-        self.walkingFramesUp = self.spriteSheet.get_frames(self.walkingFramesUp, constants.MOVING_SPRITE_X, 125, 75, 125)
-        self.walkingFramesDown = self.spriteSheet.get_frames(self.walkingFramesDown, constants.MOVING_SPRITE_X, 250, 75, 125)
+        self.walkingFramesLeft = self.spriteSheet.get_character_frames(self.walkingFramesLeft, constants.MOVING_SPRITE_X, 0, 75, 125)
+        self.walkingFramesRight = self.spriteSheet.get_character_frames(self.walkingFramesRight, constants.MOVING_SPRITE_X, 0, 75, 125, True)
+        self.walkingFramesUp = self.spriteSheet.get_character_frames(self.walkingFramesUp, constants.MOVING_SPRITE_X, 125, 75, 125)
+        self.walkingFramesDown = self.spriteSheet.get_character_frames(self.walkingFramesDown, constants.MOVING_SPRITE_X, 250, 75, 125)
 
         self.stopFrame = self.spriteSheet.get_image(0, 375, self.width, self.height)
 
@@ -74,7 +74,7 @@ class Player(pygame.sprite.Sprite):
             self.moveX = 0
         if self.rect.y <= self.height/3 and self.moveY < 0:
             self.moveY = 0
-        if self.rect.y > self.main.height - self.height/3 and self.moveY > 0:
+        if self.rect.y > self.main.height - self.height and self.moveY > 0:
             self.moveY = 0
 
     def update(self):

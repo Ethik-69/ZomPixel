@@ -30,6 +30,7 @@ class Game(object):
         self.click_pos_y = None
         self.display_score = None
         self.enemy_hit_list = None
+        self.obstacles_collided = None
         self.is_mouse_button_down = False
         self.game_background_image = None
         self.accueil_background_image = None
@@ -47,8 +48,10 @@ class Game(object):
         # Font pour l'acceuil
         self.accueil_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
         self.accueil_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 55)
-        # Font pour le score
-        self.score_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 30)
+        # Font pour le résultat en fin de niveau
+        self.final_score_font = pygame.font.Font('data/fonts/visitor1.ttf', 30)
+        # Font affichage hud/ath
+        self.hud_font = pygame.font.Font('data/fonts/visitor1.ttf', 25)
         # Font de test
         self.test_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 15)
         print('     - Ok')
@@ -73,13 +76,17 @@ class Game(object):
 
     def title_screen_text(self):
         """Affiche les texts de l'ecran d'accueil"""
-        title = self.accueil_font0.render("Z.o.m.P.i.x.e.l", 1, (100, 20, 20))
+        title = self.accueil_font0.render("z.o.m.p.i.g.a.m.e", 1, (100, 20, 20))
         title_pos = title.get_rect(centerx=self.background.get_width()/2, centery=120)
         self.background.blit(title, title_pos)
 
         label_demarrer = self.accueil_font1.render("Demarrer", 1, (0, 0, 0))
         label_demarrer_pos = label_demarrer.get_rect(centerx=self.background.get_width()/2, centery=660)
         self.background.blit(label_demarrer, label_demarrer_pos)
+        
+        label_question_mark = self.accueil_font1.render("?", 1, (0, 0, 0))
+        label_question_mark_pos = label_question_mark.get_rect(centerx=self.background.get_width()/1.1, centery=660)
+        self.background.blit(label_question_mark, label_question_mark_pos)
 
     def title_screen(self):
         """Boucle de l'ecran d'accueil"""
@@ -131,24 +138,32 @@ class Game(object):
 
     def click_motion(self):
         """Gestion du click"""
-        if self.click_pos_x is not None and self.click_pos_x < self.player.rect.x:
-            self.player.action = 'left'
-            self.player.move_left()
-        if self.click_pos_x is not None and self.click_pos_x > self.player.rect.x:
-            self.player.action = 'right'
-            self.player.move_right()
-        if self.click_pos_y is not None and self.click_pos_y < self.player.rect.y:
-            self.player.action = 'up'
-            self.player.move_up()
-        if self.click_pos_y is not None and self.click_pos_y > self.player.rect.y:
-            self.player.action = 'down'
-            self.player.move_down()
+        if self.click_pos_x is not None and self.click_pos_y is not None:
+            print('clickpos', self.click_pos_x, self.click_pos_y)
+            print('clickposdiv', self.click_pos_x - self.player.width / 2, self.click_pos_y- self.player.height / 2)
+            print(self.player.rect.x, self.player.rect.y)
+
         if self.click_pos_x == self.player.rect.x:
             self.player.moveX = 0
             self.click_pos_x = None
         if self.click_pos_y == self.player.rect.y:
             self.player.moveY = 0
             self.click_pos_y = None
+
+        if self.click_pos_x is not None:
+            if self.click_pos_x < self.player.rect.x:
+                self.player.action = 'left'
+                self.player.move_left()
+            elif self.click_pos_x > self.player.rect.x:
+                self.player.action = 'right'
+                self.player.move_right()
+        if self.click_pos_y is not None:
+            if self.click_pos_y < self.player.rect.y:
+                self.player.action = 'up'
+                self.player.move_up()
+            elif self.click_pos_y > self.player.rect.y:
+                self.player.action = 'down'
+                self.player.move_down()
         if self.click_pos_x is None and self.click_pos_y is None:
             self.player.action = ''
 
@@ -182,12 +197,12 @@ class Game(object):
 
     # --------------Collisions---------------
 
-    def collide_test(self):
+    def pnj_collide(self):
         """
-        Test de collision entre les personnages
+        Tests de collisions
         rectangle-rectangle puis au pixel près
         """
-        # collision avec le joueur
+        # Collision avec le joueur
         if not self.player.is_feeding:
             self.enemy_hit_list = pygame.sprite.spritecollide(self.player, self.levels.current_level.pnj.enemy_list, False)
             for enemy in self.enemy_hit_list:
@@ -198,7 +213,7 @@ class Game(object):
                         enemy.is_under_attack(self.player)
                         self.player.is_feeding = True
 
-        # collsision avec les autres zombies
+        # Collsision avec les autres zombies
         for zombie in self.levels.current_level.pnj.zombie_list:
             self.enemy_hit_list = pygame.sprite.spritecollide(zombie, self.levels.current_level.pnj.enemy_list, False)
             for enemy in self.enemy_hit_list:
@@ -208,6 +223,23 @@ class Game(object):
                         print('[*] Mask Collide - Zombie')
                         enemy.is_under_attack(zombie)
                         zombie.is_feeding = True
+
+    def obstacle_collide(self):
+        # Collision avec les objets
+        # bug un peu mais pour l'instant ça marche
+        if not self.player.is_feeding:
+            self.obstacles_collided = pygame.sprite.spritecollide(self.player, self.levels.current_level.obstacles.objects_list, False)
+            for obstacle in self.obstacles_collided:
+                print('[*] Collide Object')
+                if pygame.sprite.collide_mask(self.player, obstacle) is not None:
+                    if self.player.moveX < 0:  # gauche
+                        self.player.moveX = 1
+                    elif self.player.moveX > 0:  # droite
+                        self.player.moveX = -1
+                    if self.player.moveY < 0:  # haut
+                        self.player.moveY = 1
+                    elif self.player.moveY > 0:  # bas
+                        self.player.moveY = -1
 
     # ---------------Level end---------------
 
@@ -220,19 +252,19 @@ class Game(object):
         self.background.blit(self.score_image, (self.width/3, self.height/13))
 
         # Définit et pose les texts
-        label_player_score = self.score_font0.render(str(self.player.score) + ' Points', 1, (255, 255, 255))
+        label_player_score = self.final_score_font.render(str(self.player.score) + ' Points', 1, (255, 255, 255))
         label_player_score_pos = label_player_score.get_rect(centerx=self.width/2, centery=self.height/1.8)
         self.background.blit(label_player_score, label_player_score_pos)
 
-        label_player_time = self.score_font0.render('Terminer en', 1, (255, 255, 255))
+        label_player_time = self.final_score_font.render('Terminer en', 1, (255, 255, 255))
         label_player_time_pos = label_player_time.get_rect(centerx=self.width/2, centery=self.height/1.6)
         self.background.blit(label_player_time, label_player_time_pos)
 
-        player_time = self.score_font0.render(str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]), 1, (255, 255, 255))
+        player_time = self.final_score_font.render(str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]), 1, (255, 255, 255))
         player_time_pos = player_time.get_rect(centerx=self.width/2, centery=self.height/1.5)
         self.background.blit(player_time, player_time_pos)
 
-        label_next_level = self.score_font0.render('Niveau suivant', 1, (255, 255, 255))
+        label_next_level = self.final_score_font.render('Niveau suivant', 1, (255, 255, 255))
         label_next_level_pos = label_player_score.get_rect(centerx=self.width/2.2, centery=self.height/1.3)
         self.background.blit(label_next_level, label_next_level_pos)
 
@@ -259,7 +291,22 @@ class Game(object):
                     self.display_score = False
 
     def fin(self):
-        print('[*] Fin')
+        pass
+
+    #########################################
+    """Boucle Principal"""
+    #########################################
+
+    def display_hud(self):
+        current_lvl = self.hud_font.render('%s %s' % ('Niveau', self.levels.current_level_number), True, (0, 0, 0))
+        score = self.hud_font.render('%s' % self.player.score, True, (0, 0, 0))
+        time = self.hud_font.render('%s:%s:%s' % (self.time.chronos['current_level'].Time[0],
+                                                  self.time.chronos['current_level'].Time[1],
+                                                  self.time.chronos['current_level'].Time[2]), True, (0, 0, 0))
+
+        self.window.blit(current_lvl, (20, 20))
+        self.window.blit(score, (150, 20))
+        self.window.blit(time, (250, 20))
 
     #########################################
     """Boucle Principal"""
@@ -286,14 +333,15 @@ class Game(object):
                     self.on_key_up(event.key)
 
             if self.is_mouse_button_down:
-                self.click_pos_x = mouse_xy[0]
-                self.click_pos_y = mouse_xy[1]
+                self.click_pos_x = mouse_xy[0] - self.player.width / 2
+                self.click_pos_y = mouse_xy[1] - self.player.height / 2
 
             self.click_motion()
 
             # -------------------------Update--------------------------
 
-            self.collide_test()
+            self.pnj_collide()
+            self.obstacle_collide()
             self.time.update()
             self.player.update()
             self.levels.current_level.pnj.update()
@@ -301,13 +349,17 @@ class Game(object):
             # ------------------------Display------------------------
 
             self.window.blit(self.background, (0, 0))
+
+            self.display_hud()
+
             self.levels.current_level.pnj.draw()
+            #self.levels.obstacles.objects_list.draw(self.window)
 
             # Si le joueur mange ne l'affiche pas
             if not self.player.is_feeding:
                 self.player_sprite.draw(self.window)
 
-            test(self)  # affichage données de test
+            # test(self)  # affichage données de test
 
             # -----------------------Change Lvl------------------------
 
@@ -319,7 +371,7 @@ class Game(object):
                     self.display_player_score()
                     self.levels = self.levels.current_level.next_level()
                     if not self.levels:
-                        self.fin()
+                        self.title_screen()
                 except Exception as E:
                     pass
 
@@ -330,3 +382,6 @@ class Game(object):
 
 if __name__ == '__main__':
     game = Game()
+
+    #  gestion collision objets (obstacle_collide)
+    #  gestion multi devour img / multi pnj
