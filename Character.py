@@ -6,15 +6,16 @@ from sprites import *
 
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, main, name, name_image, x, y):
+    def __init__(self, main, init_values, pos, num):
         pygame.sprite.Sprite.__init__(self)
         self.main = main
-        self.name = name
+        self.num = num
+        self.name = init_values['name'] + str(num)
         self.isAlive = True
         self.underAttack = False
         self.spriteSheet = None
         self.main.time.add_rebour(self.name)
-        self.imgName = name_image
+        self.imgName = init_values['img']
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
@@ -26,8 +27,8 @@ class Character(pygame.sprite.Sprite):
         self.image = self.stopFrame
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
         self.timeTarget = 20  # temp entre chaque frame
         self.timeNum = 0
         self.currentImage = 0
@@ -121,12 +122,13 @@ class Character(pygame.sprite.Sprite):
 
 
 class Humain(Character):
-    def __init__(self, main, name, name_image, x, y, attack_img):
-        Character.__init__(self, main, name, name_image, x, y)
+    def __init__(self, main, init_values, pos, num):
+        Character.__init__(self, main, init_values, pos, num)
         self.tick = 0
-        self.attack_img = attack_img
+        self.attack_img = init_values['attack_img']
         self.attacker = None
         self.dyingFrames = []
+        self.zombie_image = init_values['zombie_img']
         self.get_actions_frames()
         self.framesSwitch['self_devour'] = self.dyingFrames
         self.iaActionSwitch = {1: 'up',
@@ -168,7 +170,11 @@ class Humain(Character):
         """Choisie si le citoyen se reveil en zombie"""
         rand = random.randint(0, 100)
         if rand <= 100:
-            self.main.levels.current_level.pnj.add_zombie(self.main, self.name, 'character/zombie_punk_sprite_sheet.png', self.rect.x, self.rect.y)
+            self.main.levels.current_level.pnj.add_zombie(self.main,
+                                                          self.name,
+                                                          self.zombie_image,
+                                                          (self.rect.x, self.rect.y),
+                                                          self.num)
 
     def update(self):
         """Actualisation des citoyens"""
@@ -182,8 +188,8 @@ class Humain(Character):
 
 
 class Zombie(Character):
-    def __init__(self, main, name, name_image, x, y):
-        Character.__init__(self, main, name, name_image, x, y)
+    def __init__(self, main, init_values, pos, num):
+        Character.__init__(self, main, init_values, pos, num)
         self.tick = 0
         self.is_feeding = False
         self.main.time.rebours[self.name].start([00, 10, 00]) # x temp de vie (H:M:S)

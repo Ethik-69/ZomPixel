@@ -4,9 +4,10 @@ from manager import *
 
 
 class Levels(object):
-    """"Class principal des niveau"""
+    """"Class principal des niveaux"""
     def __init__(self, main):
         self.game_background_image = pygame.image.load('data/img/map.png').convert()
+        self.hud_image = pygame.image.load('data/img/hud.png')
 
         self.current_level = None
         self.current_level_number = 0
@@ -20,9 +21,7 @@ class Levels(object):
     def init_level(self):
         """Initialisation des niveaux"""
         print('[*] Generation in Progress')
-        self.current_level = Level(self.main,
-                                   constants.LEVELS_LIST[self.current_level_number],
-                                   self.current_level_number)
+        self.current_level = Level(self.main, constants.LEVELS_LIST[self.current_level_number])
         print('     - Ok')
 
     def next_level(self):
@@ -40,9 +39,8 @@ class Levels(object):
 
 class Level(Levels):
     """Class secondaire des niveau"""
-    def __init__(self, main, lvl, lvl_number):
+    def __init__(self, main, lvl):
         Levels.__init__(self, main)
-        self.current_level_number = lvl_number  # d'un niveau a l'autre garde le numéro du lvl en cour
         self.number = lvl['number']
         self.objects_pos = lvl['objects']
 
@@ -62,12 +60,10 @@ class Level(Levels):
         self.main.player.rect.x, self.main.player.rect.y = self.pos_player_x, self.pos_player_y
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
 
+        self.main.background.blit(self.hud_image, (-5, -2))
+
         self.obstacles.create_all(self.objects_pos)
 
         self.is_started = True
         self.main.time.chronos['current_level'].reset()
         print('     - Ok')
-
-
-
-
