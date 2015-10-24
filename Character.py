@@ -10,9 +10,11 @@ class Character(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.main = main
         self.num = num
-        self.name = init_values['name'] + str(num)
+        self.id_name = init_values['name'] + str(num)  # For chrono identification
+        self.name = init_values['name']
         self.isAlive = True
         self.underAttack = False
+        self.attacker = None
         self.spriteSheet = None
         self.main.time.add_rebour(self.name)
         self.imgName = init_values['img']
@@ -113,10 +115,10 @@ class Character(pygame.sprite.Sprite):
             if self.currentImage == 12:
                 self.currentImage = 0
         # Selection frame
-        if self.action != '':
+        if self.action != 'self_devour' and self.action != '':
             self.image = self.framesSwitch[self.action][self.currentImage]
         elif self.underAttack:
-            self.image = self.framesSwitch[self.action]
+            self.image = self.framesSwitch[self.action][self.attacker.name][self.currentImage]
         else:
             self.image = self.stopFrame
 
@@ -125,12 +127,15 @@ class Humain(Character):
     def __init__(self, main, init_values, pos, num):
         Character.__init__(self, main, init_values, pos, num)
         self.tick = 0
-        self.attack_img = init_values['attack_img']
-        self.attacker = None
+        self.img_attack_by_player = init_values['attack_by_player']
+        self.img_attack_by_citizen = init_values['attack_by_citizen']
+        self.img_attack_by_punk = init_values['attack_by_punk']
+        self.spriteSheet = None
         self.dyingFrames = []
+        self.allDyingFrames = {}
         self.zombie_image = init_values['zombie_img']
         self.get_actions_frames()
-        self.framesSwitch['self_devour'] = self.dyingFrames
+        self.framesSwitch['self_devour'] = self.allDyingFrames
         self.iaActionSwitch = {1: 'up',
                                2: 'down',
                                3: 'left',
@@ -139,8 +144,22 @@ class Humain(Character):
 
     def get_actions_frames(self):
         """Recupère les frames des actions"""
-        self.spriteSheet = SpriteSheet('data/img/' + self.attack_img)
+        print('[*] Get Action Frames in progress...')
+        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_citizen)
         self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.allDyingFrames['citizen'] = self.dyingFrames
+        self.dyingFrames = []
+
+        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_player)
+        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.allDyingFrames['player'] = self.dyingFrames
+        self.dyingFrames = []
+
+        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_punk)
+        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.allDyingFrames['punk'] = self.dyingFrames
+        self.dyingFrames = []
+        print('[*] Get Action Frames Ok')
 
     def is_under_attack(self, attacker):
         print('[*] ' + self.name + ' Is Under Attack')
@@ -171,6 +190,7 @@ class Humain(Character):
         rand = random.randint(0, 100)
         if rand <= 100:
             self.main.levels.current_level.pnj.add_zombie(self.main,
+                                                          self.id_name,
                                                           self.name,
                                                           self.zombie_image,
                                                           (self.rect.x, self.rect.y),

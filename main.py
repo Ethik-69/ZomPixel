@@ -122,7 +122,7 @@ class Game(object):
         """Creation des groupe de sprites et du joueur"""
         print('[*] Player Init')
         self.player_sprite = pygame.sprite.Group()
-        self.player = Player(self, 'zombie', 'character/zombie_sprite_sheet.png', 512, 354)
+        self.player = Player(self, 'player', 'character/player/zombie_sprite_sheet.png', 512, 354)
         self.player_sprite.add(self.player)
         print('     - Ok')
 
@@ -313,7 +313,7 @@ class Game(object):
 
         self.window.blit(current_lvl, (50, 14))
         self.window.blit(score, (492, 14))
-        self.window.blit(time, (880, 14))
+        self.window.blit(time, (878, 14))
 
     #########################################
     """Boucle Principal"""
@@ -374,10 +374,17 @@ class Game(object):
             self.clock.tick(100)
 
 if __name__ == '__main__':
-    game = Game()
+    #import cProfile
+    #cProfile.run('Game()')
+
+    #from pycallgraph import PyCallGraph
+    #from pycallgraph.output import GraphvizOutput
+
+    #with PyCallGraph(output=GraphvizOutput()):
+        game = Game()
+
 
 
     #  gestion collision objets. il touche un objet, par a l'opposer (il le touche tjrs donc traverse l'objet)
     #  collision objets/pnj ne fonctionne pas
     #  gestion multi devour img
-
