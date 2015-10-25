@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
                              'right': self.move_right}
 
     def __getitem__(self):
+        """Renvoi le score du joueur"""
         return self.score
 
     def get_frame(self):

@@ -25,6 +25,7 @@ class Levels(object):
         print('     - Ok')
 
     def next_level(self):
+        """Passe au niveau suivant"""
         print('[*] Next Level')
         self.is_started = False
         self.current_level_number += 1
@@ -55,11 +56,11 @@ class Level(Levels):
         print('[*] Init obj PNJ Ok')
 
     def start(self):
-        """Lance le niveau"""
+        """Re-initialise la position du joueur - re-initialise le fond - créer les obstacles et lance le chrono"""
         print('[*] Level Start')
         self.main.player.rect.x, self.main.player.rect.y = self.pos_player_x, self.pos_player_y
-        self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
 
+        self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
         self.main.background.blit(self.hud_image, (-5, -2))
 
         self.obstacles.create_all(self.objects_pos)

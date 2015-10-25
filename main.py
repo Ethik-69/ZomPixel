@@ -72,7 +72,7 @@ class Game(object):
     #########################################
 
     def title_screen_text(self):
-        """Affiche les texts de l'ecran d'welcome"""
+        """Initialise et pose sur le fond les texts de l'ecran d'accueil"""
         title = self.welcome_font0.render("z.o.m.p.i.g.a.m.e", 1, (100, 20, 20))
         title_pos = title.get_rect(centerx=self.background.get_width()/2, centery=120)
         self.background.blit(title, title_pos)
@@ -119,7 +119,7 @@ class Game(object):
     #########################################
 
     def create_player(self):
-        """Creation des groupe de sprites et du joueur"""
+        """Creation du joueur"""
         print('[*] Player Init')
         self.player_sprite = pygame.sprite.Group()
         self.player = Player(self, 'player', 'character/player/zombie_sprite_sheet.png', 512, 354)
@@ -133,7 +133,7 @@ class Game(object):
     # -------------Déplacements--------------
 
     def click_motion(self):
-        """Gestion du click"""
+        """Gestion du déplacement du joueur au click"""
         if self.click_pos_x == self.player.rect.x:
             self.player.moveX = 0
             self.click_pos_x = None
@@ -193,6 +193,7 @@ class Game(object):
                         zombie.is_feeding = True
 
     def obstacle_collide(self):
+        """Collision joeur-objets et pnj-objet (en cour)"""
         # Collision avec les objets (grosse refacto a faire)
         if not self.player.is_feeding:
             self.obstacles_collided = pygame.sprite.spritecollide(self.player,
@@ -247,6 +248,7 @@ class Game(object):
     # ---------------Level end---------------
 
     def init_score_screen(self):
+        """Initialisation de l'affichage du score en fin de niveau"""
         print('[*] Init Display Score')
         time = self.time.chronos['current_level'].Time  # temp qu'a mis le joueur pour terminer le niveau
 
@@ -278,6 +280,7 @@ class Game(object):
         print('     - Ok')
 
     def display_score(self):
+        """"Boucle de l'affichage du score"""
         self.is_display_score = True
         self.init_score_screen()
 
@@ -305,6 +308,7 @@ class Game(object):
     #########################################
 
     def display_hud(self):
+        """Affichage Tête Haute (score - temps.....)"""
         current_lvl = self.hud_font.render('%s %s' % ('Niveau', self.levels.current_level_number), True, (0, 0, 0))
         score = self.hud_font.render('%s' % self.player.score, True, (0, 0, 0))  # player.score
         time = self.hud_font.render('%s:%s:%s' % (self.time.chronos['current_level'].Time[0],

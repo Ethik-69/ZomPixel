@@ -25,13 +25,15 @@ class PNJ(object):
             print('.'),
 
     def add_zombie(self, main, id_name, name, img, pos, num):
+        """Ajoute un nouveau zombie a la liste des zombie en 'vie' """
         print('[*] ' + name + ' Going Zombie')
-        init_value = {'id_name': name, 'img': img, 'name': name}
+        init_value = {'id_name': id_name, 'img': img, 'name': name}
         zombie = Zombie(main, init_value, pos, num)
         self.zombie_list.add(zombie)
         print('[*] New Zombie')
 
     def remove_zombie(self):
+        """Supprime tout les zombie restant en fin de niveau"""
         print('[*] Remove Remaining Zombies')
         for zombie in self.zombie_list:
             self.zombie_list.remove(zombie)
@@ -57,7 +59,7 @@ class PNJ(object):
         self.zombie_list.update()
 
     def draw(self):
-        """dessine les enemies"""
+        """dessine les pnj"""
         self.enemy_list.draw(self.main.window)
 
         # Ne pas afficher les zombie 'ia' qui se baffrent
@@ -86,6 +88,7 @@ class Obstacles(object):
         self.sprites = SpriteSheet('data/img/objets.png')
 
     def create_all(self, objects_pos):
+        """Créer tout les obstacles"""
         for key in objects_pos.keys():
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, constants.OBJECTS[key], pos, self.sprites)
@@ -113,4 +116,5 @@ class Object(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def display(self):
+        """Pose l'objet sur le fond"""
         self.main.background.blit(self.image, self.pos)

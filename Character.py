@@ -67,6 +67,7 @@ class Character(pygame.sprite.Sprite):
         self.stopFrame = self.spriteSheet.get_image(0, 375, self.width, self.height)
 
     def collide_window_side(self):
+        """Test de collision avec les bords de la fenetre"""
         if self.rect.x <= self.width/2 and self.moveX < 0:
             self.move_right()
             self.action = 'right'
@@ -107,7 +108,7 @@ class Character(pygame.sprite.Sprite):
         self.moveX = -1
 
     def select_frame(self):
-        # Gestion frames
+        """Selectionne le frame en fonction de l'action et de l'image courante"""
         self.timeNum += 1
         if self.timeNum == self.timeTarget:
             self.timeNum = 0
@@ -162,6 +163,7 @@ class Humain(Character):
         print('[*] Get Action Frames Ok')
 
     def is_under_attack(self, attacker):
+        """Initialise le fait que le pnj en prend plein la tronche"""
         print('[*] ' + self.name + ' Is Under Attack')
         self.underAttack = True
         self.attacker = attacker
@@ -220,6 +222,7 @@ class Zombie(Character):
                                5: ''}
 
     def dying(self):
+        """Déclare le zombie mort"""
         print('[*] ' + self.name + ' Is Dying')
         self.isAlive = False
 

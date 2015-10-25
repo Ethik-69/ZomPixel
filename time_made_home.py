@@ -8,6 +8,7 @@ class Times(object):
         self.chronos = {}
 
     def __getitem__(self, name, chrono=False):
+        """Renvoi se qui est demander"""
         if not chrono:
             return self.rebours[name]
         else:
@@ -43,13 +44,14 @@ class Rebour(object):
         return self.isFinish
 
     def start(self, init_value):
-        """Lance le chrono"""
+        """Lance le rebour"""
         print('[*] Rebour Start ' + self.name)
         self.Time = init_value
         self.is_started = True
         self.isFinish = False
 
     def stop(self):
+        """Arrete le rebour"""
         self.is_started = False
         self.isFinish = True
 
@@ -80,9 +82,11 @@ class Chrono(object):
         self.Time = [0, 0, 0]
 
     def reset(self):
+        """Reset le chrono"""
         self.Time = [0, 0, 0]
 
     def stop(self):
+        """Arrete le chrono"""
         self.is_started = False
         return self.Time
 

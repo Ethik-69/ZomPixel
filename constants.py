@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-
+"""
+Les constants utilisées pour le jeu:
+- Personnages
+- Objets
+- Niveaux
+- Liste des niveaux
+"""
 
 MOVING_SPRITE_X = [0, 75, 150, 225, 300, 375, 450, 525, 600, 675, 750, 825]
 DYING_SPRITE_X = [0, 125, 250, 375, 500, 625, 750, 875, 1000, 1125, 1250, 1375]
@@ -36,12 +42,12 @@ OBJECTS = {'manhole_cover': [0, 250, 75, 75],
 
 LEVEL0 = {'number': 0,
           'enemy': {(255, 200): citizen,
-                    (500, 300): punk},
+                    (800, 300): punk},
           'objects': {'manhole_cover': [],
                       'bush': [],
-                      'blue_car': [(100, 100)],
+                      'blue_car': [],
                       'police_car': [],
-                      'yellow_car': [(100, 600)],
+                      'yellow_car': [],
                       'cone': [],
                       'dich': [],
                       'working_fence': [],
@@ -67,8 +73,8 @@ LEVEL1 = {'number': 1,
 
 LEVEL2 = {'number': 2,
           'enemy': {(255, 200): citizen,
-                    (255, 400): punk,
-                    (255, 450): punk},
+                    (255, 400): citizen,
+                    (855, 400): punk},
           'objects': {'manhole_cover': [],
                       'hydrant': [],
                       'bush': [],
@@ -82,21 +88,29 @@ LEVEL2 = {'number': 2,
           'pos_player': [512, 354]}
 
 LEVEL3 = {'number': 3,
-          'enemy': [],
+          'enemy': {(255, 200): citizen,
+                    (255, 400): citizen,
+                    (855, 200): punk,
+                    (855, 400): punk},
           'objects': {'manhole_cover': [],
                       'hydrant': [],
                       'bush': [],
                       'blue_car': [],
                       'police_car': [],
                       'yellow_car': [],
-                      'cone': [(300,350)],
+                      'cone': [],
                       'working_fence': [],
                       'fence': []},
           'pos_level': [-1024, -1536],
           'pos_player': [512, 354]}
 
 LEVEL4 = {'number': 4,
-          'enemy': [],
+          'enemy': {(255, 200): citizen,
+                    (255, 400): citizen,
+                    (255, 600): citizen,
+                    (855, 200): punk,
+                    (855, 400): punk,
+                    (855, 600): punk},
           'objects': {'manhole_cover': [],
                       'hydrant': [],
                       'bush': [],
