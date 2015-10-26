@@ -85,7 +85,7 @@ class Obstacles(object):
         self.main = main
         self.objects_list = pygame.sprite.Group()
 
-        self.sprites = SpriteSheet('data/img/objets.png')
+        self.sprites = SpriteSheet()
 
     def create_all(self, objects_pos):
         """Créer tout les obstacles"""
@@ -107,7 +107,8 @@ class Object(pygame.sprite.Sprite):
         self.image = sprite_sheet.get_image(sprite_sheet_data[0],
                                             sprite_sheet_data[1],
                                             sprite_sheet_data[2],
-                                            sprite_sheet_data[3])
+                                            sprite_sheet_data[3],
+                                            'data/img/objets.png')
 
         self.rect = self.image.get_rect()
         self.rect.x = self.pos[0]

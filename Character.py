@@ -46,25 +46,30 @@ class Character(pygame.sprite.Sprite):
 
     def get_frame(self):
         """Charge les frames des personnages"""
-        self.spriteSheet = SpriteSheet('data/img/' + self.imgName)
+        self.spriteSheet = SpriteSheet()
 
         self.walkingFramesLeft = self.spriteSheet.get_character_frames(self.walkingFramesLeft,
-                                                             constants.MOVING_SPRITE_X,
-                                                             0, 75, 125)
+                                                                       constants.MOVING_SPRITE_X,
+                                                                       0, 75, 125,
+                                                                       'data/img/' + self.imgName)
 
         self.walkingFramesRight = self.spriteSheet.get_character_frames(self.walkingFramesRight,
-                                                              constants.MOVING_SPRITE_X,
-                                                              0, 75, 125, True)
+                                                                        constants.MOVING_SPRITE_X,
+                                                                        0, 75, 125,
+                                                                        'data/img/' + self.imgName,
+                                                                        True)
 
         self.walkingFramesDown = self.spriteSheet.get_character_frames(self.walkingFramesDown,
-                                                             constants.MOVING_SPRITE_X,
-                                                             250, 75, 125)
+                                                                       constants.MOVING_SPRITE_X,
+                                                                       250, 75, 125,
+                                                                       'data/img/' + self.imgName)
 
         self.walkingFramesUp = self.spriteSheet.get_character_frames(self.walkingFramesUp,
-                                                           constants.MOVING_SPRITE_X,
-                                                           125, 75, 125)
+                                                                     constants.MOVING_SPRITE_X,
+                                                                     125, 75, 125,
+                                                                     'data/img/' + self.imgName)
 
-        self.stopFrame = self.spriteSheet.get_image(0, 375, self.width, self.height)
+        self.stopFrame = self.spriteSheet.get_image(0, 375, self.width, self.height, 'data/img/' + self.imgName, True)
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenetre"""
@@ -145,18 +150,25 @@ class Humain(Character):
 
     def get_actions_frames(self):
         """Recupère les frames des actions"""
-        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_citizen)
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.spriteSheet = SpriteSheet()
+        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
+                                                                 constants.DYING_SPRITE_X,
+                                                                 0, 125, 125,
+                                                                 'data/img/' + self.img_attack_by_citizen)
         self.allDyingFrames['citizen'] = self.dyingFrames
         self.dyingFrames = []
 
-        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_player)
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
+                                                                 constants.DYING_SPRITE_X,
+                                                                 0, 125, 125,
+                                                                 'data/img/' + self.img_attack_by_player)
         self.allDyingFrames['player'] = self.dyingFrames
         self.dyingFrames = []
 
-        self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_punk)
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
+        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
+                                                                 constants.DYING_SPRITE_X,
+                                                                 0, 125, 125,
+                                                                 'data/img/' + self.img_attack_by_punk)
         self.allDyingFrames['punk'] = self.dyingFrames
         self.dyingFrames = []
 
