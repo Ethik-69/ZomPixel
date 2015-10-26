@@ -57,7 +57,7 @@ LEVEL0 = {'number': 0,
 
 LEVEL1 = {'number': 1,
           'enemy': {(255, 200): citizen,
-                    (200, 200): citizen,
+                    (200, 300): citizen,
                     (255, 400): punk},
           'objects': {'manhole_cover': [],
                       'hydrant': [],
@@ -123,5 +123,4 @@ LEVEL4 = {'number': 4,
           'pos_level': [0, -1536],
           'pos_player': [512, 354]}
 
-# LEVELS_LIST = [LEVEL0]
 LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4]

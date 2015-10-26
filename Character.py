@@ -145,7 +145,6 @@ class Humain(Character):
 
     def get_actions_frames(self):
         """Recupère les frames des actions"""
-        print('[*] Get Action Frames in progress...')
         self.spriteSheet = SpriteSheet('data/img/' + self.img_attack_by_citizen)
         self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
         self.allDyingFrames['citizen'] = self.dyingFrames
@@ -160,7 +159,6 @@ class Humain(Character):
         self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames, constants.DYING_SPRITE_X, 0, 125, 125)
         self.allDyingFrames['punk'] = self.dyingFrames
         self.dyingFrames = []
-        print('[*] Get Action Frames Ok')
 
     def is_under_attack(self, attacker):
         """Initialise le fait que le pnj en prend plein la tronche"""
@@ -222,7 +220,7 @@ class Zombie(Character):
                                5: ''}
 
     def dying(self):
-        """Déclare le zombie mort"""
+        """Déclade"""
         print('[*] ' + self.name + ' Is Dying')
         self.isAlive = False
 

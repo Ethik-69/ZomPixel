@@ -22,19 +22,20 @@ class Levels(object):
         """Initialisation des niveaux"""
         print('[*] Generation in Progress')
         self.current_level = Level(self.main, constants.LEVELS_LIST[self.current_level_number])
-        print('     - Ok')
+        print('[*] Generation Ok')
+        print('[*] Return levels ', self)
 
     def next_level(self):
         """Passe au niveau suivant"""
         print('[*] Next Level')
         self.is_started = False
+        print('[*] Current Level Number ' + str(self.current_level_number))
         self.current_level_number += 1
         print('[*] Next Level Number ' + str(self.current_level_number))
         if self.current_level_number == len(constants.LEVELS_LIST):
             return False
         self.main.background.fill((0, 0, 0))
         self.init_level()
-        self.current_level.start()
         return self  # pour que le current lvl du main change
 
 
@@ -53,6 +54,7 @@ class Level(Levels):
 
         print('[*] Init obj PNJ')
         self.pnj = PNJ(main, lvl['enemy'], self)
+        print('')
         print('[*] Init obj PNJ Ok')
 
     def start(self):
@@ -65,6 +67,6 @@ class Level(Levels):
 
         self.obstacles.create_all(self.objects_pos)
 
-        self.is_started = True
         self.main.time.chronos['current_level'].reset()
+        self.is_started = True
         print('     - Ok')

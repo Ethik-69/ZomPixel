@@ -300,6 +300,7 @@ class Game(object):
                     self.is_display_score = False
 
     def end_game(self):
+        print('[*] Start New Game')
         new_game = Game()
         pass
 
@@ -369,8 +370,13 @@ class Game(object):
                 self.levels.current_level.is_change_level = False
                 self.display_score()
                 self.levels = self.levels.current_level.next_level()
+                print(self.levels)
                 if not self.levels:
+                    print('[*] Game End')
                     self.end_game()
+
+                self.levels.current_level.start()
+                print('[*] Current Level Number' + str(self.levels.current_level_number))
 
             # ----------------------------------------------------------
 
@@ -387,8 +393,8 @@ if __name__ == '__main__':
     #with PyCallGraph(output=GraphvizOutput()):
         game = Game()
 
-
-
+    #  ne change tjrs pas de niveau --'
     #  gestion collision objets. il touche un objet, par a l'opposer (il le touche tjrs donc traverse l'objet)
+    #  un objet par fichier
     #  collision objets/pnj ne fonctionne pas
-    #  gestion multi devour img
+    #  charger toute les images au debut
