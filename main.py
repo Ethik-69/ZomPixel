@@ -41,15 +41,8 @@ class Game(object):
 
         self.button_next_level = None
 
-        # Font pour l'acceuil
-        self.welcome_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
-        self.welcome_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 55)
-        # Font pour le résultat en fin de niveau
-        self.final_score_font = pygame.font.Font('data/fonts/visitor1.ttf', 30)
-        # Font affichage hud/ath
-        self.hud_font = pygame.font.Font('data/fonts/visitor1.ttf', 25)
-        # Font de test
-        self.test_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 15)
+        self.font_init()
+        self.loading_screen()
 
         self.game_background_image = None
         self.welcome_background_image = None
@@ -67,23 +60,20 @@ class Game(object):
 
         self.title_screen()
 
+    def text_blit(self, font, text, text_color, pos):
+        text_to_blit = font.render(text, 1, text_color)
+        text_to_blit_pos = text_to_blit.get_rect(centerx=pos[0], centery=pos[1])
+        self.background.blit(text_to_blit, text_to_blit_pos)
+
     #########################################
     """Ecran d'Accueil"""
     #########################################
 
     def title_screen_text(self):
         """Initialise et pose sur le fond les texts de l'ecran d'accueil"""
-        title = self.welcome_font0.render("z.o.m.p.i.g.a.m.e", 1, (100, 20, 20))
-        title_pos = title.get_rect(centerx=self.background.get_width()/2, centery=120)
-        self.background.blit(title, title_pos)
-
-        label_start = self.welcome_font1.render("Demarrer", 1, (0, 0, 0))
-        label_start_pos = label_start.get_rect(centerx=self.background.get_width()/2, centery=660)
-        self.background.blit(label_start, label_start_pos)
-        
-        label_question_mark = self.welcome_font1.render("?", 1, (0, 0, 0))
-        label_question_mark_pos = label_question_mark.get_rect(centerx=self.background.get_width()/1.1, centery=660)
-        self.background.blit(label_question_mark, label_question_mark_pos)
+        self.text_blit(self.welcome_font0, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 120))
+        self.text_blit(self.welcome_font1, "Demarrer", (0, 0, 0), (self.background.get_width()/2, 660))
+        self.text_blit(self.welcome_font1, "?", (0, 0, 0), (self.background.get_width()/1.1, 660))
 
     def title_screen(self):
         """Boucle de l'ecran d'accueil"""
@@ -91,6 +81,7 @@ class Game(object):
         title_screen = True
         self.background.blit(self.welcome_background_image, (0, 0))
         button_start = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.7, 609, 280, 106])
+        button_question_mark = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/1.14, 625, 75, 75])
 
         self.title_screen_text()
 
@@ -102,6 +93,7 @@ class Game(object):
         while title_screen:
             mouse_xy = pygame.mouse.get_pos()
             is_start = button_start.collidepoint(mouse_xy)
+            is_help = button_question_mark.collidepoint(mouse_xy)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
@@ -111,12 +103,66 @@ class Game(object):
                 elif event.type == MOUSEBUTTONDOWN and is_start:
                     title_screen = False
                     print('[*] Leaving Title Screen')
+                elif event.type == MOUSEBUTTONDOWN and is_help:
+                    self.help_screen()
 
         self.main()
+
+    def help_screen_text(self):
+        """Initialise et pose sur le fond les texts de l'ecran d'aide"""
+        self.text_blit(self.welcome_font1, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 50))
+        self.text_blit(self.final_score_font, "But: Manger les citoyens le plus vite possible", (100, 20, 20), (self.background.get_width()/2, 150))
+        self.text_blit(self.final_score_font, "Si vous mangez un citoyen: +2 point", (100, 20, 20), (self.background.get_width()/2, 250))
+        self.text_blit(self.final_score_font, "Si l'un de vos zombie mange un citoyen: +1 point", (100, 20, 20), (self.background.get_width()/2, 350))
+        self.text_blit(self.final_score_font, "Cliquez pour deplacer le zombie principal", (100, 20, 20), (self.background.get_width()/2, 450))
+        self.text_blit(self.welcome_font1, "Retour", (100, 20, 20), (self.background.get_width()/2, 700))
+
+    def help_screen(self):
+        """Boucle de l'écran d'aide"""
+        print('[*] Help Screen')
+        help_screen = True
+        self.background.fill((0, 0, 0))
+
+        button_back = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/2.7, 609, 280, 106])
+        self.help_screen_text()
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        while help_screen:
+            mouse_xy = pygame.mouse.get_pos()
+            is_back = button_back.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        quit()
+                elif event.type == MOUSEBUTTONDOWN and is_back:
+                    help_screen = False
+                    print('[*] Leaving Help Screen')
+                    self.title_screen()
 
     #########################################
     """Initialisation du jeux"""
     #########################################
+
+    def font_init(self):
+        # Font pour l'acceuil
+        self.welcome_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
+        self.welcome_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 55)
+        # Font pour le résultat en fin de niveau
+        self.final_score_font = pygame.font.Font('data/fonts/visitor1.ttf', 30)
+        # Font affichage hud/ath
+        self.hud_font = pygame.font.Font('data/fonts/visitor1.ttf', 25)
+        # Font de test
+        self.test_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 15)
+
+    def loading_screen(self):
+        self.text_blit(self.welcome_font0, "Loading", (100, 20, 20), (self.background.get_width()/2, self.background.get_height()/2))
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
 
     def create_player(self):
         """Creation du joueur"""
@@ -257,21 +303,10 @@ class Game(object):
         self.background.blit(self.score_image, (self.width/3, self.height/13))
 
         # Définit et pose les texts
-        label_player_score = self.final_score_font.render(str(self.player.score) + ' Points', 1, (255, 255, 255))
-        label_player_score_pos = label_player_score.get_rect(centerx=self.width/2, centery=self.height/1.8)
-        self.background.blit(label_player_score, label_player_score_pos)
-
-        label_player_time = self.final_score_font.render('Terminer en', 1, (255, 255, 255))
-        label_player_time_pos = label_player_time.get_rect(centerx=self.width/2, centery=self.height/1.6)
-        self.background.blit(label_player_time, label_player_time_pos)
-
-        player_time = self.final_score_font.render(str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]), 1, (255, 255, 255))
-        player_time_pos = player_time.get_rect(centerx=self.width/2, centery=self.height/1.5)
-        self.background.blit(player_time, player_time_pos)
-
-        label_next_level = self.final_score_font.render('Niveau suivant', 1, (255, 255, 255))
-        label_next_level_pos = label_player_score.get_rect(centerx=self.width/2.2, centery=self.height/1.3)
-        self.background.blit(label_next_level, label_next_level_pos)
+        self.text_blit(self.final_score_font, str(self.player.score) + " Points", (255, 255, 255), (self.width/2, self.height/1.8))
+        self.text_blit(self.final_score_font, "Terminer en", (255, 255, 255), (self.width/2, self.height/1.6))
+        self.text_blit(self.final_score_font, str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]), (255, 255, 255), (self.width/2, self.height/1.5))
+        self.text_blit(self.final_score_font, "Niveau suivant", (255, 255, 255), (self.width/2, self.height/1.3))
 
         # Pose le bouton niveau suivant
         self.button_next_level = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.6, self.height/1.4, 250, 50])
@@ -320,10 +355,6 @@ class Game(object):
         self.window.blit(current_lvl, (50, 14))
         self.window.blit(score, (492, 14))
         self.window.blit(time, (878, 14))
-
-    #########################################
-    """Boucle Principal"""
-    #########################################
 
     def main(self):
         print('[*] Launch Main')
@@ -394,7 +425,6 @@ if __name__ == '__main__':
     #with PyCallGraph(output=GraphvizOutput()):
         game = Game()
 
-    #  ne change tjrs pas de niveau --'
     #  gestion collision objets. il touche un objet, par a l'opposer (il le touche tjrs donc traverse l'objet)
     #  un objet par fichier
     #  collision objets/pnj ne fonctionne pas

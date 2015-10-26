@@ -112,15 +112,16 @@ class Character(pygame.sprite.Sprite):
     def move_left(self):
         self.moveX = -1
 
-    def select_frame(self):
-        """Selectionne le frame en fonction de l'action et de l'image courante"""
+    def update_current_image(self):
         self.timeNum += 1
         if self.timeNum == self.timeTarget:
             self.timeNum = 0
             self.currentImage += 1
             if self.currentImage == 12:
                 self.currentImage = 0
-        # Selection frame
+
+    def select_frame(self):
+        """Selectionne la frame en fonction de l'action"""
         if self.action != 'self_devour' and self.action != '':
             self.image = self.framesSwitch[self.action][self.currentImage]
         elif self.underAttack:
@@ -216,6 +217,7 @@ class Humain(Character):
             self.rect.x += self.moveX
             self.rect.y += self.moveY
         self.collide_window_side()
+        self.update_current_image()
         self.select_frame()
 
 
@@ -246,4 +248,5 @@ class Zombie(Character):
             self.rect.x += self.moveX
             self.rect.y += self.moveY
             self.collide_window_side()
+            self.update_current_image()
             self.select_frame()

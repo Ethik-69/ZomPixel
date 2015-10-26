@@ -9,6 +9,7 @@ class SpriteSheet(object):
         self.sheet = None
 
     def get_character_frames(self, walking_frames, x, y, width, height, file_name, flip=False):
+        """Decoupe les frames demander"""
         self.sheet = pygame.image.load(file_name).convert()
         for x in x:
             img = self.get_image(x, y, width, height, self.sheet)
@@ -18,6 +19,7 @@ class SpriteSheet(object):
         return walking_frames
 
     def get_image(self, x, y, width, height, img, solo_use=False):
+        """Découpe l'image demander"""
         if solo_use:
             img = pygame.image.load(img).convert()
         image = pygame.Surface((width, height)).convert()
