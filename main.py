@@ -181,16 +181,17 @@ class Game(object):
 
         # Collsision avec les autres zombies
         for zombie in self.levels.current_level.pnj.zombie_list:
-            self.enemy_hit_list = pygame.sprite.spritecollide(zombie,
-                                                              self.levels.current_level.pnj.enemy_list,
-                                                              False)
-            for enemy in self.enemy_hit_list:
-                print('[*] Rect Collide - Zombie')
-                if pygame.sprite.collide_mask(zombie, enemy) is not None:
-                    if not enemy.underAttack and not zombie.is_feeding:
-                        print('[*] Mask Collide - Zombie')
-                        enemy.is_under_attack(zombie)
-                        zombie.is_feeding = True
+            if not zombie.is_feeding:
+                self.enemy_hit_list = pygame.sprite.spritecollide(zombie,
+                                                                  self.levels.current_level.pnj.enemy_list,
+                                                                  False)
+                for enemy in self.enemy_hit_list:
+                    print('[*] Rect Collide - Zombie')
+                    if pygame.sprite.collide_mask(zombie, enemy) is not None:
+                        if not enemy.underAttack and not zombie.is_feeding:
+                            print('[*] Mask Collide - Zombie')
+                            enemy.is_under_attack(zombie)
+                            zombie.is_feeding = True
 
     def obstacle_collide(self):
         """Collision joeur-objets et pnj-objet (en cour)"""

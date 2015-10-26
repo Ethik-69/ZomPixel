@@ -43,7 +43,7 @@ class Level(Levels):
     """Class secondaire des niveau"""
     def __init__(self, main, lvl):
         Levels.__init__(self, main)
-        self.number = lvl['number']
+        self.current_level_number = lvl['number']
         self.objects_pos = lvl['objects']
 
         self.pos_x, self.pos_y = lvl['pos_level'][0], lvl['pos_level'][1]
