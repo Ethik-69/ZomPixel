@@ -16,7 +16,7 @@ class Character(pygame.sprite.Sprite):
         self.underAttack = False
         self.attacker = None
         self.spriteSheet = None
-        self.main.time.add_rebour(self.name)
+        self.main.time.add_rebour(self.id_name)
         self.imgName = init_values['img']
         self.width = 75
         self.height = 125
@@ -162,17 +162,17 @@ class Humain(Character):
 
     def is_under_attack(self, attacker):
         """Initialise le fait que le pnj en prend plein la tronche"""
-        print('[*] ' + self.name + ' Is Under Attack')
+        print('[*] ' + self.id_name + ' Is Under Attack')
         self.underAttack = True
         self.attacker = attacker
         self.action = 'self_devour' # Se fait dévorer
         self.currentImage = 0
-        self.main.time.rebours[self.name].start([00, 02, 00])
+        self.main.time.rebours[self.id_name].start([00, 02, 00])
 
     def is_dying(self):
         """Mort du citoyen"""
-        if self.main.time.rebours[self.name].isFinish:
-            print('[*] ' + self.name + ' Is Dying')
+        if self.main.time.rebours[self.id_name].isFinish:
+            print('[*] ' + self.id_name + ' Is Dying')
             self.isAlive = False
             if self.attacker == self.main.player:
                 self.going_zombie()
@@ -212,7 +212,7 @@ class Zombie(Character):
         Character.__init__(self, main, init_values, pos, num)
         self.tick = 0
         self.is_feeding = False
-        self.main.time.rebours[self.name].start([00, 10, 00]) # x temp de vie (H:M:S)
+        self.main.time.rebours[self.id_name].start([00, 10, 00]) # x temp de vie (H:M:S)
         self.iaActionSwitch = {1: 'up',
                                2: 'down',
                                3: 'left',
@@ -220,12 +220,12 @@ class Zombie(Character):
                                5: ''}
 
     def dying(self):
-        """Déclade"""
+        """Déclare le zombie mort"""
         print('[*] ' + self.name + ' Is Dying')
         self.isAlive = False
 
     def update(self):
-        if self.main.time.rebours[self.name].isFinish:  # si le rebour principal est fini le zombie meur
+        if self.main.time.rebours[self.id_name].isFinish:  # si le rebour principal est fini le zombie meur
             self.dying()
         if self.is_feeding:
             self.image = self.stopFrame

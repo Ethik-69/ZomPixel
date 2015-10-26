@@ -116,5 +116,5 @@ class Object(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def display(self):
-        """Pose l'obje"""
+        """Pose l'objet sur le fond"""
         self.main.background.blit(self.image, self.pos)
