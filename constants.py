@@ -28,29 +28,33 @@ punk = {'name': 'punk',
         'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}
 
 
-OBJECTS = {'manhole_cover': [0, 250, 75, 75],
-           'bush': [100, 100, 50, 50],  # buisson
-           'blue_car': [0, 20, 230, 120],
-           'police_car': [200, 0, 230, 120],
-           'yellow_car': [400, 0, 230, 120],
-           'cone': [450, 100, 50, 50],
-           'working_fence': [0, 150, 100, 50],
-           'fence': [550, 100, 50, 50],
-           'dich': [550, 100, 50, 50],
-           'skull': [100, 100, 50, 50]}
+OBJECTS = {'manhole': "data/img/objets/manhole.png",
+           'bush': "data/img/objets/bush.png",
+           'blue_car': "data/img/objets/blue_car.png",
+           'police_car': "data/img/objets/police_car.png",
+           'yellow_car': "data/img/objets/yellow_car.png",
+           'cone': "data/img/objets/cone.png",
+           'tree': "data/img/objets/tree.png",
+           'working_fence_v': "data/img/objets/working_fence_v.png",
+           'working_fence_h': "data/img/objets/working_fence_h.png",
+           'fence': "data/img/objets/fence.png",
+           'bin': "data/img/objets/bin.png",
+           'skull': "data/img/objets/skull.png"}
 
 
 LEVEL0 = {'number': 0,
           'enemy': {(255, 200): citizen,
                     (800, 300): punk},
-          'objects': {'manhole_cover': [],
+          'objects': {'manhole': [],
                       'bush': [],
                       'blue_car': [],
-                      'police_car': [],
+                      'police_car': [(300, 300)],
                       'yellow_car': [],
                       'cone': [],
-                      'dich': [],
-                      'working_fence': [],
+                      'tree': [],
+                      'bin': [],
+                      'working_fence_v': [],
+                      'working_fence_h': [],
                       'fence': []},
           'pos_level': [0, -1534],
           'pos_player': [512, 354]}

@@ -28,6 +28,7 @@ class Character(pygame.sprite.Sprite):
         self.get_frame()
         self.image = self.stopFrame
         self.rect = self.image.get_rect()
+        # self.rect = self.rect.inflate(0, 0)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos[0]
         self.rect.y = pos[1]
@@ -178,7 +179,7 @@ class Humain(Character):
         print('[*] ' + self.id_name + ' Is Under Attack')
         self.underAttack = True
         self.attacker = attacker
-        self.action = 'self_devour' # Se fait dévorer
+        self.action = 'self_devour'  # Se fait dévorer
         self.currentImage = 0
         self.main.time.rebours[self.id_name].start([00, 02, 00])
 
@@ -209,14 +210,33 @@ class Humain(Character):
                                                           (self.rect.x, self.rect.y),
                                                           self.num)
 
-    def update(self):
+    def obstacle_collide(self, obstacles_list):
+        if not self.underAttack:
+            obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
+            for obstacle in obstacles_collided:
+                print('[*] Enemy Collide Object')
+                if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                    self.action = 'left'
+                    self.actionSwitch[self.action]()
+                elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                    self.action = 'right'
+                    self.actionSwitch[self.action]()
+                    
+                if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
+                    self.action = 'down'
+                    self.actionSwitch[self.action]()
+                elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
+                    self.action = 'up'
+                    self.actionSwitch[self.action]()
+
+    def update(self, obstacles_list):
         """Actualisation des citoyens"""
         self.is_dying()
         if not self.underAttack:
             self.move_alea()
-            self.rect.x += self.moveX
-            self.rect.y += self.moveY
+            self.rect = self.rect.move([self.moveX, self.moveY])
         self.collide_window_side()
+        self.obstacle_collide(obstacles_list)
         self.update_current_image()
         self.select_frame()
 
@@ -238,15 +258,34 @@ class Zombie(Character):
         print('[*] ' + self.name + ' Is Dying')
         self.isAlive = False
 
-    def update(self):
+    def obstacle_collide(self, obsctacles_list):
+        if not self.is_feeding:
+            obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
+            for obstacle in obstacles_collided:
+                print('[*] Zombie Collide Object')
+                if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                    self.action = 'left'
+                    self.actionSwitch[self.action]()
+                elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                    self.action = 'right'
+                    self.actionSwitch[self.action]()
+
+                if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
+                    self.action = 'down'
+                    self.actionSwitch[self.action]()
+                elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
+                    self.action = 'up'
+                    self.actionSwitch[self.action]()
+
+    def update(self, obstacles_list):
         if self.main.time.rebours[self.id_name].isFinish:  # si le rebour principal est fini le zombie meur
             self.dying()
         if self.is_feeding:
             self.image = self.stopFrame
         else:
             self.move_alea()
-            self.rect.x += self.moveX
-            self.rect.y += self.moveY
+            self.rect = self.rect.move([self.moveX, self.moveY])
             self.collide_window_side()
+            self.obstacle_collide(obstacles_list)
             self.update_current_image()
             self.select_frame()

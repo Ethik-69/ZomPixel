@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from sprites import *
-from Character import *
+from character import *
 from constants import *
 
 
@@ -39,7 +39,7 @@ class PNJ(object):
             self.zombie_list.remove(zombie)
         print('     - Ok')
 
-    def update(self):
+    def update(self, obsctacles_list):
         """met les pnj a jour"""
         for enemy in self.enemy_list:
             if not enemy.isAlive:
@@ -55,8 +55,8 @@ class PNJ(object):
             print('[*] Change Lvl => True')
             self.level.is_change_level = True
 
-        self.enemy_list.update()
-        self.zombie_list.update()
+        self.enemy_list.update(obsctacles_list)
+        self.zombie_list.update(obsctacles_list)
 
     def draw(self):
         """dessine les pnj"""
@@ -104,11 +104,7 @@ class Object(pygame.sprite.Sprite):
         self.name = name
         self.pos = pos
 
-        self.image = sprite_sheet.get_image(sprite_sheet_data[0],
-                                            sprite_sheet_data[1],
-                                            sprite_sheet_data[2],
-                                            sprite_sheet_data[3],
-                                            'data/img/objets.png')
+        self.image = sprite_sheet.load_image(sprite_sheet_data)
 
         self.rect = self.image.get_rect()
         self.rect.x = self.pos[0]

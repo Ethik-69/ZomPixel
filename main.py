@@ -5,7 +5,7 @@ import sys
 from levels import *
 from time_made_home import *
 from player import *
-from Character import *
+from character import *
 
 try:
     from pygame.locals import *
@@ -39,26 +39,13 @@ class Game(object):
         self.obstacles_collided = None
         self.is_mouse_button_down = False
 
-        self.button_next_level = None
-
-        self.font_init()
-        self.loading_screen()
-
         self.game_background_image = None
         self.welcome_background_image = None
 
-        self.time = Times()
-        self.clock = pygame.time.Clock()
+        self.button_next_level = None
 
-        self.welcome_background_image = pygame.image.load('data/img/title_screen.png').convert()
-        self.score_image = pygame.image.load('data/img/score_background0.png')
-
-        self.create_player()
-
-        self.levels = Levels(self)
-        self.levels.init_level()
-
-        self.title_screen()
+    def __getitem__(self):
+        return self.width
 
     def text_blit(self, font, text, text_color, pos):
         text_to_blit = font.render(text, 1, text_color)
@@ -147,6 +134,22 @@ class Game(object):
     """Initialisation du jeux"""
     #########################################
 
+    def start(self):
+        """Fini d'initialiser le jeu et le démarre"""
+        self.font_init()
+        self.loading_screen()
+
+        self.time = Times()
+        self.clock = pygame.time.Clock()
+
+        self.welcome_background_image = pygame.image.load('data/img/title_screen.png').convert()
+        self.score_image = pygame.image.load('data/img/score_background0.png')
+
+        self.create_player()
+        self.levels = Levels(self)
+        self.levels.init_level()
+        self.title_screen()
+
     def font_init(self):
         # Font pour l'acceuil
         self.welcome_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
@@ -168,7 +171,8 @@ class Game(object):
         """Creation du joueur"""
         print('[*] Player Init')
         self.player_sprite = pygame.sprite.Group()
-        self.player = Player(self, 'player', 'character/player/zombie_sprite_sheet.png', 512, 354)
+        self.player = Player('player', 'character/player/zombie_sprite_sheet.png', 512, 354, self.width, self.height)
+        self.time.add_rebour('player')
         self.player_sprite.add(self.player)
         print('     - Ok')
 
@@ -239,60 +243,24 @@ class Game(object):
                             enemy.is_under_attack(zombie)
                             zombie.is_feeding = True
 
-    def obstacle_collide(self):
+    def obstacle_collide_player(self):
         """Collision joeur-objets et pnj-objet (en cour)"""
-        # Collision avec les objets (grosse refacto a faire)
         if not self.player.is_feeding:
             self.obstacles_collided = pygame.sprite.spritecollide(self.player,
                                                                   self.levels.current_level.obstacles.objects_list,
                                                                   False)
             for obstacle in self.obstacles_collided:
-                print('[*] Collide Object')
-                if pygame.sprite.collide_mask(self.player, obstacle) is not None:
-                    if self.player.moveX < 0:  # gauche
-                        self.player.moveX = 1
-                    elif self.player.moveX > 0:  # droite
-                        self.player.moveX = -1
-                    if self.player.moveY < 0:  # haut
-                        self.player.moveY = 1
-                    elif self.player.moveY > 0:  # bas
-                        self.player.moveY = -1
+                print('[*] Player Collide Object')
+                if self.player.rect.x <= obstacle.rect.x and self.player.moveX > 0:
+                    self.player.moveX = 0
+                if self.player.rect.x >= obstacle.rect.x and self.player.moveX < 0:
+                    self.player.moveX = 0
+                if self.player.rect.y <= obstacle.rect.y and self.player.moveY > 0:
+                    self.player.moveY = 0
+                if self.player.rect.y >= obstacle.rect.y and self.player.moveY < 0:
+                    self.player.moveY = 0
 
-        for zombie in self.levels.current_level.pnj.zombie_list:
-            if not zombie.is_feeding:
-                self.obstacles_collided = pygame.sprite.spritecollide(zombie,
-                                                                      self.levels.current_level.obstacles.objects_list,
-                                                                      False)
-                for obstacle in self.obstacles_collided:
-                    print('[*] Collide Object')
-                    if pygame.sprite.collide_mask(self.player, obstacle) is not None:
-                        if zombie.moveX < 0:  # vas vers la gauche
-                            zombie.action = 'right'
-                        elif zombie.moveX > 0:  # vas vers la droite
-                            zombie.action = 'left'
-                        if zombie.moveY < 0:  # vas vers le haut
-                            zombie.action = 'down'
-                        elif zombie.moveY > 0:  # vas vers le bas
-                            zombie.action = 'up'        
-        
-        for enemy in self.levels.current_level.pnj.enemy_list:
-            if not enemy.is_under_attack:
-                self.obstacles_collided = pygame.sprite.spritecollide(enemy,
-                                                                      self.levels.current_level.obstacles.objects_list,
-                                                                      False)
-                for obstacle in self.obstacles_collided:
-                    print('[*] Collide Object')
-                    if pygame.sprite.collide_mask(self.player, obstacle) is not None:
-                        if enemy.moveX < 0:  # vas vers la gauche
-                            enemy.action = 'right'
-                        elif enemy.moveX > 0:  # vas vers la droite
-                            enemy.action = 'left'
-                        if enemy.moveY < 0:  # vas vers le haut
-                            enemy.action = 'down'
-                        elif enemy.moveY > 0:  # vas vers le bas
-                            enemy.action = 'up'
-
-    # ---------------Level end---------------
+    # --------------Level end----------------
 
     def init_score_screen(self):
         """Initialisation de l'affichage du score en fin de niveau"""
@@ -379,10 +347,10 @@ class Game(object):
 
             self.click_motion()
             self.pnj_collide()
-            self.obstacle_collide()
+            self.obstacle_collide_player()
             self.time.update()
             self.player.update()
-            self.levels.current_level.pnj.update()
+            self.levels.current_level.pnj.update(self.levels.current_level.obstacles.objects_list)
 
             # ------------------------Display------------------------
 
@@ -416,16 +384,16 @@ class Game(object):
             self.clock.tick(100)
 
 if __name__ == '__main__':
-    #import cProfile
-    #cProfile.run('Game()')
+    # import cProfile
+    # cProfile.run('Game()')
 
-    #from pycallgraph import PyCallGraph
-    #from pycallgraph.output import GraphvizOutput
+    # from pycallgraph import PyCallGraph
+    # from pycallgraph.output import GraphvizOutput
 
-    #with PyCallGraph(output=GraphvizOutput()):
+    # with PyCallGraph(output=GraphvizOutput()):
         game = Game()
+        game.start()
 
-    #  gestion collision objets. il touche un objet, par a l'opposer (il le touche tjrs donc traverse l'objet)
-    #  un objet par fichier
-    #  collision objets/pnj ne fonctionne pas
-    #  charger toute les images au debut
+    # TODO: Gestion collision objets. (zombie/enemy)
+    # TODO: Charger toute les images au debut
+    # TODO: Refacto
