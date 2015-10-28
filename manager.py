@@ -39,6 +39,34 @@ class PNJ(object):
             self.zombie_list.remove(zombie)
         print('     - Ok')
 
+    def pnj_collide(self):
+        """
+        Tests de collisions
+        rectangle-rectangle puis au pixel près
+        """
+        # Collision avec le joueur
+        if not self.main.player.is_feeding:
+            enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)
+            for enemy in enemy_hit_list:
+                print('[*] Rect Collide - Player')
+                if pygame.sprite.collide_mask(self.main.player, enemy) is not None:
+                    if not enemy.underAttack and not self.main.player.is_feeding:
+                        print('[*] Mask Collide - Player')
+                        enemy.is_under_attack(self.main.player)
+                        self.main.player.is_feeding = True
+
+        # Collsision avec les autres zombies
+        for zombie in self.zombie_list:
+            if not zombie.is_feeding:
+                enemy_hit_list = pygame.sprite.spritecollide(zombie, self.enemy_list, False)
+                for enemy in enemy_hit_list:
+                    print('[*] Rect Collide - Zombie')
+                    if pygame.sprite.collide_mask(zombie, enemy) is not None:
+                        if not enemy.underAttack and not zombie.is_feeding:
+                            print('[*] Mask Collide - Zombie')
+                            enemy.is_under_attack(zombie)
+                            zombie.is_feeding = True
+
     def update(self, obsctacles_list):
         """met les pnj a jour"""
         for enemy in self.enemy_list:
@@ -55,6 +83,7 @@ class PNJ(object):
             print('[*] Change Lvl => True')
             self.level.is_change_level = True
 
+        self.pnj_collide()
         self.enemy_list.update(obsctacles_list)
         self.zombie_list.update(obsctacles_list)
 

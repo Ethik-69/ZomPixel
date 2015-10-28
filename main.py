@@ -209,57 +209,6 @@ class Game(object):
         if self.click_pos_x is None and self.click_pos_y is None:
             self.player.action = ''
 
-    # --------------Collisions---------------
-
-    def pnj_collide(self):
-        """
-        Tests de collisions
-        rectangle-rectangle puis au pixel près
-        """
-        # Collision avec le joueur
-        if not self.player.is_feeding:
-            self.enemy_hit_list = pygame.sprite.spritecollide(self.player,
-                                                              self.levels.current_level.pnj.enemy_list,
-                                                              False)
-            for enemy in self.enemy_hit_list:
-                print('[*] Rect Collide - Player')
-                if pygame.sprite.collide_mask(self.player, enemy) is not None:
-                    if not enemy.underAttack and not self.player.is_feeding:
-                        print('[*] Mask Collide - Player')
-                        enemy.is_under_attack(self.player)
-                        self.player.is_feeding = True
-
-        # Collsision avec les autres zombies
-        for zombie in self.levels.current_level.pnj.zombie_list:
-            if not zombie.is_feeding:
-                self.enemy_hit_list = pygame.sprite.spritecollide(zombie,
-                                                                  self.levels.current_level.pnj.enemy_list,
-                                                                  False)
-                for enemy in self.enemy_hit_list:
-                    print('[*] Rect Collide - Zombie')
-                    if pygame.sprite.collide_mask(zombie, enemy) is not None:
-                        if not enemy.underAttack and not zombie.is_feeding:
-                            print('[*] Mask Collide - Zombie')
-                            enemy.is_under_attack(zombie)
-                            zombie.is_feeding = True
-
-    def obstacle_collide_player(self):
-        """Collision joeur-objets et pnj-objet (en cour)"""
-        if not self.player.is_feeding:
-            self.obstacles_collided = pygame.sprite.spritecollide(self.player,
-                                                                  self.levels.current_level.obstacles.objects_list,
-                                                                  False)
-            for obstacle in self.obstacles_collided:
-                print('[*] Player Collide Object')
-                if self.player.rect.x <= obstacle.rect.x and self.player.moveX > 0:
-                    self.player.moveX = 0
-                if self.player.rect.x >= obstacle.rect.x and self.player.moveX < 0:
-                    self.player.moveX = 0
-                if self.player.rect.y <= obstacle.rect.y and self.player.moveY > 0:
-                    self.player.moveY = 0
-                if self.player.rect.y >= obstacle.rect.y and self.player.moveY < 0:
-                    self.player.moveY = 0
-
     # --------------Level end----------------
 
     def init_score_screen(self):
@@ -346,10 +295,8 @@ class Game(object):
                 self.click_pos_y = mouse_xy[1] - self.player.height / 2
 
             self.click_motion()
-            self.pnj_collide()
-            self.obstacle_collide_player()
             self.time.update()
-            self.player.update()
+            self.player.update(self.levels.current_level.obstacles.objects_list)
             self.levels.current_level.pnj.update(self.levels.current_level.obstacles.objects_list)
 
             # ------------------------Display------------------------

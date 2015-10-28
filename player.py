@@ -89,13 +89,30 @@ class Player(pygame.sprite.Sprite):
             self.moveY = 0
         if self.rect.y > self.game_height - self.height and self.moveY > 0:
             self.moveY = 0
+            
+            
+    def obstacle_collide(self, obstacles_list):
+        """Collision joeur-objets et pnj-objet (en cour)"""
+        if not self.is_feeding:
+            obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
+            for obstacle in obstacles_collided:
+                print('[*] Player Collide Object')
+                if self.rect.x <= obstacle.rect.x and self.moveX > 0:
+                    self.moveX = 0
+                if self.rect.x >= obstacle.rect.x and self.moveX < 0:
+                    self.moveX = 0
+                if self.rect.y <= obstacle.rect.y and self.moveY > 0:
+                    self.moveY = 0
+                if self.rect.y >= obstacle.rect.y and self.moveY < 0:
+                    self.moveY = 0
 
-    def update(self):
+    def update(self, obstacles_list):
         """Actualisation du joueur"""
         if self.is_feeding: # si le joueur est en train de manger, ne l'affiche pas
             self.image = None
         else:
             self.collide_window_side()
+            self.obstacle_collide(obstacles_list)
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.timeNum += 1
             if self.timeNum == self.timeTarget:
