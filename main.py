@@ -19,10 +19,10 @@ class Game(object):
     """Class principal"""
     def __init__(self):
         pygame.init()
-        self.width = 1024
-        self.height = 768
+        self.width = constants.GAME_WIDTH
+        self.height = constants.GAME_HEIGHT
         self.window = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("ZomPixel")
+        pygame.display.set_caption("ZompiGame")
         self.background = pygame.Surface(self.window.get_size())
         self.background = self.background.convert()
 
@@ -31,10 +31,13 @@ class Game(object):
 
         self.run = None
         self.levels = None
+        self.credit = None
         self.score_image = None
+        self.game_over_image = None
         self.click_pos_x = None
         self.click_pos_y = None
         self.is_display_score = None
+        self.is_game_over = None
         self.enemy_hit_list = None
         self.obstacles_collided = None
         self.is_mouse_button_down = False
@@ -43,6 +46,7 @@ class Game(object):
         self.welcome_background_image = None
 
         self.button_next_level = None
+        self.button_accueil = None
 
     def __getitem__(self):
         return self.width
@@ -59,8 +63,8 @@ class Game(object):
     def title_screen_text(self):
         """Initialise et pose sur le fond les texts de l'ecran d'accueil"""
         self.text_blit(self.welcome_font0, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 120))
-        self.text_blit(self.welcome_font1, "Demarrer", (0, 0, 0), (self.background.get_width()/2, 660))
-        self.text_blit(self.welcome_font1, "?", (0, 0, 0), (self.background.get_width()/1.1, 660))
+        self.text_blit(self.welcome_font1, "Demarrer", (0, 0, 0), (self.background.get_width()/1.975, 660))
+        self.text_blit(self.welcome_font1, "?", (0, 0, 0), (self.background.get_width()/1.095, 660))
 
     def title_screen(self):
         """Boucle de l'ecran d'accueil"""
@@ -98,10 +102,12 @@ class Game(object):
     def help_screen_text(self):
         """Initialise et pose sur le fond les texts de l'ecran d'aide"""
         self.text_blit(self.welcome_font1, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 50))
-        self.text_blit(self.final_score_font, "But: Manger les citoyens le plus vite possible", (100, 20, 20), (self.background.get_width()/2, 150))
+        self.text_blit(self.final_score_font, "But: Manger les citoyens en moins de 30 secondes !", (100, 20, 20), (self.background.get_width()/2, 150))
         self.text_blit(self.final_score_font, "Si vous mangez un citoyen: +2 point", (100, 20, 20), (self.background.get_width()/2, 250))
-        self.text_blit(self.final_score_font, "Si l'un de vos zombie mange un citoyen: +1 point", (100, 20, 20), (self.background.get_width()/2, 350))
-        self.text_blit(self.final_score_font, "Cliquez pour deplacer le zombie principal", (100, 20, 20), (self.background.get_width()/2, 450))
+        self.text_blit(self.final_score_font, "Si l'un de vos zompie mange un citoyen: +1 point", (100, 20, 20), (self.background.get_width()/2, 350))
+        self.text_blit(self.final_score_font, "Cliquez pour deplacer le zompie principal", (100, 20, 20), (self.background.get_width()/2, 450))
+        self.text_blit(self.final_score_font, "Le niveau  zero vous servira d'entrainement ;)", (100, 20, 20), (self.background.get_width()/2, 550))
+        self.text_blit(self.final_score_font, "Facebook: ZompiGame", (100, 20, 20), (self.background.get_width()/2, 650))
         self.text_blit(self.welcome_font1, "Retour", (100, 20, 20), (self.background.get_width()/2, 700))
 
     def help_screen(self):
@@ -144,6 +150,8 @@ class Game(object):
 
         self.welcome_background_image = pygame.image.load('data/img/title_screen.png').convert()
         self.score_image = pygame.image.load('data/img/score_background0.png')
+        self.game_over_image = pygame.image.load('data/img/game_over_background.png')
+        self.skull_image = pygame.image.load('data/img/objets/skull.png')
 
         self.create_player()
         self.levels = Levels(self)
@@ -221,7 +229,7 @@ class Game(object):
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font, str(self.player.score) + " Points", (255, 255, 255), (self.width/2, self.height/1.8))
-        self.text_blit(self.final_score_font, "Terminer en", (255, 255, 255), (self.width/2, self.height/1.6))
+        self.text_blit(self.final_score_font, "Termine en", (255, 255, 255), (self.width/2, self.height/1.6))
         self.text_blit(self.final_score_font, str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]), (255, 255, 255), (self.width/2, self.height/1.5))
         self.text_blit(self.final_score_font, "Niveau suivant", (255, 255, 255), (self.width/2, self.height/1.3))
 
@@ -238,6 +246,7 @@ class Game(object):
         self.init_score_screen()
 
         while self.is_display_score:
+            self.display_hud()
             mouse_xy = pygame.mouse.get_pos()
             is_lvl_change = self.button_next_level.collidepoint(mouse_xy)
             for event in pygame.event.get():
@@ -252,10 +261,120 @@ class Game(object):
                     self.click_pos_y = 0
                     self.is_display_score = False
 
+            pygame.display.flip()
+
+    # --------------Mort Joueur--------------
+
+    def init_game_over(self):
+        print('[*] Init Game Over')
+        # Pose l'image
+        self.background.blit(self.game_over_image, (self.width/6.6, self.height/3.5))
+        self.background.blit(self.skull_image, (self.width/3.15, self.height/2.1))
+        self.background.blit(self.skull_image, (self.width/1.55, self.height/2.1))
+
+        # Définit et pose les texts
+        self.text_blit(self.final_score_font, "Vous etes definitivement", (255, 255, 255), (self.width/2, self.height/2.4))
+        self.text_blit(self.welcome_font1, "M.O.R.T", (255, 255, 255), (self.width/2, self.height/2.1))
+        self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score), (255, 255, 255), (self.width/2, self.height/1.8))
+        self.text_blit(self.final_score_font, 'Accueil', (255, 255, 255), (self.width/2, self.height/1.435))
+
+        # Pose le bouton retour accueil
+        self.button_accueil = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.35, self.height/1.5, 145, 45])
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+        print('     - Ok')
+
+    def init_time_out(self):
+        print('[*] Init Time Out')
+        # Pose l'image
+        self.background.blit(self.game_over_image, (self.width/6.6, self.height/3.5))
+        self.background.blit(self.skull_image, (self.width/3.15, self.height/2.1))
+        self.background.blit(self.skull_image, (self.width/1.55, self.height/2.1))
+
+        # Définit et pose les texts
+        self.text_blit(self.welcome_font1, "Temps ecoule", (255, 255, 255), (self.width/2, self.height/2.3))
+        self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score), (255, 255, 255), (self.width/2, self.height/1.95))
+        self.text_blit(self.final_score_font, 'Accueil', (255, 255, 255), (self.width/2, self.height/1.435))
+
+        # Pose le bouton retour accueil
+        self.button_accueil = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.35, self.height/1.5, 145, 45])
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+        print('     - Ok')
+
+    def display_game_over(self, end_type):
+        self.is_game_over = True
+
+        if end_type == 'game_over':
+            self.init_game_over()
+        else:
+            self.init_time_out()
+
+        while self.is_game_over:
+            self.display_hud()
+            mouse_xy = pygame.mouse.get_pos()
+            is_accueil = self.button_accueil.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        quit()
+                elif event.type == MOUSEBUTTONDOWN and is_accueil:
+                    self.is_game_over = False
+                    self.end_game()
+
+            pygame.display.flip()
+
+    def init_credit(self):
+        print('[*] Init Game Over')
+        self.background.fill((0, 0, 0))
+
+        # Définit et pose les texts
+        self.text_blit(self.welcome_font1, "Pre-Alpha terminee !", (100, 20, 20), (constants.GAME_WIDTH/2, 100))
+        self.text_blit(self.final_score_font, "Votre score final est de " + str(self.player.final_score), (100, 20, 20), (constants.GAME_WIDTH/2, 200))
+        self.text_blit(self.final_score_font, "Rejoignez nous sur Facebook: ZompiGame !", (100, 20, 20), (constants.GAME_WIDTH/2, 300))
+        self.text_blit(self.final_score_font, "Developper par:", (100, 20, 20), (constants.GAME_WIDTH/2, 400))
+        self.text_blit(self.final_score_font, "Ethan CHAMIK", (100, 20, 20), (constants.GAME_WIDTH/5, 500))
+        self.text_blit(self.final_score_font, "Romain GUILLOT", (100, 20, 20), (constants.GAME_WIDTH/2, 500))
+        self.text_blit(self.final_score_font, "Thibault DESCAMPS", (100, 20, 20), (constants.GAME_WIDTH/1.2, 500))
+        self.text_blit(self.final_score_font, "Faites tournez ;)", (100, 20, 20), (constants.GAME_WIDTH/2, 600))
+        self.text_blit(self.welcome_font1, "Retour", (100, 20, 20), (constants.GAME_WIDTH/2, 700))
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+        print('     - Ok')
+
+    def display_credit(self):
+        print('[*] Credit')
+        self.credit = True
+        self.background.fill((0, 0, 0))
+
+        button_back = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/2.7, 609, 280, 106])
+        self.init_credit()
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        while self.credit:
+            mouse_xy = pygame.mouse.get_pos()
+            is_back = button_back.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == KEYDOWN:
+                    if event.key == K_ESCAPE:
+                        quit()
+                elif event.type == MOUSEBUTTONDOWN and is_back:
+                    self.credit = False
+                    print('[*] Leaving Credit')
+                    self.end_game()
+
     def end_game(self):
         print('[*] Start New Game')
-        new_game = Game()
-        pass
+        self.run = False
 
     #########################################
     """Boucle Principal"""
@@ -282,7 +401,7 @@ class Game(object):
             mouse_xy = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.run = False
+                    quit()
                 elif event.type == MOUSEBUTTONDOWN:
                     self.is_mouse_button_down = True
                 elif event.type == MOUSEBUTTONUP:
@@ -297,7 +416,10 @@ class Game(object):
             self.click_motion()
             self.time.update()
             self.player.update(self.levels.current_level.obstacles.objects_list)
-            self.levels.current_level.pnj.update(self.levels.current_level.obstacles.objects_list)
+            self.levels.current_level.update(self.levels.current_level.obstacles.objects_list)
+
+            if self.player.dying:
+                self.display_game_over('game_over')
 
             # ------------------------Display------------------------
 
@@ -317,13 +439,12 @@ class Game(object):
                 self.levels.current_level.is_change_level = False
                 self.display_score()
                 self.levels = self.levels.current_level.next_level()
-                print(self.levels)
                 if not self.levels:
                     print('[*] Game End')
-                    self.end_game()
-
-                self.levels.current_level.start()
-                print('[*] Current Level Number' + str(self.levels.current_level_number))
+                    self.display_credit()
+                else:
+                    self.levels.current_level.start()
+                    print('[*] Current Level Number' + str(self.levels.current_level_number))
 
             # ----------------------------------------------------------
 
@@ -338,9 +459,21 @@ if __name__ == '__main__':
     # from pycallgraph.output import GraphvizOutput
 
     # with PyCallGraph(output=GraphvizOutput()):
+    while True:
+        print('[*] Game Object Init')
         game = Game()
-        game.start()
+        if game:
+            game.start()
+        else:
+            break
 
-    # TODO: Gestion collision objets. (zombie/enemy)
+    # TODO: TEST !! =D <= c'est cool les test !
     # TODO: Charger toute les images au debut
-    # TODO: Refacto
+    # TODO: Refacto main
+    # TODO: Refacto character
+    # TODO: Refacto player
+    # TODO: Refacto levels
+    # TODO: Refacto sprites
+    # TODO: Refacto player
+    # TODO: Refacto manager
+

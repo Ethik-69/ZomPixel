@@ -8,6 +8,7 @@ class Levels(object):
     def __init__(self, main):
         self.game_background_image = pygame.image.load('data/img/map.png').convert()
         self.hud_image = pygame.image.load('data/img/hud.png')
+        self.skull_image = pygame.image.load('data/img/objets/skull.png')
 
         self.current_level = None
         self.current_level_number = 0
@@ -50,6 +51,7 @@ class Level(Levels):
         self.pos_player_x, self.pos_player_y = lvl['pos_player'][0], lvl['pos_player'][1]
 
         self.is_change_level = False
+        self.game_over = False
         self.main.time.chronos['current_level'].start()
 
         print('[*] Init obj PNJ')
@@ -64,9 +66,17 @@ class Level(Levels):
 
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
         self.main.background.blit(self.hud_image, (-5, -2))
+        self.skull_image = pygame.transform.scale(self.skull_image, (30, 35))
+        self.main.background.blit(self.skull_image, (constants.GAME_WIDTH/1.99, 7))
 
         self.obstacles.create_all(self.objects_pos)
 
         self.main.time.chronos['current_level'].reset()
         self.is_started = True
         print('     - Ok')
+
+    def update(self, obstacles_list):
+        self.pnj.update(obstacles_list)
+        if self.main.time.chronos['current_level'].Time == [00, 30, 00]:
+            print('[*] Time Out')
+            self.main.display_game_over('Time Out')

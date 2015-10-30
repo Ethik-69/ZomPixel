@@ -90,7 +90,7 @@ class Character(pygame.sprite.Sprite):
     def move_alea(self):
         """Choisi une direction aleatoire tout les x ticks"""
         self.tick += 1
-        if self.tick == 200:
+        if self.tick == 50:
             self.tick = 0
             rand = random.randint(1, 6)
             if rand > 5:
@@ -191,8 +191,10 @@ class Humain(Character):
             if self.attacker == self.main.player:
                 self.going_zombie()
                 self.main.player.score += 2
+                self.main.player.final_score += 2
             else:
                 self.main.player.score += 1
+                self.main.player.final_score += 1
             try:
                 self.attacker.is_feeding = False
                 self.attacker.image = self.attacker.stopFrame
@@ -202,7 +204,7 @@ class Humain(Character):
     def going_zombie(self):
         """Choisie si le citoyen se reveil en zombie"""
         rand = random.randint(0, 100)
-        if rand <= 100:
+        if rand <= 50:
             self.main.levels.current_level.pnj.add_zombie(self.main,
                                                           self.id_name,
                                                           self.name,
@@ -222,11 +224,11 @@ class Humain(Character):
                     self.action = 'right'
                     self.actionSwitch[self.action]()
                     
-                if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
-                    self.action = 'down'
-                    self.actionSwitch[self.action]()
-                elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
+                if self.rect.y <= obstacle.rect.y and self.moveY > 0:  # vas vers le haut
                     self.action = 'up'
+                    self.actionSwitch[self.action]()
+                elif self.rect.y >= obstacle.rect.y and self.moveY < 0:  # vas vers le bas
+                    self.action = 'down'
                     self.actionSwitch[self.action]()
 
     def update(self, obstacles_list):

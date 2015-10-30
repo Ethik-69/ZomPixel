@@ -8,6 +8,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, name, name_image, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
         self.score = 0
+        self.final_score = 0
         self.dying = False
         self.is_feeding = False
         self.game_width = width
@@ -90,21 +91,25 @@ class Player(pygame.sprite.Sprite):
         if self.rect.y > self.game_height - self.height and self.moveY > 0:
             self.moveY = 0
             
-            
     def obstacle_collide(self, obstacles_list):
         """Collision joeur-objets et pnj-objet (en cour)"""
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
                 print('[*] Player Collide Object')
-                if self.rect.x <= obstacle.rect.x and self.moveX > 0:
-                    self.moveX = 0
-                if self.rect.x >= obstacle.rect.x and self.moveX < 0:
-                    self.moveX = 0
-                if self.rect.y <= obstacle.rect.y and self.moveY > 0:
-                    self.moveY = 0
-                if self.rect.y >= obstacle.rect.y and self.moveY < 0:
-                    self.moveY = 0
+                if obstacle.name == 'manhole':
+                    if pygame.sprite.collide_mask(self, obstacle):
+                        self.dying = True
+                        print('[*] Launch Game Over')
+                else:
+                    if self.rect.x <= obstacle.rect.x and self.moveX > 0:
+                        self.moveX = 0
+                    if self.rect.x >= obstacle.rect.x and self.moveX < 0:
+                        self.moveX = 0
+                    if self.rect.y <= obstacle.rect.y and self.moveY > 0:
+                        self.moveY = 0
+                    if self.rect.y >= obstacle.rect.y and self.moveY < 0:
+                        self.moveY = 0
 
     def update(self, obstacles_list):
         """Actualisation du joueur"""
