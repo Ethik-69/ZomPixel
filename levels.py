@@ -1,21 +1,22 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+import constants
 from manager import *
 
 
 class Levels(object):
     """"Class principal des niveaux"""
     def __init__(self, main):
-        self.game_background_image = pygame.image.load('data/img/map.png').convert()
-        self.hud_image = pygame.image.load('data/img/hud.png')
-        self.skull_image = pygame.image.load('data/img/objets/skull.png')
-
         self.current_level = None
         self.current_level_number = 0
 
         self.is_started = False
         self.main = main
         self.main.time.add_chrono('current_level')
+
+        self.hud_image = main.game_images['hud']
+        self.skull_image = main.game_images['skull_image']
+        self.game_background_image = main.game_images['map']
 
         self.obstacles = Obstacles(self.main)
 

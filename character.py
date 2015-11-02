@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 import random
-import constants
 from sprites import *
 
 
@@ -10,30 +9,20 @@ class Character(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.main = main
         self.num = num
-        self.id_name = name + str(num)  # For chrono identification
         self.name = name
-        self.isAlive = True
-        self.underAttack = False
-        self.attacker = None
-        self.spriteSheet = None
-        self.stopFrame = None
-        self.main.time.add_rebour(self.id_name)
+        self.id_name = name + str(num)  # For chrono identification
+
+        self.tick = 0
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
+        self.main.time.add_rebour(self.id_name)
 
-        self.image = None
-        self.framesSwitch = None
-        self.actionSwitch = None
+        self.is_alive = True
+        self.is_under_attack = False
+        self.attacker = None
 
-        self.init_move_images(main.character_images[name])
-
-        self.rect = self.image.get_rect()
-        # self.rect = self.rect.inflate(0, 0)
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = pos[0]
-        self.rect.y = pos[1]
-
+        self.action = ''
         self.actionSwitch = {'up': self.move_up,
                              'down': self.move_down,
                              'left': self.move_left,
@@ -42,15 +31,17 @@ class Character(pygame.sprite.Sprite):
         self.timeTarget = 20  # temp entre chaque frame
         self.timeNum = 0
         self.currentImage = 0
-        self.action = ''
+        self.stopFrame = main.character_images[name]['stopFrame']
+        self.image = self.stopFrame
+        self.framesSwitch = {'up': main.character_images[name]['walkingFramesUp'],
+                             'down': main.character_images[name]['walkingFramesDown'],
+                             'left': main.character_images[name]['walkingFramesLeft'],
+                             'right': main.character_images[name]['walkingFramesRight']}
 
-    def init_move_images(self, images):
-            self.stopFrame = images['stopFrame']
-            self.image = images['stopFrame']
-            self.framesSwitch = {'up': images['walkingFramesUp'],
-                                 'down': images['walkingFramesDown'],
-                                 'left': images['walkingFramesLeft'],
-                                 'right': images['walkingFramesRight']}
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenetre"""
@@ -105,7 +96,7 @@ class Character(pygame.sprite.Sprite):
         """Selectionne la frame en fonction de l'action"""
         if self.action != 'self_devour' and self.action != '':
             self.image = self.framesSwitch[self.action][self.currentImage]
-        elif self.underAttack:
+        elif self.is_under_attack:
             self.image = self.framesSwitch[self.action][self.attacker.name][self.currentImage]
         else:
             self.image = self.stopFrame
@@ -126,10 +117,10 @@ class Humain(Character):
                                4: 'right',
                                5: ''}
 
-    def is_under_attack(self, attacker):
+    def under_attack(self, attacker):
         """Initialise le fait que le pnj en prend plein la tronche"""
         print('[*] ' + self.id_name + ' Is Under Attack')
-        self.underAttack = True
+        self.is_under_attack = True
         self.attacker = attacker
         self.action = 'self_devour'  # Se fait dévorer
         self.currentImage = 0
@@ -139,7 +130,7 @@ class Humain(Character):
         """Mort du citoyen"""
         if self.main.time.rebours[self.id_name].isFinish:
             print('[*] ' + self.id_name + ' Is Dying')
-            self.isAlive = False
+            self.is_alive = False
             if self.attacker == self.main.player:
                 self.going_zombie()
                 self.main.player.score += 2
@@ -150,7 +141,7 @@ class Humain(Character):
             try:
                 self.attacker.is_feeding = False
                 self.attacker.image = self.attacker.stopFrame
-            except Exception as E:
+            except:
                 pass
 
     def going_zombie(self):
@@ -163,7 +154,7 @@ class Humain(Character):
                                                           self.num)
 
     def obstacle_collide(self, obstacles_list):
-        if not self.underAttack:
+        if not self.is_under_attack:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
                 print('[*] Enemy Collide Object')
@@ -184,7 +175,7 @@ class Humain(Character):
     def update(self, obstacles_list):
         """Actualisation des citoyens"""
         self.is_dying()
-        if not self.underAttack:
+        if not self.is_under_attack:
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
         self.collide_window_side()
@@ -198,7 +189,7 @@ class Zombie(Character):
         Character.__init__(self, main, name, pos, num)
         self.tick = 0
         self.is_feeding = False
-        self.main.time.rebours[self.id_name].start([00, 10, 00]) # x temp de vie (H:M:S)
+        self.main.time.rebours[self.id_name].start([00, 10, 00])  # x temp de vie (H:M:S)
         self.iaActionSwitch = {1: 'up',
                                2: 'down',
                                3: 'left',
@@ -208,7 +199,7 @@ class Zombie(Character):
     def dying(self):
         """Déclare le zombie mort"""
         print('[*] ' + self.name + ' Is Dying')
-        self.isAlive = False
+        self.is_alive = False
 
     def obstacle_collide(self, obsctacles_list):
         if not self.is_feeding:

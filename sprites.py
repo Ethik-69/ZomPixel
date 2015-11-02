@@ -20,7 +20,8 @@ class SpriteSheet(object):
             walking_frames.append(img)
         return walking_frames
 
-    def get_image(self, x, y, width, height, img, solo_use=False):
+    @staticmethod
+    def get_image(x, y, width, height, img, solo_use=False):
         """Découpe l'image demander"""
         if solo_use:
             img = pygame.image.load(img).convert()

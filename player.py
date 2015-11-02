@@ -1,40 +1,43 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-import constants
 from sprites import *
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, images, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
-        self.score = 0
-        self.final_score = 0
-        self.dying = False
-        self.is_feeding = False
         self.game_width = width
         self.game_height = height
         self.name = name
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
+
+        self.score = 0
+        self.final_score = 0
+
+        self.dying = False
+        self.is_feeding = False
+
+        self.action = ''
+        self.actionSwitch = {'up': self.move_up,
+                             'down': self.move_down,
+                             'left': self.move_left,
+                             'right': self.move_right}
+
+        self.timeTarget = 40
+        self.timeNum = 0
+        self.currentImage = 0
         self.stopFrame = images['stopFrame']
+        self.framesSwitch = {'up': images['walkingFramesUp'],
+                             'down': images['walkingFramesDown'],
+                             'left': images['walkingFramesLeft'],
+                             'right': images['walkingFramesRight']}
         self.image = self.stopFrame
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)  # pour les tests de collision pixel/pixel
         self.rect.x = x
         self.rect.y = y
-        self.timeTarget = 40
-        self.timeNum = 0
-        self.currentImage = 0
-        self.action = ''
-        self.framesSwitch = {'up': images['walkingFramesUp'],
-                             'down': images['walkingFramesDown'],
-                             'left': images['walkingFramesLeft'],
-                             'right': images['walkingFramesRight']}
-        self.actionSwitch = {'up': self.move_up,
-                             'down': self.move_down,
-                             'left': self.move_left,
-                             'right': self.move_right}
 
     def __getitem__(self):
         """Renvoi le score du joueur"""
@@ -85,7 +88,7 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, obstacles_list):
         """Actualisation du joueur"""
-        if self.is_feeding: # si le joueur est en train de manger, ne l'affiche pas
+        if self.is_feeding:  # si le joueur est en train de manger, ne l'affiche pas
             self.image = None
         else:
             self.collide_window_side()

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from sprites import *
 from character import *
-from constants import *
 
 
 class PNJ(object):
@@ -10,6 +8,7 @@ class PNJ(object):
         self.enemy_list = pygame.sprite.Group()
         self.zombie_list = pygame.sprite.Group()
         self.feeding_zombie_list = pygame.sprite.Group()
+
         self.main = main
         self.level = level
         self.init_pnj(start_enemy_list)
@@ -49,9 +48,9 @@ class PNJ(object):
             for enemy in enemy_hit_list:
                 print('[*] Rect Collide - Player')
                 if pygame.sprite.collide_mask(self.main.player, enemy) is not None:
-                    if not enemy.underAttack and not self.main.player.is_feeding:
+                    if not enemy.is_under_attack and not self.main.player.is_feeding:
                         print('[*] Mask Collide - Player')
-                        enemy.is_under_attack(self.main.player)
+                        enemy.under_attack(self.main.player)
                         self.main.player.is_feeding = True
 
         # Collsision avec les autres zombies
@@ -61,20 +60,20 @@ class PNJ(object):
                 for enemy in enemy_hit_list:
                     print('[*] Rect Collide - Zombie')
                     if pygame.sprite.collide_mask(zombie, enemy) is not None:
-                        if not enemy.underAttack and not zombie.is_feeding:
+                        if not enemy.is_under_attack and not zombie.is_feeding:
                             print('[*] Mask Collide - Zombie')
-                            enemy.is_under_attack(zombie)
+                            enemy.under_attack(zombie)
                             zombie.is_feeding = True
 
     def update(self, obsctacles_list):
         """met les pnj a jour"""
         for enemy in self.enemy_list:
-            if not enemy.isAlive:
+            if not enemy.is_alive:
                 print('[*] Remove Humain')
                 self.enemy_list.remove(enemy)
 
         for zombie in self.zombie_list:
-            if not zombie.isAlive:
+            if not zombie.is_alive:
                 print('[*] Remove Zombie')
                 self.zombie_list.remove(zombie)
 
@@ -130,7 +129,7 @@ class Object(pygame.sprite.Sprite):
         self.name = name
         self.pos = pos
 
-        self.image = main.obstacles[name]
+        self.image = main.obstacles_images[name]
 
         self.rect = self.image.get_rect()
         self.rect.x = self.pos[0]
