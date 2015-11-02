@@ -28,7 +28,3 @@ class SpriteSheet(object):
         image.blit(img, (0, 0), (x, y, width, height))
         image.set_colorkey((0, 0, 0))
         return image
-
-    def load_image(self, img):
-        img = pygame.image.load(img)
-        return img

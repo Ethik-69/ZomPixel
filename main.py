@@ -32,8 +32,6 @@ class Game(object):
         self.run = None
         self.levels = None
         self.credit = None
-        self.score_image = None
-        self.game_over_image = None
         self.click_pos_x = None
         self.click_pos_y = None
         self.is_display_score = None
@@ -42,8 +40,16 @@ class Game(object):
         self.obstacles_collided = None
         self.is_mouse_button_down = False
 
-        self.game_background_image = None
-        self.welcome_background_image = None
+        self.hud_font = None
+        self.test_font0 = None
+        self.welcome_font0 = None
+        self.welcome_font1 = None
+        self.final_score_font = None
+
+        self.sprite_sheet = SpriteSheet()
+        self.game_images = {}  # Dictionnaire contenant les images (autre que celles des personnages)
+        self.character_images = constants.character_images
+        self.obstacles = {}
 
         self.button_next_level = None
         self.button_accueil = None
@@ -70,7 +76,7 @@ class Game(object):
         """Boucle de l'ecran d'accueil"""
         print('[*] Title Screen Init')
         title_screen = True
-        self.background.blit(self.welcome_background_image, (0, 0))
+        self.background.blit(self.game_images['welcome_background_image'], (0, 0))
         button_start = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.7, 609, 280, 106])
         button_question_mark = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/1.14, 625, 75, 75])
 
@@ -103,10 +109,12 @@ class Game(object):
         """Initialise et pose sur le fond les texts de l'ecran d'aide"""
         self.text_blit(self.welcome_font1, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 50))
         self.text_blit(self.final_score_font, "But: Manger les citoyens en moins de 30 secondes !", (100, 20, 20), (self.background.get_width()/2, 150))
-        self.text_blit(self.final_score_font, "Si vous mangez un citoyen: +2 point", (100, 20, 20), (self.background.get_width()/2, 250))
-        self.text_blit(self.final_score_font, "Si l'un de vos zompie mange un citoyen: +1 point", (100, 20, 20), (self.background.get_width()/2, 350))
-        self.text_blit(self.final_score_font, "Cliquez pour deplacer le zompie principal", (100, 20, 20), (self.background.get_width()/2, 450))
-        self.text_blit(self.final_score_font, "Le niveau  zero vous servira d'entrainement ;)", (100, 20, 20), (self.background.get_width()/2, 550))
+        self.text_blit(self.final_score_font, "Si vous mangez un citoyen: +2 points.", (100, 20, 20), (self.background.get_width()/2, 200))
+        self.text_blit(self.final_score_font, "Si l'un de vos zompies mange un citoyen: +1 point.", (100, 20, 20), (self.background.get_width()/2, 250))
+        self.text_blit(self.final_score_font, "Cliquez pour deplacer le zompie principal.", (100, 20, 20), (self.background.get_width()/2, 300))
+        self.text_blit(self.final_score_font, "Ou restez appuyer, il suivra votre souris.", (100, 20, 20), (self.background.get_width()/2, 350))
+        self.text_blit(self.final_score_font, "Les bouches d'egouts sont des pieges mortel.", (100, 20, 20), (self.background.get_width()/2, 400))
+        self.text_blit(self.final_score_font, "Le niveau zero vous servira d'entrainement ;)", (100, 20, 20), (self.background.get_width()/2, 450))
         self.text_blit(self.final_score_font, "Facebook: ZompiGame", (100, 20, 20), (self.background.get_width()/2, 650))
         self.text_blit(self.welcome_font1, "Retour", (100, 20, 20), (self.background.get_width()/2, 700))
 
@@ -148,10 +156,7 @@ class Game(object):
         self.time = Times()
         self.clock = pygame.time.Clock()
 
-        self.welcome_background_image = pygame.image.load('data/img/title_screen.png').convert()
-        self.score_image = pygame.image.load('data/img/score_background0.png')
-        self.game_over_image = pygame.image.load('data/img/game_over_background.png')
-        self.skull_image = pygame.image.load('data/img/objets/skull.png')
+        self.load_all_images()
 
         self.create_player()
         self.levels = Levels(self)
@@ -175,11 +180,72 @@ class Game(object):
         self.window.blit(self.background, (0, 0))
         pygame.display.flip()
 
+    def load_all_images(self):
+        # Game images
+        self.game_images['welcome_background_image'] = pygame.image.load('data/img/title_screen.png').convert()
+        self.game_images['score_image'] = pygame.image.load('data/img/score_background0.png')
+        self.game_images['game_over_image'] = pygame.image.load('data/img/game_over_background.png')
+        self.game_images['skull_image'] = pygame.image.load('data/img/objets/skull.png')
+
+        # Characters images
+        self.sprite_sheet.set_img(constants.player_img)
+        self.character_images['player'] = self.get_frames(self.character_images['player'], 'player')
+
+        self.sprite_sheet.set_img(constants.npc['citizen']['img'])
+        self.character_images['citizen'] = self.get_frames(self.character_images['citizen'], 'citizen')
+
+        self.sprite_sheet.set_img(constants.npc['punk']['img'])
+        self.character_images['punk'] = self.get_frames(self.character_images['punk'], 'punk')
+
+        self.sprite_sheet.set_img(constants.npc['citizen']['zombie_img'])
+        self.character_images['z_citizen'] = self.get_frames(self.character_images['z_citizen'], 'z_citizen')
+
+        self.sprite_sheet.set_img(constants.npc['punk']['zombie_img'])
+        self.character_images['z_punk'] = self.get_frames(self.character_images['z_punk'], 'z_punk')
+
+        # Objects images
+        for obstacle in constants.OBSTACLES:
+            self.obstacles[obstacle] = pygame.image.load(constants.OBSTACLES[obstacle])
+
+    def get_frames(self, character, name):
+        character['walkingFramesLeft'] = self.sprite_sheet.get_character_frames(character['walkingFramesLeft'],
+                                                                                constants.MOVING_SPRITE_X,
+                                                                                0, 75, 125)
+
+        character['walkingFramesRight'] = self.sprite_sheet.get_character_frames(character['walkingFramesRight'],
+                                                                                 constants.MOVING_SPRITE_X,
+                                                                                 0, 75, 125, True)
+
+        character['walkingFramesUp'] = self.sprite_sheet.get_character_frames(character['walkingFramesUp'],
+                                                                              constants.MOVING_SPRITE_X,
+                                                                              125, 75, 125)
+
+        character['walkingFramesDown'] = self.sprite_sheet.get_character_frames(character['walkingFramesDown'],
+                                                                                constants.MOVING_SPRITE_X,
+                                                                                250, 75, 125)
+
+        character['stopFrame'] = self.sprite_sheet.get_image(0, 375, self.width, self.height, self.sprite_sheet.sheet)
+
+        if name != 'player' and 'z_' not in name:
+            character['attack']['by_player'] = self.get_action_frames(constants.npc[name]['attack_by_player'])
+            character['attack']['by_citizen'] = self.get_action_frames(constants.npc[name]['attack_by_citizen'])
+            character['attack']['by_punk'] = self.get_action_frames(constants.npc[name]['attack_by_punk'])
+
+        return character
+
+    def get_action_frames(self, file_name):
+        frames = []
+        self.sprite_sheet.set_img(file_name)
+        frames = self.sprite_sheet.get_character_frames(frames,
+                                                        constants.DYING_SPRITE_X,
+                                                        0, 125, 125)
+        return frames
+
     def create_player(self):
         """Creation du joueur"""
         print('[*] Player Init')
         self.player_sprite = pygame.sprite.Group()
-        self.player = Player('player', 'character/player/zombie_sprite_sheet.png', 512, 354, self.width, self.height)
+        self.player = Player('player', self.character_images['player'], 512, 354, self.width, self.height)
         self.time.add_rebour('player')
         self.player_sprite.add(self.player)
         print('     - Ok')
@@ -225,7 +291,7 @@ class Game(object):
         time = self.time.chronos['current_level'].Time  # temp qu'a mis le joueur pour terminer le niveau
 
         # Pose l'image destinée au score
-        self.background.blit(self.score_image, (self.width/3, self.height/13))
+        self.background.blit(self.game_images['score_image'], (self.width/3, self.height/13))
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font, str(self.player.score) + " Points", (255, 255, 255), (self.width/2, self.height/1.8))
@@ -268,9 +334,9 @@ class Game(object):
     def init_game_over(self):
         print('[*] Init Game Over')
         # Pose l'image
-        self.background.blit(self.game_over_image, (self.width/6.6, self.height/3.5))
-        self.background.blit(self.skull_image, (self.width/3.15, self.height/2.1))
-        self.background.blit(self.skull_image, (self.width/1.55, self.height/2.1))
+        self.background.blit(self.game_images['game_over_image'], (self.width/6.6, self.height/3.5))
+        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/2.1))
+        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/2.1))
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font, "Vous etes definitivement", (255, 255, 255), (self.width/2, self.height/2.4))
@@ -288,9 +354,9 @@ class Game(object):
     def init_time_out(self):
         print('[*] Init Time Out')
         # Pose l'image
-        self.background.blit(self.game_over_image, (self.width/6.6, self.height/3.5))
-        self.background.blit(self.skull_image, (self.width/3.15, self.height/2.1))
-        self.background.blit(self.skull_image, (self.width/1.55, self.height/2.1))
+        self.background.blit(self.game_images['game_over_image'], (self.width/6.6, self.height/3.5))
+        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/2.1))
+        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/2.1))
 
         # Définit et pose les texts
         self.text_blit(self.welcome_font1, "Temps ecoule", (255, 255, 255), (self.width/2, self.height/2.3))
@@ -451,29 +517,17 @@ class Game(object):
             pygame.display.flip()
             self.clock.tick(100)
 
+
 if __name__ == '__main__':
-    # import cProfile
-    # cProfile.run('Game()')
-
-    # from pycallgraph import PyCallGraph
-    # from pycallgraph.output import GraphvizOutput
-
-    # with PyCallGraph(output=GraphvizOutput()):
     while True:
         print('[*] Game Object Init')
         game = Game()
-        if game:
-            game.start()
-        else:
-            break
+        game.start()
 
+    # NOTE: Collision objets désactivée
+    # TODO: Charger toute les images au debut (personnage Ok - attack Ok - Zombie Ok - Object Ok)
+    # TODO: Refacto __init__ !
+    # FIXME: Collision objets
     # TODO: TEST !! =D <= c'est cool les test !
-    # TODO: Charger toute les images au debut
-    # TODO: Refacto main
-    # TODO: Refacto character
-    # TODO: Refacto player
-    # TODO: Refacto levels
-    # TODO: Refacto sprites
-    # TODO: Refacto player
-    # TODO: Refacto manager
-
+    # TODO: boutons -> vrai boutons
+    # TODO: Refacto !

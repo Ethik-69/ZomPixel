@@ -45,12 +45,12 @@ class Character(pygame.sprite.Sprite):
         self.action = ''
 
     def init_move_images(self, images):
-        self.stopFrame = images['stopFrame']
-        self.image = images['stopFrame']
-        self.framesSwitch = {'up': images['walkingFramesUp'],
-                             'down': images['walkingFramesDown'],
-                             'left': images['walkingFramesLeft'],
-                             'right': images['walkingFramesRight']}
+            self.stopFrame = images['stopFrame']
+            self.image = images['stopFrame']
+            self.framesSwitch = {'up': images['walkingFramesUp'],
+                                 'down': images['walkingFramesDown'],
+                                 'left': images['walkingFramesLeft'],
+                                 'right': images['walkingFramesRight']}
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenetre"""
@@ -110,14 +110,15 @@ class Character(pygame.sprite.Sprite):
         else:
             self.image = self.stopFrame
 
+
 class Humain(Character):
     def __init__(self, main, name, pos, num):
         Character.__init__(self, main, name, pos, num)
         self.tick = 0
         self.allDyingFrames = {'player': main.character_images[name]['attack']['by_player'],
-                               'citizen': main.character_images[name]['attack']['by_citizen'],
-                               'punk': main.character_images[name]['attack']['by_punk']}
-        self.zombie_image = main.character_images[name]['zombie']
+                               'z_citizen': main.character_images[name]['attack']['by_citizen'],
+                               'z_punk': main.character_images[name]['attack']['by_punk']}
+        self.zombie_image = main.character_images['z_' + name]
         self.framesSwitch['self_devour'] = self.allDyingFrames
         self.iaActionSwitch = {1: 'up',
                                2: 'down',
@@ -155,9 +156,9 @@ class Humain(Character):
     def going_zombie(self):
         """Choisie si le citoyen se reveil en zombie"""
         rand = random.randint(0, 100)
-        if rand <= 50:
+        if rand <= 100:
             self.main.levels.current_level.pnj.add_zombie(self.main,
-                                                          self.name,
+                                                          'z_' + self.name,
                                                           (self.rect.x, self.rect.y),
                                                           self.num)
 
@@ -237,6 +238,6 @@ class Zombie(Character):
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collide_window_side()
-            self.obstacle_collide(obstacles_list)
+            # self.obstacle_collide(obstacles_list)
             self.update_current_image()
             self.select_frame()

@@ -8,11 +8,52 @@ Les constants utilisées pour le jeu:
 - Liste des niveaux
 """
 
+
 GAME_WIDTH = 1024
 GAME_HEIGHT = 768
 
+character_images = {'player': {'walkingFramesUp': [],
+                               'walkingFramesDown': [],
+                               'walkingFramesLeft': [],
+                               'walkingFramesRight': [],
+                               'stopFrame': []},
+                    'citizen': {'walkingFramesUp': [],
+                                'walkingFramesDown': [],
+                                'walkingFramesLeft': [],
+                                'walkingFramesRight': [],
+                                'stopFrame': [],
+                                'attack': {'by_player': [],
+                                           'by_citizen': [],
+                                           'by_punk': []}},
+                    'punk': {'walkingFramesUp': [],
+                             'walkingFramesDown': [],
+                             'walkingFramesLeft': [],
+                             'walkingFramesRight': [],
+                             'stopFrame': [],
+                             'attack': {'by_player': [],
+                                        'by_citizen': [],
+                                        'by_punk': []}},
+                    'z_citizen': {'walkingFramesUp': [],
+                                  'walkingFramesDown': [],
+                                  'walkingFramesLeft': [],
+                                  'walkingFramesRight': [],
+                                  'stopFrame': [],
+                                  'attack': {'by_player': [],
+                                             'by_citizen': [],
+                                             'by_punk': []}},
+                    'z_punk': {'walkingFramesUp': [],
+                               'walkingFramesDown': [],
+                               'walkingFramesLeft': [],
+                               'walkingFramesRight': [],
+                               'stopFrame': [],
+                               'attack': {'by_player': [],
+                                          'by_citizen': [],
+                                          'by_punk': []}}}
+
+
 MOVING_SPRITE_X = [0, 75, 150, 225, 300, 375, 450, 525, 600, 675, 750, 825]
 DYING_SPRITE_X = [0, 125, 250, 375, 500, 625, 750, 875, 1000, 1125, 1250, 1375]
+
 
 player_img = 'character/player/zombie_sprite_sheet.png'
 
@@ -30,20 +71,20 @@ npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
                 'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}}
 
 
-OBJECTS = {'manhole': "data/img/objets/manhole.png",
-           'bush': "data/img/objets/bush.png",
-           'blue_car': "data/img/objets/blue_car.png",
-           'police_car': "data/img/objets/police_car.png",
-           'yellow_car': "data/img/objets/yellow_car.png",
-           'cone': "data/img/objets/cone.png",
-           'tree': "data/img/objets/tree.png",
-           'working_fence_v': "data/img/objets/working_fence_v.png",
-           'working_fence_h': "data/img/objets/working_fence_h.png",
-           'fence': "data/img/objets/fence.png",
-           'bin': "data/img/objets/bin.png",
-           'skull': "data/img/objets/skull.png",
-           'bench': "data/img/objets/bench.png",
-           'phone_box': "data/img/objets/phone_box.png"}
+OBSTACLES = {'manhole': "data/img/objets/manhole.png",
+             'bush': "data/img/objets/bush.png",
+             'blue_car': "data/img/objets/blue_car.png",
+             'police_car': "data/img/objets/police_car.png",
+             'yellow_car': "data/img/objets/yellow_car.png",
+             'cone': "data/img/objets/cone.png",
+             'tree': "data/img/objets/tree.png",
+             'working_fence_v': "data/img/objets/working_fence_v.png",
+             'working_fence_h': "data/img/objets/working_fence_h.png",
+             'fence': "data/img/objets/fence.png",
+             'bin': "data/img/objets/bin.png",
+             'skull': "data/img/objets/skull.png",
+             'bench': "data/img/objets/bench.png",
+             'phone_box': "data/img/objets/phone_box.png"}
 
 
 LEVEL0 = {'number': 0,
@@ -55,6 +96,7 @@ LEVEL0 = {'number': 0,
                       'bin': [(800, 650)]},
           'pos_level': [0, -1536],
           'pos_player': [512, 354]}
+
 
 LEVEL1 = {'number': 1,
           'enemy': {(255, 568): 'citizen',
@@ -68,6 +110,7 @@ LEVEL1 = {'number': 1,
           'pos_level': [0, -1534],
           'pos_player': [512, 354]}
 
+
 LEVEL2 = {'number': 2,
           'enemy': {(255, 568): 'citizen',
                     (800, 468): 'citizen',
@@ -79,6 +122,7 @@ LEVEL2 = {'number': 2,
                       'bin': [(450, 640), (490, 640)]},
           'pos_level': [0, -1534],
           'pos_player': [512, 354]}
+
 
 LEVEL3 = {'number': 3,
           'enemy': {(255, 528): 'citizen',
@@ -97,6 +141,7 @@ LEVEL3 = {'number': 3,
           'pos_level': [0, -200],
           'pos_player': [512, 354]}
 
+
 LEVEL4 = {'number': 4,
           'enemy': {(255, 528): 'citizen',
                     (800, 468): 'citizen',
@@ -114,6 +159,7 @@ LEVEL4 = {'number': 4,
           'pos_level': [0, -1200],
           'pos_player': [512, 354]}
 
+
 LEVEL5 = {'number': 5,
           'enemy': {(255, 528): 'citizen',
                     (800, 468): 'citizen',
@@ -124,6 +170,7 @@ LEVEL5 = {'number': 5,
                       'bench': [(750, 320)]},
           'pos_level': [0, -768],
           'pos_player': [350, 150]}
+
 
 LEVEL6 = {'number': 6,
           'enemy': {(255, 328): 'citizen',
@@ -146,4 +193,5 @@ LEVEL6 = {'number': 6,
           'pos_level': [-1024, 0],
           'pos_player': [200, 600]}
 
-LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+LEVELS_LIST = [LEVEL3]
+# LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
