@@ -14,21 +14,20 @@ GAME_HEIGHT = 768
 MOVING_SPRITE_X = [0, 75, 150, 225, 300, 375, 450, 525, 600, 675, 750, 825]
 DYING_SPRITE_X = [0, 125, 250, 375, 500, 625, 750, 875, 1000, 1125, 1250, 1375]
 
-
-citizen = {'name': 'citizen',
-           'img': 'character/citizen/citizen_sprite_sheet.png',
-           'attack_by_player': 'character/citizen/citizen_attack_by_player.png',
-           'attack_by_citizen': 'character/citizen/citizen_attack_by_citizen.png',
-           'attack_by_punk': 'character/citizen/citizen_attack_by_punk.png',
-           'zombie_img': 'character/citizen/zombie_citizen_sprite_sheet.png'}
+player_img = 'character/player/zombie_sprite_sheet.png'
 
 
-punk = {'name': 'punk',
-        'img': 'character/punk/punk_sprite_sheet.png',
-        'attack_by_player': 'character/punk/punk_attack_by_player.png',
-        'attack_by_citizen': 'character/punk/punk_attack_by_citizen.png',
-        'attack_by_punk': 'character/punk/punk_attack_by_punk.png',
-        'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}
+# npc = Non-player character / Personnage non joueur
+npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
+                   'attack_by_player': 'character/citizen/citizen_attack_by_player.png',
+                   'attack_by_citizen': 'character/citizen/citizen_attack_by_citizen.png',
+                   'attack_by_punk': 'character/citizen/citizen_attack_by_punk.png',
+                   'zombie_img': 'character/citizen/zombie_citizen_sprite_sheet.png'},
+       'punk': {'img': 'character/punk/punk_sprite_sheet.png',
+                'attack_by_player': 'character/punk/punk_attack_by_player.png',
+                'attack_by_citizen': 'character/punk/punk_attack_by_citizen.png',
+                'attack_by_punk': 'character/punk/punk_attack_by_punk.png',
+                'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}}
 
 
 OBJECTS = {'manhole': "data/img/objets/manhole.png",
@@ -48,7 +47,7 @@ OBJECTS = {'manhole': "data/img/objets/manhole.png",
 
 
 LEVEL0 = {'number': 0,
-          'enemy': {(200, 350): citizen},
+          'enemy': {(200, 350): 'citizen'},
           'objects': {'manhole': [(300, 230)],
                       'blue_car': [(660, 220)],
                       'yellow_car': [(150, 510)],
@@ -58,8 +57,8 @@ LEVEL0 = {'number': 0,
           'pos_player': [512, 354]}
 
 LEVEL1 = {'number': 1,
-          'enemy': {(255, 568): citizen,
-                    (800, 468): citizen},
+          'enemy': {(255, 568): 'citizen',
+                    (800, 468): 'citizen'},
           'objects': {'manhole': [(300, 300)],
                       'blue_car': [(140, 520)],
                       'yellow_car': [(659, 220)],
@@ -70,9 +69,9 @@ LEVEL1 = {'number': 1,
           'pos_player': [512, 354]}
 
 LEVEL2 = {'number': 2,
-          'enemy': {(255, 568): citizen,
-                    (800, 468): citizen,
-                    (750, 690): punk},
+          'enemy': {(255, 568): 'citizen',
+                    (800, 468): 'citizen',
+                    (750, 690): 'punk'},
           'objects': {'manhole': [(151, 463)],
                       'bush': [],
                       'blue_car': [(660, 220)],
@@ -82,10 +81,10 @@ LEVEL2 = {'number': 2,
           'pos_player': [512, 354]}
 
 LEVEL3 = {'number': 3,
-          'enemy': {(255, 528): citizen,
-                    (800, 168): citizen,
-                    (750, 650): punk,
-                    (150, 630): punk},
+          'enemy': {(255, 528): 'citizen',
+                    (800, 168): 'citizen',
+                    (750, 650): 'punk',
+                    (150, 630): 'punk'},
           'objects': {'manhole': [(351, 300)],
                       'yellow_car': [(-75, 100)],
                       'bush': [(100, 620), (900, 620)],
@@ -99,10 +98,10 @@ LEVEL3 = {'number': 3,
           'pos_player': [512, 354]}
 
 LEVEL4 = {'number': 4,
-          'enemy': {(255, 528): citizen,
-                    (800, 468): citizen,
-                    (750, 650): punk,
-                    (150, 630): punk},
+          'enemy': {(255, 528): 'citizen',
+                    (800, 468): 'citizen',
+                    (750, 650): 'punk',
+                    (150, 630): 'punk'},
           'objects': {'manhole': [(300, 650)],
                       'bush': [(600, 150)],
                       'yellow_car': [(660, 550)],
@@ -116,10 +115,10 @@ LEVEL4 = {'number': 4,
           'pos_player': [512, 354]}
 
 LEVEL5 = {'number': 5,
-          'enemy': {(255, 528): citizen,
-                    (800, 468): citizen,
-                    (750, 650): punk,
-                    (150, 630): punk},
+          'enemy': {(255, 528): 'citizen',
+                    (800, 468): 'citizen',
+                    (750, 650): 'punk',
+                    (150, 630): 'punk'},
           'objects': {'bush': [(500, 350), (480, 450), (480, 550), (50, 700)],
                       'tree': [(150, 300), (480, 140), (850, 650)],
                       'bench': [(750, 320)]},
@@ -127,11 +126,11 @@ LEVEL5 = {'number': 5,
           'pos_player': [350, 150]}
 
 LEVEL6 = {'number': 6,
-          'enemy': {(255, 328): citizen,
-                    (800, 468): citizen,
-                    (750, 650): punk,
-                    (850, 130): punk,
-                    (150, 130): punk},
+          'enemy': {(255, 328): 'citizen',
+                    (800, 468): 'citizen',
+                    (750, 650): 'punk',
+                    (850, 130): 'punk',
+                    (150, 130): 'punk'},
           'objects': {'manhole': [(300, 100), (800, 500)],
                       'bush': [],
                       'blue_car': [],

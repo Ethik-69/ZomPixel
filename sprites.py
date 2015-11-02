@@ -8,9 +8,11 @@ class SpriteSheet(object):
     def __init__(self):
         self.sheet = None
 
-    def get_character_frames(self, walking_frames, x, y, width, height, file_name, flip=False):
+    def set_img(self, file_name):
+        self.sheet = pygame.image.load('data/img/' + file_name).convert()
+
+    def get_character_frames(self, walking_frames, x, y, width, height, flip=False):
         """Decoupe les frames demander"""
-        self.sheet = pygame.image.load(file_name).convert()
         for x in x:
             img = self.get_image(x, y, width, height, self.sheet)
             if flip:

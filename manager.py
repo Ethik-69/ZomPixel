@@ -24,11 +24,10 @@ class PNJ(object):
             pnj_num += 1
             print('.'),
 
-    def add_zombie(self, main, id_name, name, img, pos, num):
+    def add_zombie(self, main, name, pos, num):
         """Ajoute un nouveau zombie a la liste des zombie en 'vie' """
         print('[*] ' + name + ' Going Zombie')
-        init_value = {'id_name': id_name, 'img': img, 'name': name}
-        zombie = Zombie(main, init_value, pos, num)
+        zombie = Zombie(main, name, pos, num)
         self.zombie_list.add(zombie)
         print('[*] New Zombie')
 

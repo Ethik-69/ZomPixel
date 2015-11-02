@@ -6,71 +6,51 @@ from sprites import *
 
 
 class Character(pygame.sprite.Sprite):
-    def __init__(self, main, init_values, pos, num):
+    def __init__(self, main, name, pos, num):
         pygame.sprite.Sprite.__init__(self)
         self.main = main
         self.num = num
-        self.id_name = init_values['name'] + str(num)  # For chrono identification
-        self.name = init_values['name']
+        self.id_name = name + str(num)  # For chrono identification
+        self.name = name
         self.isAlive = True
         self.underAttack = False
         self.attacker = None
         self.spriteSheet = None
+        self.stopFrame = None
         self.main.time.add_rebour(self.id_name)
-        self.imgName = init_values['img']
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
-        self.walkingFramesUp = []
-        self.walkingFramesDown = []
-        self.walkingFramesRight = []
-        self.walkingFramesLeft = []
-        self.get_frame()
-        self.image = self.stopFrame
+
+        self.image = None
+        self.framesSwitch = None
+        self.actionSwitch = None
+
+        self.init_move_images(main.character_images[name])
+
         self.rect = self.image.get_rect()
         # self.rect = self.rect.inflate(0, 0)
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos[0]
         self.rect.y = pos[1]
-        self.timeTarget = 20  # temp entre chaque frame
-        self.timeNum = 0
-        self.currentImage = 0
-        self.action = ''
-        self.framesSwitch = {'up': self.walkingFramesUp,
-                             'down': self.walkingFramesDown,
-                             'left': self.walkingFramesLeft,
-                             'right': self.walkingFramesRight}
+
         self.actionSwitch = {'up': self.move_up,
                              'down': self.move_down,
                              'left': self.move_left,
                              'right': self.move_right}
 
-    def get_frame(self):
-        """Charge les frames des personnages"""
-        self.spriteSheet = SpriteSheet()
+        self.timeTarget = 20  # temp entre chaque frame
+        self.timeNum = 0
+        self.currentImage = 0
+        self.action = ''
 
-        self.walkingFramesLeft = self.spriteSheet.get_character_frames(self.walkingFramesLeft,
-                                                                       constants.MOVING_SPRITE_X,
-                                                                       0, 75, 125,
-                                                                       'data/img/' + self.imgName)
-
-        self.walkingFramesRight = self.spriteSheet.get_character_frames(self.walkingFramesRight,
-                                                                        constants.MOVING_SPRITE_X,
-                                                                        0, 75, 125,
-                                                                        'data/img/' + self.imgName,
-                                                                        True)
-
-        self.walkingFramesDown = self.spriteSheet.get_character_frames(self.walkingFramesDown,
-                                                                       constants.MOVING_SPRITE_X,
-                                                                       250, 75, 125,
-                                                                       'data/img/' + self.imgName)
-
-        self.walkingFramesUp = self.spriteSheet.get_character_frames(self.walkingFramesUp,
-                                                                     constants.MOVING_SPRITE_X,
-                                                                     125, 75, 125,
-                                                                     'data/img/' + self.imgName)
-
-        self.stopFrame = self.spriteSheet.get_image(0, 375, self.width, self.height, 'data/img/' + self.imgName, True)
+    def init_move_images(self, images):
+        self.stopFrame = images['stopFrame']
+        self.image = images['stopFrame']
+        self.framesSwitch = {'up': images['walkingFramesUp'],
+                             'down': images['walkingFramesDown'],
+                             'left': images['walkingFramesLeft'],
+                             'right': images['walkingFramesRight']}
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenetre"""
@@ -130,49 +110,20 @@ class Character(pygame.sprite.Sprite):
         else:
             self.image = self.stopFrame
 
-
 class Humain(Character):
-    def __init__(self, main, init_values, pos, num):
-        Character.__init__(self, main, init_values, pos, num)
+    def __init__(self, main, name, pos, num):
+        Character.__init__(self, main, name, pos, num)
         self.tick = 0
-        self.img_attack_by_player = init_values['attack_by_player']
-        self.img_attack_by_citizen = init_values['attack_by_citizen']
-        self.img_attack_by_punk = init_values['attack_by_punk']
-        self.spriteSheet = None
-        self.dyingFrames = []
-        self.allDyingFrames = {}
-        self.zombie_image = init_values['zombie_img']
-        self.get_actions_frames()
+        self.allDyingFrames = {'player': main.character_images[name]['attack']['by_player'],
+                               'citizen': main.character_images[name]['attack']['by_citizen'],
+                               'punk': main.character_images[name]['attack']['by_punk']}
+        self.zombie_image = main.character_images[name]['zombie']
         self.framesSwitch['self_devour'] = self.allDyingFrames
         self.iaActionSwitch = {1: 'up',
                                2: 'down',
                                3: 'left',
                                4: 'right',
                                5: ''}
-
-    def get_actions_frames(self):
-        """Recupère les frames des actions"""
-        self.spriteSheet = SpriteSheet()
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
-                                                                 constants.DYING_SPRITE_X,
-                                                                 0, 125, 125,
-                                                                 'data/img/' + self.img_attack_by_citizen)
-        self.allDyingFrames['citizen'] = self.dyingFrames
-        self.dyingFrames = []
-
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
-                                                                 constants.DYING_SPRITE_X,
-                                                                 0, 125, 125,
-                                                                 'data/img/' + self.img_attack_by_player)
-        self.allDyingFrames['player'] = self.dyingFrames
-        self.dyingFrames = []
-
-        self.dyingFrames = self.spriteSheet.get_character_frames(self.dyingFrames,
-                                                                 constants.DYING_SPRITE_X,
-                                                                 0, 125, 125,
-                                                                 'data/img/' + self.img_attack_by_punk)
-        self.allDyingFrames['punk'] = self.dyingFrames
-        self.dyingFrames = []
 
     def is_under_attack(self, attacker):
         """Initialise le fait que le pnj en prend plein la tronche"""
@@ -206,9 +157,7 @@ class Humain(Character):
         rand = random.randint(0, 100)
         if rand <= 50:
             self.main.levels.current_level.pnj.add_zombie(self.main,
-                                                          self.id_name,
                                                           self.name,
-                                                          self.zombie_image,
                                                           (self.rect.x, self.rect.y),
                                                           self.num)
 
@@ -238,14 +187,14 @@ class Humain(Character):
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
         self.collide_window_side()
-        self.obstacle_collide(obstacles_list)
+        # self.obstacle_collide(obstacles_list)
         self.update_current_image()
         self.select_frame()
 
 
 class Zombie(Character):
-    def __init__(self, main, init_values, pos, num):
-        Character.__init__(self, main, init_values, pos, num)
+    def __init__(self, main, name, pos, num):
+        Character.__init__(self, main, name, pos, num)
         self.tick = 0
         self.is_feeding = False
         self.main.time.rebours[self.id_name].start([00, 10, 00]) # x temp de vie (H:M:S)
