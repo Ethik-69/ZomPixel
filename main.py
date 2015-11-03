@@ -30,7 +30,7 @@ class Game(object):
         self.frameRate = 0
 
         self.player = None
-        self.player_sprite = pygame.sprite.Group()
+        self.player_sprite = None
 
         self.run = None
         self.time = None
@@ -264,7 +264,7 @@ class Game(object):
                                                                                 constants.MOVING_SPRITE_X,
                                                                                 250, 75, 125)
 
-        character['stopFrame'] = self.sprite_sheet.get_image(0, 375, self.width, self.height, self.sprite_sheet.sheet)
+        character['stopFrame'] = self.sprite_sheet.get_image(0, 375, 75, 125, self.sprite_sheet.sheet)
 
         if name != 'player' and 'z_' not in name:
             character['attack']['by_player'] = self.get_action_frames(constants.npc[name]['attack_by_player'])

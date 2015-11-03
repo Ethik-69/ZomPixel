@@ -179,7 +179,7 @@ class Humain(Character):
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
         self.collide_window_side()
-        # self.obstacle_collide(obstacles_list)
+        self.obstacle_collide(obstacles_list)
         self.update_current_image()
         self.select_frame()
 

@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)  # pour les tests de collision pixel/pixel
         self.rect.x = x
         self.rect.y = y
+        print('player rect size ', self.rect.size, '------------------')
 
     def __getitem__(self):
         """Renvoi le score du joueur"""
@@ -92,7 +93,7 @@ class Player(pygame.sprite.Sprite):
             self.image = None
         else:
             self.collide_window_side()
-            # self.obstacle_collide(obstacles_list)
+            self.obstacle_collide(obstacles_list)
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.timeNum += 1
             if self.timeNum == self.timeTarget:

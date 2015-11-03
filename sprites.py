@@ -21,10 +21,8 @@ class SpriteSheet(object):
         return walking_frames
 
     @staticmethod
-    def get_image(x, y, width, height, img, solo_use=False):
+    def get_image(x, y, width, height, img):
         """Découpe l'image demander"""
-        if solo_use:
-            img = pygame.image.load(img).convert()
         image = pygame.Surface((width, height)).convert()
         image.blit(img, (0, 0), (x, y, width, height))
         image.set_colorkey((0, 0, 0))
