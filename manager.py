@@ -45,9 +45,7 @@ class PNJ(object):
         # Collision avec le joueur
         if not self.main.player.is_feeding:
             enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)
-            print(enemy_hit_list)
             for enemy in enemy_hit_list:
-                print('[*] Rect Collide - Player -> ' + enemy.id_name)
                 if pygame.sprite.collide_mask(self.main.player, enemy) is not None:
                     if not enemy.is_under_attack and not self.main.player.is_feeding:
                         print('[*] Mask Collide - Player')
@@ -59,7 +57,6 @@ class PNJ(object):
             if not zombie.is_feeding:
                 enemy_hit_list = pygame.sprite.spritecollide(zombie, self.enemy_list, False)
                 for enemy in enemy_hit_list:
-                    print('[*] Rect Collide - Zombie -> ' + enemy.id_name)
                     if pygame.sprite.collide_mask(zombie, enemy) is not None:
                         if not enemy.is_under_attack and not zombie.is_feeding:
                             print('[*] Mask Collide - Zombie')
@@ -111,11 +108,19 @@ class Obstacles(object):
         Remplacés par [image, rect] correspondantent juste en dessous
         """
         self.main = main
+        self.tree = False
         self.objects_list = pygame.sprite.Group()
 
     def create_all(self, objects_pos):
         """Créer tout les obstacles"""
         for key in objects_pos.keys():
+            #if key == 'fence' and not self.tree:
+            #    pass
+            #if key == 'tree':
+            #    obstacle = Object(self.main, 'fence', objects_pos['fence'])
+            #    obstacle.display()
+            #    self.objects_list.add(obstacle)
+
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, pos)
                 obstacle.display()

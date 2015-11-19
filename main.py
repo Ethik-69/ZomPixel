@@ -138,7 +138,7 @@ class Game(object):
                        (100, 20, 20), (self.background.get_width()/2, 350))
 
         self.text_blit(self.final_score_font,
-                       "Les bouches d'egouts sont des pieges mortel.",
+                       "Les bouches d'egouts sont des pieges mortels.",
                        (100, 20, 20), (self.background.get_width()/2, 400))
 
         self.text_blit(self.final_score_font,
@@ -196,9 +196,11 @@ class Game(object):
         self.create_player()
         self.levels = Levels(self)
         self.levels.init_level()
-        self.title_screen()
+        # self.title_screen()
+        self.main()
 
     def font_init(self):
+        print('[*] Load Font')
         # Font pour l'acceuil
         self.welcome_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
         self.welcome_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 55)
@@ -220,6 +222,7 @@ class Game(object):
 
     def load_all_images(self):
         # Game images
+        print('[*] Load Game Images')
         self.game_images['map'] = pygame.image.load('data/img/map.png').convert()
         self.game_images['welcome_background_image'] = pygame.image.load('data/img/title_screen.png').convert()
         self.game_images['score_image'] = pygame.image.load('data/img/score_background0.png')
@@ -228,6 +231,7 @@ class Game(object):
         self.game_images['hud'] = pygame.image.load('data/img/hud.png')
 
         # Characters images
+        print('[*] Load PNJ Images')
         self.sprite_sheet.set_img(constants.player_img)
         self.character_images['player'] = self.get_frames(self.character_images['player'], 'player')
 
@@ -244,6 +248,7 @@ class Game(object):
         self.character_images['z_punk'] = self.get_frames(self.character_images['z_punk'], 'z_punk')
 
         # Objects images
+        print('[*] Load Obstacles Images')
         for obstacle in constants.OBSTACLES:
             self.obstacles_images[obstacle] = pygame.image.load(constants.OBSTACLES[obstacle])
 
@@ -323,7 +328,7 @@ class Game(object):
         if self.click_pos_x is None and self.click_pos_y is None:
             self.player.action = ''
 
-    # --------------Level end----------------
+    # ------------Fin de niveau--------------
 
     def init_score_screen(self):
         """Initialisation de l'affichage du score en fin de niveau"""
@@ -576,9 +581,19 @@ class Game(object):
             self.display_hud()
             self.levels.current_level.pnj.draw()
 
+            # Test---------------------------------------------
+            for pnj in self.levels.current_level.pnj.enemy_list:
+                pygame.draw.rect(self.window, (0, 0, 0), pnj.collision_rect)
+
+            for pnj in self.levels.current_level.pnj.zombie_list:
+                pygame.draw.rect(self.window, (0, 0, 0), pnj.collision_rect)
+            # -----------------------------------------------
+
             # Si le joueur mange, ne l'affiche pas
             if not self.player.is_feeding:
                 self.player_sprite.draw(self.window)
+                # pygame.draw.rect(self.window, (255, 255, 255), self.player.rect)
+                pygame.draw.rect(self.window, (0, 0, 0), self.player.collision_rect)
 
             # -----------------------Change Lvl------------------------
 
@@ -607,8 +622,12 @@ if __name__ == '__main__':
         game = Game()
         game.start()
 
-    # NOTE: Collision objets désactivée
-    # FIXME: Collision objets
+    # TODO: collision, rect plus petit pour pouvoir passer deriere les objets
+    # TODO: circle collision pour les citoyen 'fou' une fois près d'un zombie
     # TODO: TEST !! =D <= c'est cool les test !
     # TODO: boutons -> vrai boutons
     # TODO: Refacto !
+    # TODO: Recherche 'IA'
+
+    # RETOUR: - Plus nerveux
+        #     - Amélioration collision

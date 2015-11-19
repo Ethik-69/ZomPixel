@@ -39,9 +39,14 @@ class Character(pygame.sprite.Sprite):
                              'right': main.character_images[name]['walkingFramesRight']}
 
         self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+
+        self.collision_rect = self.image.get_rect()
+        self.collision_rect.inflate_ip(-5, -80)
+        self.collision_rect.center = (self.rect.x + 37, self.rect.y + 95)
+
+        self.mask = pygame.mask.from_surface(self.image)
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenetre"""
@@ -157,20 +162,22 @@ class Humain(Character):
         if not self.is_under_attack:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
-                print('[*] Enemy Collide Object')
-                if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
-                    self.action = 'left'
-                    self.actionSwitch[self.action]()
-                elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
-                    self.action = 'right'
-                    self.actionSwitch[self.action]()
-                    
-                if self.rect.y <= obstacle.rect.y and self.moveY > 0:  # vas vers le haut
-                    self.action = 'up'
-                    self.actionSwitch[self.action]()
-                elif self.rect.y >= obstacle.rect.y and self.moveY < 0:  # vas vers le bas
-                    self.action = 'down'
-                    self.actionSwitch[self.action]()
+                print('[*] Enemy Near Object')
+                if self.collision_rect.colliderect(obstacle):
+                    print('[*] Enemy Collide Object')
+                    if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                        self.action = 'left'
+                        self.actionSwitch[self.action]()
+                    elif self.collision_rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                        self.action = 'right'
+                        self.actionSwitch[self.action]()
+
+                    if self.collision_rect.y <= obstacle.rect.y and self.moveY > 0:  # vas vers le haut
+                        self.action = 'up'
+                        self.actionSwitch[self.action]()
+                    elif self.collision_rect.y >= obstacle.rect.y and self.moveY < 0:  # vas vers le bas
+                        self.action = 'down'
+                        self.actionSwitch[self.action]()
 
     def update(self, obstacles_list):
         """Actualisation des citoyens"""
@@ -178,6 +185,7 @@ class Humain(Character):
         if not self.is_under_attack:
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
+            self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
         self.collide_window_side()
         self.obstacle_collide(obstacles_list)
         self.update_current_image()
@@ -205,20 +213,22 @@ class Zombie(Character):
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
             for obstacle in obstacles_collided:
-                print('[*] Zombie Collide Object')
-                if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
-                    self.action = 'left'
-                    self.actionSwitch[self.action]()
-                elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
-                    self.action = 'right'
-                    self.actionSwitch[self.action]()
+                print('[*] Zombie Near Object')
+                if self.collision_rect.colliderect(obstacle):
+                    print('[*] Zombie Collide Object')
+                    if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                        self.action = 'left'
+                        self.actionSwitch[self.action]()
+                    elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                        self.action = 'right'
+                        self.actionSwitch[self.action]()
 
-                if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
-                    self.action = 'down'
-                    self.actionSwitch[self.action]()
-                elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
-                    self.action = 'up'
-                    self.actionSwitch[self.action]()
+                    if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
+                        self.action = 'down'
+                        self.actionSwitch[self.action]()
+                    elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
+                        self.action = 'up'
+                        self.actionSwitch[self.action]()
 
     def update(self, obstacles_list):
         if self.main.time.rebours[self.id_name].isFinish:  # si le rebour principal est fini le zombie meur
@@ -228,7 +238,8 @@ class Zombie(Character):
         else:
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
+            self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
             self.collide_window_side()
-            # self.obstacle_collide(obstacles_list)
+            self.obstacle_collide(obstacles_list)
             self.update_current_image()
             self.select_frame()

@@ -70,17 +70,16 @@ npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
                 'attack_by_punk': 'character/punk/punk_attack_by_punk.png',
                 'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}}
 
-
 OBSTACLES = {'manhole': "data/img/objets/manhole.png",
              'bush': "data/img/objets/bush.png",
              'blue_car': "data/img/objets/blue_car.png",
              'police_car': "data/img/objets/police_car.png",
              'yellow_car': "data/img/objets/yellow_car.png",
              'cone': "data/img/objets/cone.png",
+             'fence': "data/img/objets/fence.png",
              'tree': "data/img/objets/tree.png",
              'working_fence_v': "data/img/objets/working_fence_v.png",
              'working_fence_h': "data/img/objets/working_fence_h.png",
-             'fence': "data/img/objets/fence.png",
              'bin': "data/img/objets/bin.png",
              'skull': "data/img/objets/skull.png",
              'bench': "data/img/objets/bench.png",
@@ -92,8 +91,9 @@ LEVEL0 = {'number': 0,
           'objects': {'manhole': [(300, 230)],
                       'blue_car': [(660, 220)],
                       'yellow_car': [(150, 510)],
-                      'tree': [(550, 50)],
-                      'bin': [(800, 650)]},
+                      'tree': [(500, 50)],
+                      'bin': [(800, 650)],
+                      'bench': [(100, 200)]},
           'pos_level': [0, -1536],
           'pos_player': [512, 354]}
 
@@ -147,10 +147,10 @@ LEVEL4 = {'number': 4,
                     (800, 468): 'citizen',
                     (750, 650): 'punk',
                     (150, 630): 'punk'},
-          'objects': {'manhole': [(300, 650)],
+          'objects': {'yellow_car': [(100, 230)],
                       'bush': [(600, 150)],
-                      'yellow_car': [(660, 550)],
                       'tree': [(100, 200), (700, 200)],
+                      'manhole': [(100, 260)],
                       'fence': [(-1, 295), (91, 295),
                                 (182, 295), (274, 295),
                                 (546, 295), (637, 295),
@@ -193,5 +193,5 @@ LEVEL6 = {'number': 6,
           'pos_level': [-1024, 0],
           'pos_player': [200, 600]}
 
-LEVELS_LIST = [LEVEL3]
-# LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+# LEVELS_LIST = [LEVEL4]
+LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]

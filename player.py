@@ -35,10 +35,14 @@ class Player(pygame.sprite.Sprite):
                              'right': images['walkingFramesRight']}
         self.image = self.stopFrame
         self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)  # pour les tests de collision pixel/pixel
         self.rect.x = x
         self.rect.y = y
-        print('player rect size ', self.rect.size, '------------------')
+
+        self.collision_rect = self.image.get_rect()
+        self.collision_rect.inflate_ip(-5, -80)
+        self.collision_rect.center = (self.rect.x + 37, self.rect.y + 95)
+
+        self.mask = pygame.mask.from_surface(self.image)  # pour les tests de collision pixel/pixel
 
     def __getitem__(self):
         """Renvoi le score du joueur"""
@@ -77,14 +81,16 @@ class Player(pygame.sprite.Sprite):
                     if pygame.sprite.collide_mask(self, obstacle):
                         self.dying = True
                         print('[*] Launch Game Over')
-                else:
-                    if self.rect.x <= obstacle.rect.x and self.moveX > 0:
+
+                elif self.collision_rect.colliderect(obstacle):
+                    print('[*] Player Collide Object')
+                    if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:
                         self.moveX = 0
-                    if self.rect.x >= obstacle.rect.x and self.moveX < 0:
+                    if self.collision_rect.x >= obstacle.rect.x and self.moveX < 0:
                         self.moveX = 0
-                    if self.rect.y <= obstacle.rect.y and self.moveY > 0:
+                    if self.collision_rect.y <= obstacle.rect.y and self.moveY > 0:
                         self.moveY = 0
-                    if self.rect.y >= obstacle.rect.y and self.moveY < 0:
+                    if self.collision_rect.y >= obstacle.rect.y and self.moveY < 0:
                         self.moveY = 0
 
     def update(self, obstacles_list):
@@ -95,6 +101,7 @@ class Player(pygame.sprite.Sprite):
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
             self.rect = self.rect.move([self.moveX, self.moveY])
+            self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
             self.timeNum += 1
             if self.timeNum == self.timeTarget:
                 self.timeNum = 0
