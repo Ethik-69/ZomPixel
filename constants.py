@@ -70,20 +70,25 @@ npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
                 'attack_by_punk': 'character/punk/punk_attack_by_punk.png',
                 'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}}
 
-OBSTACLES = {'manhole': "data/img/objets/manhole.png",
-             'bush': "data/img/objets/bush.png",
-             'blue_car': "data/img/objets/blue_car.png",
-             'police_car': "data/img/objets/police_car.png",
-             'yellow_car': "data/img/objets/yellow_car.png",
-             'cone': "data/img/objets/cone.png",
-             'fence': "data/img/objets/fence.png",
-             'tree': "data/img/objets/tree.png",
-             'working_fence_v': "data/img/objets/working_fence_v.png",
-             'working_fence_h': "data/img/objets/working_fence_h.png",
-             'bin': "data/img/objets/bin.png",
-             'skull': "data/img/objets/skull.png",
-             'bench': "data/img/objets/bench.png",
-             'phone_box': "data/img/objets/phone_box.png"}
+# Liste des objets
+# [0] = path
+# [1] = inflatexy pour modifier la taille du rect
+# [2] = .center pour modifier sont emplacement dans l'image
+
+OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (0, 0), (0, 0)],  # 0 car inutile -> collision pixel perfect
+             'bush': ["data/img/objets/bush.png", (-13, -13), (32, 32)],
+             'blue_car': ["data/img/objets/blue_car.png", (-10, -10), (113, 57)],
+             'police_car': ["data/img/objets/police_car.png", (-10, -10), (113, 57)],
+             'yellow_car': ["data/img/objets/yellow_car.png", (-10, -10), (113, 57)],
+             'cone': ["data/img/objets/cone.png", (-10, -30), (20, 35)],
+             'fence': ["data/img/objets/fence.png", (0, -37), (47, 41)],
+             'tree': ["data/img/objets/tree.png", (-120, -120), (70, 140)],
+             'working_fence_v': ["data/img/objets/working_fence_v.png", (-3, -4), (13, 47)],
+             'working_fence_h': ["data/img/objets/working_fence_h.png", (-3, -4), (47, 13)],
+             'bin': ["data/img/objets/bin.png", (-7, -30), (17, 40)],
+             'skull': ["data/img/objets/skull.png", (0, 0), (0, 0)],  # 0 car collision inutile
+             'bench': ["data/img/objets/bench.png", (-5, -5), (49, 15)],
+             'phone_box': ["data/img/objets/phone_box.png", (-5, -75), (30, 90)]}
 
 
 LEVEL0 = {'number': 0,
@@ -147,10 +152,10 @@ LEVEL4 = {'number': 4,
                     (800, 468): 'citizen',
                     (750, 650): 'punk',
                     (150, 630): 'punk'},
-          'objects': {'yellow_car': [(100, 230)],
+          'objects': {'yellow_car': [(660, 550)],
                       'bush': [(600, 150)],
                       'tree': [(100, 200), (700, 200)],
-                      'manhole': [(100, 260)],
+                      'manhole': [(200, 460)],
                       'fence': [(-1, 295), (91, 295),
                                 (182, 295), (274, 295),
                                 (546, 295), (637, 295),
@@ -193,5 +198,29 @@ LEVEL6 = {'number': 6,
           'pos_level': [-1024, 0],
           'pos_player': [200, 600]}
 
-# LEVELS_LIST = [LEVEL4]
-LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+
+TEST_LEVEL = {'number': 'T',
+              'enemy': {(255, 328): 'citizen',
+                        (800, 468): 'citizen',
+                        (750, 650): 'punk',
+                        (850, 130): 'punk',
+                        (150, 130): 'punk'},
+              'objects': {'manhole': [(50, 50)],
+                          'bush': [(50, 200)],
+                          'bench': [(50, 450)],
+                          'blue_car': [(50, 600)],
+                          'police_car': [],
+                          'yellow_car': [],
+                          'cone': [(900, 700)],
+                          'tree': [(300, 100)],
+                          'bin': [(300, 300)],
+                          'phone_box': [(500, 100)],
+                          'working_fence_h': [(700, 250)],
+                          'working_fence_v': [(700, 400)],
+                          'fence': [(500, 700)]},
+              'pos_level': [-1024, 0],
+              'pos_player': [512, 354]}
+
+
+LEVELS_LIST = [TEST_LEVEL]
+# LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]

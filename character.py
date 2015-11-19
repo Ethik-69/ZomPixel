@@ -163,7 +163,7 @@ class Humain(Character):
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
                 print('[*] Enemy Near Object')
-                if self.collision_rect.colliderect(obstacle):
+                if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Enemy Collide Object')
                     if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
                         self.action = 'left'
@@ -214,7 +214,7 @@ class Zombie(Character):
             obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
             for obstacle in obstacles_collided:
                 print('[*] Zombie Near Object')
-                if self.collision_rect.colliderect(obstacle):
+                if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Zombie Collide Object')
                     if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
                         self.action = 'left'

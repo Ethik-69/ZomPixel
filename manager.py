@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 from character import *
+import constants
 
 
 class PNJ(object):
@@ -140,6 +141,12 @@ class Object(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.pos[0]
         self.rect.y = self.pos[1]
+
+        self.collision_rect = self.image.get_rect()
+        self.collision_rect.x = self.rect.x
+        self.collision_rect.y = self.rect.y
+        self.collision_rect.inflate_ip(constants.OBSTACLES[name][1][0], constants.OBSTACLES[name][1][1])
+        self.collision_rect.center = (self.rect.x + constants.OBSTACLES[name][2][0], self.rect.y + constants.OBSTACLES[name][2][1])
 
         self.mask = pygame.mask.from_surface(self.image)
 

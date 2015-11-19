@@ -82,7 +82,7 @@ class Player(pygame.sprite.Sprite):
                         self.dying = True
                         print('[*] Launch Game Over')
 
-                elif self.collision_rect.colliderect(obstacle):
+                elif self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Player Collide Object')
                     if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:
                         self.moveX = 0

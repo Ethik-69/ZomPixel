@@ -250,7 +250,7 @@ class Game(object):
         # Objects images
         print('[*] Load Obstacles Images')
         for obstacle in constants.OBSTACLES:
-            self.obstacles_images[obstacle] = pygame.image.load(constants.OBSTACLES[obstacle])
+            self.obstacles_images[obstacle] = pygame.image.load(constants.OBSTACLES[obstacle][0])
 
     def get_frames(self, character, name):
         character['walkingFramesLeft'] = self.sprite_sheet.get_character_frames(character['walkingFramesLeft'],
@@ -581,12 +581,17 @@ class Game(object):
             self.display_hud()
             self.levels.current_level.pnj.draw()
 
-            # Test---------------------------------------------
+            # Test d'affichage des rect de collision (hitbox)
+
             for pnj in self.levels.current_level.pnj.enemy_list:
                 pygame.draw.rect(self.window, (0, 0, 0), pnj.collision_rect)
 
             for pnj in self.levels.current_level.pnj.zombie_list:
                 pygame.draw.rect(self.window, (0, 0, 0), pnj.collision_rect)
+
+            for object in self.levels.current_level.obstacles.objects_list:
+                pygame.draw.rect(self.window, (0, 0, 0), object.collision_rect)
+
             # -----------------------------------------------
 
             # Si le joueur mange, ne l'affiche pas
