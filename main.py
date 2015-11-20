@@ -587,7 +587,7 @@ class Game(object):
                 pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
             for pnj in self.levels.current_level.pnj.zombie_list:
-                pygame.draw.rect(self.window, (0, 0, 0), pnj.collision_rect)
+                pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
             for object in self.levels.current_level.obstacles.objects_list:
                 pygame.draw.rect(self.window, (0, 0, 0), object.collision_rect)
