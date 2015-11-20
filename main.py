@@ -583,21 +583,24 @@ class Game(object):
 
             # Test d'affichage des rect de collision (hitbox)
 
-            for pnj in self.levels.current_level.pnj.enemy_list:
-                pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
+            # for pnj in self.levels.current_level.pnj.enemy_list:
+            #     if pnj.is_crazy:
+            #         pygame.draw.rect(self.window, (255, 255, 255), pnj.hitbox_rect)
+            #     else:
+            #         pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
-            for pnj in self.levels.current_level.pnj.zombie_list:
-                pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
+            # for pnj in self.levels.current_level.pnj.zombie_list:
+            #     pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
-            for object in self.levels.current_level.obstacles.objects_list:
-                pygame.draw.rect(self.window, (0, 0, 0), object.collision_rect)
+            # for object in self.levels.current_level.obstacles.objects_list:
+            #     pygame.draw.rect(self.window, (0, 0, 0), object.collision_rect)
 
             # -----------------------------------------------
 
             # Si le joueur mange, ne l'affiche pas
             if not self.player.is_feeding:
                 self.player_sprite.draw(self.window)
-                pygame.draw.rect(self.window, (100, 10, 10), self.player.hitbox_rect)  # Test
+                # pygame.draw.rect(self.window, (100, 10, 10), self.player.hitbox_rect)  # Test
 
             # -----------------------Change Lvl------------------------
 

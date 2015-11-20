@@ -63,7 +63,7 @@ class Level(Levels):
     def start(self):
         """Re-initialise la position du joueur - re-initialise le fond - créer les obstacles et lance le chrono"""
         print('[*] Level Start')
-        self.main.player.rect.x, self.main.player.rect.y = self.pos_player_x, self.pos_player_y
+        self.main.player.reset(self.pos_player_x, self.pos_player_y)
 
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
         self.main.background.blit(self.hud_image, (-5, -2))

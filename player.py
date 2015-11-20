@@ -72,6 +72,12 @@ class Player(pygame.sprite.Sprite):
     def move_left(self):
         self.moveX = -1
 
+    def reset(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
+        self.collision_rect.center = (self.rect.x + 37, self.rect.y + 95)
+        self.hitbox_rect.center = (self.rect.x + 37, self.rect.y + 70)
+
     def collide_window_side(self):
         """Test de collision avec le bord de la fenêtre"""
         if self.rect.x <= self.width/2 and self.moveX < 0:
@@ -95,7 +101,6 @@ class Player(pygame.sprite.Sprite):
                         print('[*] Launch Game Over')
 
                 elif self.collision_rect.colliderect(obstacle.collision_rect):
-                    print('[*] Player Collide Object')
                     if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:
                         self.moveX = 0
                     if self.collision_rect.x >= obstacle.rect.x and self.moveX < 0:

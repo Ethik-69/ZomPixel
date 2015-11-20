@@ -20,6 +20,9 @@ class Character(pygame.sprite.Sprite):
 
         self.is_alive = True
         self.is_under_attack = False
+        self.is_circle_collide = False
+        self.is_crazy = False
+        self.max_tick = 50
         self.attacker = None
 
         self.action = ''
@@ -74,7 +77,7 @@ class Character(pygame.sprite.Sprite):
     def move_alea(self):
         """Choisi une direction aleatoire tout les x ticks"""
         self.tick += 1
-        if self.tick == 50:
+        if self.tick == self.max_tick:
             self.tick = 0
             rand = random.randint(1, 6)
             if rand > 5:
@@ -130,6 +133,24 @@ class Humain(Character):
                                4: 'right',
                                5: ''}
 
+    def become_crazy(self):
+        print('[*] ' + self.name + str(self.num) + ' Become Crazy')
+        self.is_crazy = True
+        self.max_tick = 20
+
+    def set_opposite_action(self):
+        print('[*] Set Opposite Action For ' + self.id_name)
+        if self.action == 'up':
+            self.action = 'down'
+        elif self.action == 'down':
+            self.action = 'up'
+        elif self.action == 'left':
+            self.action = 'right'
+        elif self.action == 'right':
+            self.action = 'left'
+        if self.action != '':
+            self.actionSwitch[self.action]()
+
     def under_attack(self, attacker):
         """Initialise le fait que le pnj en prend plein la tronche"""
         print('[*] ' + self.id_name + ' Is Under Attack')
@@ -141,21 +162,20 @@ class Humain(Character):
 
     def is_dying(self):
         """Mort du citoyen"""
-        if self.main.time.rebours[self.id_name].isFinish:
-            print('[*] ' + self.id_name + ' Is Dying')
-            self.is_alive = False
-            if self.attacker == self.main.player:
-                self.going_zombie()
-                self.main.player.score += 2
-                self.main.player.final_score += 2
-            else:
-                self.main.player.score += 1
-                self.main.player.final_score += 1
-            try:
-                self.attacker.is_feeding = False
-                self.attacker.image = self.attacker.stopFrame
-            except:
-                pass
+        print('[*] ' + self.id_name + ' Is Dying')
+        self.is_alive = False
+        if self.attacker == self.main.player:
+            self.going_zombie()
+            self.main.player.score += 2
+            self.main.player.final_score += 2
+        else:
+            self.main.player.score += 1
+            self.main.player.final_score += 1
+        try:
+            self.attacker.is_feeding = False
+            self.attacker.image = self.attacker.stopFrame
+        except:
+            pass
 
     def going_zombie(self):
         """Choisie si le citoyen se reveil en zombie"""
@@ -170,7 +190,6 @@ class Humain(Character):
         if not self.is_under_attack:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
-                print('[*] Enemy Near Object')
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Enemy Collide Object')
                     if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
@@ -189,7 +208,8 @@ class Humain(Character):
 
     def update(self, obstacles_list):
         """Actualisation des citoyens"""
-        self.is_dying()
+        if self.main.time.rebours[self.id_name].isFinish:
+            self.is_dying()
         if not self.is_under_attack:
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
@@ -212,6 +232,7 @@ class Zombie(Character):
                                3: 'left',
                                4: 'right',
                                5: ''}
+        self.radius = 200
 
     def dying(self):
         """Déclare le zombie mort"""
@@ -222,7 +243,6 @@ class Zombie(Character):
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
             for obstacle in obstacles_collided:
-                print('[*] Zombie Near Object')
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Zombie Collide Object')
                     if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche

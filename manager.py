@@ -38,18 +38,23 @@ class PNJ(object):
             self.zombie_list.remove(zombie)
         print('     - Ok')
 
-    def pnj_collide(self):
-        """
-        Tests de collisions
-        rectangle-rectangle puis au pixel près
-        """
-
-        # test circle collision
+    def player_circle_collide(self):
+        """Test circle collision"""
         for enemy in self.enemy_list:
-            if pygame.sprite.collide_circle(self.main.player, enemy):
-                print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+            if not enemy.is_under_attack:
+                if pygame.sprite.collide_circle(self.main.player, enemy):
+                    if not enemy.is_circle_collide:
+                        print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+                        enemy.set_opposite_action()
+                        enemy.is_circle_collide = True
+                    if not enemy.is_crazy:
+                        enemy.become_crazy()
 
-        # Collision avec le joueur
+                elif enemy.is_circle_collide:
+                    enemy.is_circle_collide = False
+
+    def player_collide(self):
+        """Collision avec le joueur"""
         if not self.main.player.is_feeding:
             enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)
             for enemy in enemy_hit_list:
@@ -59,7 +64,8 @@ class PNJ(object):
                         enemy.under_attack(self.main.player)
                         self.main.player.is_feeding = True
 
-        # Collsision avec les autres zombies
+    def zombie_collide(self):
+        """Collsision avec les autres zombies"""
         for zombie in self.zombie_list:
             if not zombie.is_feeding:
                 enemy_hit_list = pygame.sprite.spritecollide(zombie, self.enemy_list, False)
@@ -86,7 +92,9 @@ class PNJ(object):
             print('[*] Change Lvl => True')
             self.level.is_change_level = True
 
-        self.pnj_collide()
+        self.player_collide()
+        self.zombie_collide()
+        self.player_circle_collide()
         self.enemy_list.update(obsctacles_list)
         self.zombie_list.update(obsctacles_list)
 
