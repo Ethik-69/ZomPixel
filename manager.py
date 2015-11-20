@@ -43,6 +43,12 @@ class PNJ(object):
         Tests de collisions
         rectangle-rectangle puis au pixel près
         """
+
+        # test circle collision
+        for enemy in self.enemy_list:
+            if pygame.sprite.collide_circle(self.main.player, enemy):
+                print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+
         # Collision avec le joueur
         if not self.main.player.is_feeding:
             enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)

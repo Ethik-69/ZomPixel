@@ -34,14 +34,26 @@ class Player(pygame.sprite.Sprite):
                              'left': images['walkingFramesLeft'],
                              'right': images['walkingFramesRight']}
         self.image = self.stopFrame
+
+        # Rect de base
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
 
+        # Rect pour les collision avec les objets
         self.collision_rect = self.image.get_rect()
         self.collision_rect.inflate_ip(-5, -80)
         self.collision_rect.center = (self.rect.x + 37, self.rect.y + 95)
 
+        # Hitbox
+        self.hitbox_rect = self.image.get_rect()
+        self.hitbox_rect.inflate_ip(-5, -85)
+        self.hitbox_rect.center = (self.rect.x + 37, self.rect.y + 70)
+
+        # Pour les circle collisions
+        self.radius = 200
+
+        # Pour les collisions "pixel perfect"
         self.mask = pygame.mask.from_surface(self.image)  # pour les tests de collision pixel/pixel
 
     def __getitem__(self):
@@ -102,6 +114,7 @@ class Player(pygame.sprite.Sprite):
             self.obstacle_collide(obstacles_list)
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
+            self.hitbox_rect = self.hitbox_rect.move([self.moveX, self.moveY])
             self.timeNum += 1
             if self.timeNum == self.timeTarget:
                 self.timeNum = 0

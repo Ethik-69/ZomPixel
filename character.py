@@ -38,14 +38,22 @@ class Character(pygame.sprite.Sprite):
                              'left': main.character_images[name]['walkingFramesLeft'],
                              'right': main.character_images[name]['walkingFramesRight']}
 
+        # Rect de base
         self.rect = self.image.get_rect()
         self.rect.x = pos[0]
         self.rect.y = pos[1]
 
+        # Rect pour les collision avec les objets
         self.collision_rect = self.image.get_rect()
         self.collision_rect.inflate_ip(-5, -80)
         self.collision_rect.center = (self.rect.x + 37, self.rect.y + 95)
 
+        # Hitbox
+        self.hitbox_rect = self.image.get_rect()
+        self.hitbox_rect.inflate_ip(-5, -85)
+        self.hitbox_rect.center = (self.rect.x + 37, self.rect.y + 70)
+
+        # Pour les collisions "pixel perfect"
         self.mask = pygame.mask.from_surface(self.image)
 
     def collide_window_side(self):
@@ -186,6 +194,7 @@ class Humain(Character):
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
+            self.hitbox_rect = self.hitbox_rect.move([self.moveX, self.moveY])
         self.collide_window_side()
         self.obstacle_collide(obstacles_list)
         self.update_current_image()
@@ -239,6 +248,7 @@ class Zombie(Character):
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
+            self.hitbox_rect = self.hitbox_rect.move([self.moveX, self.moveY])
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
             self.update_current_image()
