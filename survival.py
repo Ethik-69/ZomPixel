@@ -35,24 +35,71 @@ class Survival(object):
 
         self.victims = 0
         self.run = None
+        self.levels = None
         self.click_pos_x = None
         self.click_pos_y = None
         self.enemy_hit_list = None
         self.obstacles_collided = None
+        self.is_map_choice_screen = None
 
         self.is_game_over = False
 
         self.create_player()
 
-        self.levels = Levels(self)
-        self.levels.init_survival_level()
-
-        self.main()
+        self.map_choice_screen()
 
     def text_blit(self, font, text, text_color, pos):
         text_to_blit = font.render(text, 1, text_color)
         text_to_blit_pos = text_to_blit.get_rect(centerx=pos[0], centery=pos[1])
         self.background.blit(text_to_blit, text_to_blit_pos)
+
+    def init_map_choice(self):
+        self.text_blit(self.final_score_font,
+                       "Choisissez une carte",
+                       (100, 20, 20), (self.background.get_width()/2, 100))
+
+        self.text_blit(self.welcome_font1,
+                       "Retour",
+                       (100, 20, 20), (self.background.get_width()/2, 700))
+
+        self.background.blit(self.game_images['map_choice_park'], (self.background.get_width()/1.8, 200))
+        self.background.blit(self.game_images['map_choice_street'], (self.background.get_width()/7, 200))
+
+    def map_choice_screen(self):
+        print('[*] Start Map Choice Screen')
+        self.is_map_choice_screen = True
+        self.background.fill((0, 0, 0))
+
+        button_back = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/2.7, 609, 280, 106])
+        button_park = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/1.8, 200, 300, 300])
+        button_street = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/7, 200, 300, 300])
+
+        self.init_map_choice()
+
+        self.window.blit(self.background, (0, 0))
+        pygame.display.flip()
+
+        while self.is_map_choice_screen:
+            mouse_xy = pygame.mouse.get_pos()
+            is_back = button_back.collidepoint(mouse_xy)
+            is_park = button_park.collidepoint(mouse_xy)
+            is_street = button_street.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_back:
+                    self.is_map_choice_screen = False
+                    print('[*] Leaving Suvival Mode')
+                    break
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_park:
+                    print('[*] Park Choice')
+                    self.main('park')
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_street:
+                    print('[*] Street Choice')
+                    self.main('street')
 
     def create_player(self):
         """Creation du joueur"""
@@ -161,8 +208,10 @@ class Survival(object):
         self.window.blit(score, (492, 14))
         self.window.blit(time, (878, 14))
 
-    def main(self):
-        print('[*] Launch Campagne')
+    def main(self, map_pos):
+        print('[*] Launch Survival')
+        self.levels = Levels(self)
+        self.levels.init_survival_level(map_pos)
         self.run = True
         self.levels.current_level.start()
 

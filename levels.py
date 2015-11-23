@@ -28,8 +28,8 @@ class Levels(object):
         self.current_level = Level(self.main, constants.LEVELS_LIST[self.current_level_number])
         print('[*] Generation Ok')
 
-    def init_survival_level(self):
-        self.current_level = SurvivalLevel(self.main)
+    def init_survival_level(self, map_pos):
+        self.current_level = SurvivalLevel(self.main, map_pos)
 
     def next_level(self):
         """Passe au niveau suivant"""
@@ -88,20 +88,20 @@ class Level(Levels):
 
 
 class SurvivalLevel(Levels):
-    def __init__(self, main):
+    def __init__(self, main, map_pos):
         Levels.__init__(self, main)
         self.is_game_over = False
         self.main = main
         self.max_pnj = 5  # Limite le nombre d'enemy
 
-        self.objects_pos = constants.SURVIVAL['objects']
+        self.objects_pos = constants.SURVIVAL[map_pos]['objects']
 
-        self.pos_x = constants.SURVIVAL['pos_map'][0]
-        self.pos_y = constants.SURVIVAL['pos_map'][1]
-        self.pos_player_x = constants.SURVIVAL['pos_player'][0]
-        self.pos_player_y = constants.SURVIVAL['pos_player'][1]
+        self.pos_x = constants.SURVIVAL[map_pos]['pos_map'][0]
+        self.pos_y = constants.SURVIVAL[map_pos]['pos_map'][1]
+        self.pos_player_x = constants.SURVIVAL[map_pos]['pos_player'][0]
+        self.pos_player_y = constants.SURVIVAL[map_pos]['pos_player'][1]
 
-        self.pnj = PNJ(self.main, constants.SURVIVAL['enemy'], self)
+        self.pnj = PNJ(self.main, constants.SURVIVAL[map_pos]['enemy'], self)
         
         self.main.time.add_chrono('survival')
         self.main.time.add_rebour('increase_pnj_number')

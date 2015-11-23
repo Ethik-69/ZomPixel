@@ -203,6 +203,8 @@ class TitleScreen(object):
         self.game_images['game_over_image'] = pygame.image.load('data/img/game_over_background.png')
         self.game_images['skull_image'] = pygame.image.load('data/img/objets/skull.png')
         self.game_images['hud'] = pygame.image.load('data/img/hud.png')
+        self.game_images['map_choice_park'] = pygame.image.load('data/img/survival_map_choice_park.png')
+        self.game_images['map_choice_street'] = pygame.image.load('data/img/survival_map_choice_street.png')
 
         # Characters images
         print('[*] Load PNJ Images')
@@ -268,11 +270,11 @@ if __name__ == '__main__':
         game.start()
 
     # TODO: if coli_rect.top > coli_rect_pnj.top: pnj.layer += 1
-    # TODO: mode survie avec deux maps au choix
-    # Modification du menu (img)
-    # Posibilité de choisir la carte (Rue ou Park)
-    # Une image de fin avec le temp et le score
-    # TODO: Passer devant et derriere les objets et les pnjs (layer)
+    # TODO: Passer devant et derriere les objets et les pnjs (layer) http://thepythongamebook.com/en:pygame:step016
+    # TODO: Modification du menu (img)
+    # pygame book example:
+    #   homing missiles / targeting (les zombie alliés suivent les citoyen)
+    #
     # TODO: boutons -> vrai boutons
     # TODO: Refacto !
     # TODO: Recherche 'IA'
