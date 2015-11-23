@@ -119,7 +119,7 @@ class SurvivalLevel(Levels):
         self.obstacles.create_all(self.objects_pos)
 
         self.main.time.chronos['survival'].start()
-        self.main.time.rebours['increase_pnj_number'].start([02, 00, 00])
+        self.main.time.rebours['increase_pnj_number'].start([00, 20, 00])
 
     def random_pos(self):
         rand = randint(1, 2)
@@ -134,11 +134,11 @@ class SurvivalLevel(Levels):
         if self.main.time.rebours['increase_pnj_number'].isFinish:
             self.max_pnj += 1
             self.main.victims -= 1 # hack pour que l'enemy en plus ne compte pas
-            self.main.time.rebours['increase_pnj_number'].start([00, 30, 00])
+            self.main.time.rebours['increase_pnj_number'].start([00, 20, 00])
         if len(self.pnj.enemy_list) < self.max_pnj:
             self.pnj.add_enemy(self.random_pos())
             self.main.victims += 1
         self.pnj.update(obstacles_list)
-        if self.main.time.chronos['survival'].Time == [00, 10, 00]:
+        if self.main.time.chronos['survival'].Time == [01, 00, 00]:
             print('[*] Time Out')
             self.main.display_game_over('Time Out')

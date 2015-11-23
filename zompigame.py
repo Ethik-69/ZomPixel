@@ -268,15 +268,9 @@ if __name__ == '__main__':
         game.start()
 
     # TODO: if coli_rect.top > coli_rect_pnj.top: pnj.layer += 1
-    # TODO: mode survie (enemy qui arrive indefiniment (+ temp en attendant les militaires)) avec deux maps au choix
-    # Mettre l'acceuil dans un fichier ---- A vérifier
-    # Mode actuel dans un autre --- A vérifier
-    # Nouveau fichier pour le mode survie --- En cours
-    # Gestion nombre de victimes
+    # TODO: mode survie avec deux maps au choix
     # Modification du menu (img)
     # Posibilité de choisir la carte (Rue ou Park)
-    # Des enemy qui arrive indéfiniment avec un temp (if len(pnj) < 10: create pnj)
-    #      //         //   de chaque cotés aléatoirement
     # Une image de fin avec le temp et le score
     # TODO: Passer devant et derriere les objets et les pnjs (layer)
     # TODO: boutons -> vrai boutons

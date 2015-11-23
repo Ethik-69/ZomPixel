@@ -107,6 +107,11 @@ class Survival(object):
         self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score),
                        (255, 255, 255), (self.width/2, self.height/1.8))
 
+        self.text_blit(self.final_score_font, 'Temp: ' + '%s:%s:%s' % (self.time.chronos['survival'].Time[0],
+                                                                       self.time.chronos['survival'].Time[1],
+                                                                       self.time.chronos['survival'].Time[2]),
+                       (255, 255, 255), (self.width/2, self.height/1.92))
+
         self.text_blit(self.final_score_font, 'Accueil',
                        (255, 255, 255), (self.width/2, self.height/1.435))
 
