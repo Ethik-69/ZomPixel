@@ -3,7 +3,6 @@
 from levels import *
 from time_made_home import *
 from player import *
-from character import *
 
 
 class Campagne(object):
@@ -47,7 +46,7 @@ class Campagne(object):
         self.create_player()
 
         self.levels = Levels(self)
-        self.levels.init_level()
+        self.levels.init_campagne_level()
         self.main()
 
     def text_blit(self, font, text, text_color, pos):

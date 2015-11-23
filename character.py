@@ -180,6 +180,7 @@ class Humain(Character):
     def going_zombie(self):
         """Choisie si le citoyen se reveil en zombie"""
         rand = random.randint(0, 100)
+        print(self.main)
         if rand <= 100:
             self.main.levels.current_level.pnj.add_zombie(self.main,
                                                           'z_' + self.name,

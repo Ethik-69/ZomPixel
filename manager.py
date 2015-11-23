@@ -12,16 +12,16 @@ class PNJ(object):
 
         self.main = main
         self.level = level
+        self.pnj_num = 0  # compteur pour différencier les pnj
         self.init_pnj(start_enemy_list)
 
     def init_pnj(self, enemy_data):
         """Initialise les Personnages Non Joueur"""
         print('     - PNJ Init in Progress')
-        pnj_num = 0  # compteur pour différencier les pnj
         for pos in enemy_data.keys():
-            new_enemy = Humain(self.main, enemy_data[pos], pos, pnj_num)
+            new_enemy = Humain(self.main, enemy_data[pos], pos, self.pnj_num)
             self.enemy_list.add(new_enemy)
-            pnj_num += 1
+            self.pnj_num += 1
             print('.'),
 
     def add_zombie(self, main, name, pos, num):
@@ -30,6 +30,11 @@ class PNJ(object):
         zombie = Zombie(main, name, pos, num)
         self.zombie_list.add(zombie)
         print('[*] New Zombie')
+
+    def add_enemy(self, pos):
+        new_enemy = Humain(self.main, 'citizen', pos, self.pnj_num)
+        self.enemy_list.add(new_enemy)
+        self.pnj_num += 1
 
     def remove_zombie(self):
         """Supprime tout les zombie restant en fin de niveau"""

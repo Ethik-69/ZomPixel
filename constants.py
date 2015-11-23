@@ -222,5 +222,16 @@ TEST_LEVEL = {'number': 'T',
               'pos_player': [512, 354]}
 
 
-# LEVELS_LIST = [TEST_LEVEL]
-LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+LEVELS_LIST = [LEVEL5]
+# LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+
+
+SURVIVAL = {'enemy': {(150, 120): 'citizen',
+                      (800, 468): 'citizen',
+                      (750, 650): 'citizen',
+                      (150, 630): 'citizen'},
+            'objects': {'bush': [(500, 350), (480, 450), (480, 550), (50, 700)],
+                        'tree': [(150, 300), (480, 140), (850, 650)],
+                        'bench': [(750, 320)]},
+            'pos_map': [0, -768],
+            'pos_player': [150, 120]}

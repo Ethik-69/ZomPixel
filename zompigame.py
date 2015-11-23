@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 import sys
 from campagne import *
+from survival import *
 __author__ = "Thibault, Romain -> images Ethan -> Code"
 
 try:
@@ -12,7 +13,7 @@ except ImportError, errmsg:
     sys.exit(1)
 
 
-class Game(object):
+class TitleScreen(object):
     """Class principal"""
     def __init__(self):
         pygame.init()
@@ -92,6 +93,7 @@ class Game(object):
                 elif event.type == MOUSEBUTTONDOWN and is_survival:
                     title_screen = False
                     print('[*] Launch Survival')
+                    survival = Survival(self)
                 elif event.type == MOUSEBUTTONDOWN and is_help:
                     self.help_screen()
 
@@ -172,7 +174,8 @@ class Game(object):
         self.font_init()
         self.loading_screen()
         self.load_all_images()
-        self.title_screen()
+        # self.title_screen()
+        survival = Survival(self)
 
     def font_init(self):
         print('[*] Load Font')
@@ -265,14 +268,15 @@ class Game(object):
 if __name__ == '__main__':
     while True:
         print('[*] Game Object Init')
-        game = Game()
+        game = TitleScreen()
         game.start()
 
     # TODO: if coli_rect.top > coli_rect_pnj.top: pnj.layer += 1
     # TODO: mode survie (enemy qui arrive indefiniment (+ temp en attendant les militaires)) avec deux maps au choix
     # Mettre l'acceuil dans un fichier ---- A vérifier
     # Mode actuel dans un autre --- A vérifier
-    # Nouveau fichier pour le mode survie
+    # Nouveau fichier pour le mode survie --- En cours
+    # Gestion nombre de victimes
     # Modification du menu (img)
     # Posibilité de choisir la carte (Rue ou Park)
     # Des enemy qui arrive indéfiniment avec un temp (if len(pnj) < 10: create pnj)
