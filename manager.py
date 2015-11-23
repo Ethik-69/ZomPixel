@@ -41,25 +41,23 @@ class PNJ(object):
     def player_circle_collide(self):
         """Test circle collision"""
         for enemy in self.enemy_list:
-            if not enemy.is_under_attack:
-                if pygame.sprite.collide_circle(self.main.player, enemy):
-                    if not enemy.is_circle_collide:
-                        print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
-                        enemy.set_opposite_action()
-                        enemy.is_circle_collide = True
-                    if not enemy.is_crazy:
-                        enemy.become_crazy()
+            if not enemy.is_under_attack and pygame.sprite.collide_circle(self.main.player, enemy):
+                if not enemy.is_circle_collide:
+                    print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+                    enemy.set_opposite_action()
+                    enemy.is_circle_collide = True
+                if not enemy.is_crazy:
+                    enemy.become_crazy()
 
-                elif enemy.is_circle_collide:
-                    enemy.is_circle_collide = False
+            elif enemy.is_circle_collide:
+                enemy.is_circle_collide = False
 
     def player_collide(self):
         """Collision avec le joueur"""
         if not self.main.player.is_feeding:
             enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)
             for enemy in enemy_hit_list:
-                if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect):
-                    if not enemy.is_under_attack and not self.main.player.is_feeding:
+                if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not self.main.player.is_feeding:
                         print('[*] Hitbox Collide - Player')
                         enemy.under_attack(self.main.player)
                         self.main.player.is_feeding = True
@@ -70,8 +68,7 @@ class PNJ(object):
             if not zombie.is_feeding:
                 enemy_hit_list = pygame.sprite.spritecollide(zombie, self.enemy_list, False)
                 for enemy in enemy_hit_list:
-                    if zombie.hitbox_rect.colliderect(enemy.hitbox_rect):
-                        if not enemy.is_under_attack and not zombie.is_feeding:
+                    if zombie.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not zombie.is_feeding:
                             print('[*] Mask Collide - Zombie')
                             enemy.under_attack(zombie)
                             zombie.is_feeding = True
@@ -138,8 +135,8 @@ class Obstacles(object):
 
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, pos)
-                obstacle.display()
                 self.objects_list.add(obstacle)
+        print('[*] Create Objects Ok')
 
 
 class Object(pygame.sprite.Sprite):

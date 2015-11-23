@@ -101,13 +101,13 @@ class Player(pygame.sprite.Sprite):
                         print('[*] Launch Game Over')
 
                 elif self.collision_rect.colliderect(obstacle.collision_rect):
-                    if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:
+                    if self.collision_rect.x <= obstacle.collision_rect.x and self.moveX > 0:
                         self.moveX = 0
-                    if self.collision_rect.x >= obstacle.rect.x and self.moveX < 0:
+                    if self.collision_rect.x >= obstacle.collision_rect.x and self.moveX < 0:
                         self.moveX = 0
-                    if self.collision_rect.y <= obstacle.rect.y and self.moveY > 0:
+                    if self.collision_rect.y <= obstacle.collision_rect.y and self.moveY > 0:
                         self.moveY = 0
-                    if self.collision_rect.y >= obstacle.rect.y and self.moveY < 0:
+                    if self.collision_rect.y >= obstacle.collision_rect.y and self.moveY < 0:
                         self.moveY = 0
 
     def update(self, obstacles_list):

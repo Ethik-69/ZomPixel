@@ -192,17 +192,17 @@ class Humain(Character):
             for obstacle in obstacles_collided:
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Enemy Collide Object')
-                    if self.collision_rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                    if self.collision_rect.x <= obstacle.collision_rect.x and self.moveX > 0:  # vas vers la gauche
                         self.action = 'left'
                         self.actionSwitch[self.action]()
-                    elif self.collision_rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                    elif self.collision_rect.x >= obstacle.collision_rect.x and self.moveX < 0:  # vas vers la droite
                         self.action = 'right'
                         self.actionSwitch[self.action]()
 
-                    if self.collision_rect.y <= obstacle.rect.y and self.moveY > 0:  # vas vers le haut
+                    if self.collision_rect.y <= obstacle.collision_rect.y and self.moveY > 0:  # vas vers le haut
                         self.action = 'up'
                         self.actionSwitch[self.action]()
-                    elif self.collision_rect.y >= obstacle.rect.y and self.moveY < 0:  # vas vers le bas
+                    elif self.collision_rect.y >= obstacle.collision_rect.y and self.moveY < 0:  # vas vers le bas
                         self.action = 'down'
                         self.actionSwitch[self.action]()
 
@@ -245,17 +245,17 @@ class Zombie(Character):
             for obstacle in obstacles_collided:
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Zombie Collide Object')
-                    if self.rect.x <= obstacle.rect.x and self.moveX > 0:  # vas vers la gauche
+                    if self.rect.x <= obstacle.collision_rect.x and self.moveX > 0:  # vas vers la gauche
                         self.action = 'left'
                         self.actionSwitch[self.action]()
-                    elif self.rect.x >= obstacle.rect.x and self.moveX < 0:  # vas vers la droite
+                    elif self.rect.x >= obstacle.collision_rect.x and self.moveX < 0:  # vas vers la droite
                         self.action = 'right'
                         self.actionSwitch[self.action]()
 
-                    if self.rect.y <= obstacle.rect.y and self.moveY < 0:  # vas vers le haut
+                    if self.rect.y <= obstacle.collision_rect.y and self.moveY < 0:  # vas vers le haut
                         self.action = 'down'
                         self.actionSwitch[self.action]()
-                    elif self.rect.y >= obstacle.rect.y and self.moveY > 0:  # vas vers le bas
+                    elif self.rect.y >= obstacle.collision_rect.y and self.moveY > 0:  # vas vers le bas
                         self.action = 'up'
                         self.actionSwitch[self.action]()
 

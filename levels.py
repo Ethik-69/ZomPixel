@@ -25,7 +25,6 @@ class Levels(object):
         print('[*] Generation in Progress')
         self.current_level = Level(self.main, constants.LEVELS_LIST[self.current_level_number])
         print('[*] Generation Ok')
-        print('[*] Return levels ', self)
 
     def next_level(self):
         """Passe au niveau suivant"""
@@ -38,6 +37,7 @@ class Levels(object):
             return False
         self.main.background.fill((0, 0, 0))
         self.init_level()
+        print('[*] Return levels ', self)
         return self  # pour que le current lvl du main change
 
 
@@ -57,7 +57,6 @@ class Level(Levels):
 
         print('[*] Init obj PNJ')
         self.pnj = PNJ(main, lvl['enemy'], self)
-        print('')
         print('[*] Init obj PNJ Ok')
 
     def start(self):
