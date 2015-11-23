@@ -37,9 +37,6 @@ class TitleScreen(object):
         self.sprite_sheet = SpriteSheet()
         self.character_images = constants.character_images
 
-        self.button_next_level = None
-        self.button_accueil = None
-
     def __getitem__(self):
         return self.width
 
@@ -174,8 +171,7 @@ class TitleScreen(object):
         self.font_init()
         self.loading_screen()
         self.load_all_images()
-        # self.title_screen()
-        survival = Survival(self)
+        self.title_screen()
 
     def font_init(self):
         print('[*] Load Font')

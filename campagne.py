@@ -24,8 +24,8 @@ class Campagne(object):
         self.welcome_font1 = main.welcome_font1
         self.final_score_font = main.final_score_font
 
-        self.button_accueil = main.button_accueil
-        self.button_next_level = main.button_next_level
+        self.button_accueil = None
+        self.button_next_level = None
 
         self.time = Times()
         self.clock = pygame.time.Clock()

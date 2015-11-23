@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 from time_made_home import *
 from player import *
-from manager import *
 from levels import *
 
 
@@ -25,8 +24,8 @@ class Survival(object):
         self.welcome_font1 = main.welcome_font1
         self.final_score_font = main.final_score_font
 
-        self.button_accueil = main.button_accueil
-        self.button_next_level = main.button_next_level
+        self.button_accueil = None
+        self.button_next_level = None
 
         self.time = Times()
         self.clock = pygame.time.Clock()
@@ -200,17 +199,3 @@ class Survival(object):
 
             pygame.display.flip()
             self.clock.tick(100)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
