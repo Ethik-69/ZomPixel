@@ -6,7 +6,7 @@ from sprites import *
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, main, name, pos, num):
-        self._layer = 0
+        self._layer = 1
         self.groups_sprites = main.all_sprites, main.pnj_sprites
         pygame.sprite.Sprite.__init__(self, self.groups_sprites)
         self.main = main

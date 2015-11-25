@@ -5,7 +5,7 @@ from sprites import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, images, all_sprites, x, y, width, height):
-        self._layer = 0
+        self._layer = 1
         pygame.sprite.Sprite.__init__(self, all_sprites)
         self.game_width = width
         self.game_height = height

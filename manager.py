@@ -123,7 +123,8 @@ class Obstacles(object):
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, main, name, pos):
-        pygame.sprite.Sprite.__init__(self)
+        self._layer = 0
+        pygame.sprite.Sprite.__init__(self, main.all_sprites)
 
         self.main = main
         self.name = name
@@ -142,7 +143,3 @@ class Object(pygame.sprite.Sprite):
         self.collision_rect.center = (self.rect.x + constants.OBSTACLES[name][2][0], self.rect.y + constants.OBSTACLES[name][2][1])
 
         self.mask = pygame.mask.from_surface(self.image)
-
-    def display(self):
-        """Pose l'objet sur le fond"""
-        self.main.background.blit(self.image, self.pos)

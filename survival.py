@@ -254,8 +254,6 @@ class Survival(object):
             self.window.blit(self.background, (0, 0))
             self.display_hud()
 
-            self.levels.current_level.obstacles.objects_list.draw(self.window)
-
             self.all_sprites.draw(self.window)
 
             pygame.display.flip()
