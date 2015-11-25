@@ -4,14 +4,16 @@ from sprites import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, images, x, y, width, height):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, name, images, all_sprites, x, y, width, height):
+        self._layer = 0
+        pygame.sprite.Sprite.__init__(self, all_sprites)
         self.game_width = width
         self.game_height = height
         self.name = name
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
+        self.x, self.y = x, y
 
         self.score = 0
         self.final_score = 0
@@ -113,13 +115,17 @@ class Player(pygame.sprite.Sprite):
     def update(self, obstacles_list):
         """Actualisation du joueur"""
         if self.is_feeding:  # si le joueur est en train de manger, ne l'affiche pas
-            self.image = None
+            self.rect.x = -100
+            self.rect.y = -100
+        elif self.rect.x == -100:
+            self.rect.x, self.rect.y = self.x, self.y
         else:
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
             self.hitbox_rect = self.hitbox_rect.move([self.moveX, self.moveY])
+            self.x, self.y = self.rect.x, self.rect.y
             self.timeNum += 1
             if self.timeNum == self.timeTarget:
                 self.timeNum = 0

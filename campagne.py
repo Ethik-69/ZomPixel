@@ -354,7 +354,7 @@ class Campagne(object):
             self.click_motion()
             self.time.update()
             self.player.update(self.levels.current_level.obstacles.objects_list)
-            self.levels.current_level.update(self.levels.current_level.obstacles.objects_list)
+            self.levels.current_level.update()
 
             if self.player.dying:
                 self.display_game_over('game_over')
@@ -366,9 +366,7 @@ class Campagne(object):
             self.levels.current_level.pnj.draw()
 
             self.levels.current_level.obstacles.objects_list.draw(self.window)
-            # Si le joueur mange, ne l'affiche pas
-            if not self.player.is_feeding:
-                self.player_sprite.draw(self.window)
+            self.player_sprite.draw(self.window)
 
             self.test()
 

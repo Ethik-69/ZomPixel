@@ -16,6 +16,7 @@ class Character(pygame.sprite.Sprite):
         self.width = 75
         self.height = 125
         self.moveX, self.moveY = 0, 0
+        self.x, self.y = pos[0], pos[1]
         self.main.time.add_rebour(self.id_name)
 
         self.is_alive = True
@@ -264,12 +265,16 @@ class Zombie(Character):
         if self.main.time.rebours[self.id_name].isFinish:  # si le rebour principal est fini le zombie meur
             self.dying()
         if self.is_feeding:
-            self.image = self.stopFrame
+            self.rect.x = -100
+            self.rect.y = -100
+        elif self.rect.x == -100:
+            self.rect.x, self.rect.y = self.x, self.y
         else:
             self.move_alea()
             self.rect = self.rect.move([self.moveX, self.moveY])
             self.collision_rect = self.collision_rect.move([self.moveX, self.moveY])
             self.hitbox_rect = self.hitbox_rect.move([self.moveX, self.moveY])
+            self.x, self.y = self.rect.x, self.rect.y
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
             self.update_current_image()

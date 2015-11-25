@@ -80,8 +80,8 @@ class Level(Levels):
         self.is_started = True
         print('     - Ok')
 
-    def update(self, obstacles_list):
-        self.pnj.update(obstacles_list)
+    def update(self):
+        self.pnj.update(self.obstacles.objects_list)
         if self.main.time.chronos['current_level'].Time == [00, 30, 00]:
             print('[*] Time Out')
             self.main.display_game_over('Time Out')
@@ -130,7 +130,7 @@ class SurvivalLevel(Levels):
         y = randint(0, 600)
         return x, y
 
-    def update(self, obstacles_list):
+    def update(self):
         if self.main.time.rebours['increase_pnj_number'].isFinish:
             self.max_pnj += 1
             self.main.victims -= 1 # hack pour que l'enemy en plus ne compte pas
@@ -138,7 +138,7 @@ class SurvivalLevel(Levels):
         if len(self.pnj.enemy_list) < self.max_pnj:
             self.pnj.add_enemy(self.random_pos())
             self.main.victims += 1
-        self.pnj.update(obstacles_list)
+        self.pnj.update(self.obstacles.objects_list)
         if self.main.time.chronos['survival'].Time == [01, 00, 00]:
             print('[*] Time Out')
             self.main.display_game_over('Time Out')

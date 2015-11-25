@@ -103,19 +103,7 @@ class PNJ(object):
     def draw(self):
         """dessine les pnj"""
         self.enemy_list.draw(self.main.window)
-
-        # Ne pas afficher les zombie 'ia' qui se baffrent
-        if len(self.zombie_list) != 0:
-            for zombie in self.zombie_list:
-                if zombie.is_feeding:
-                    self.feeding_zombie_list.add(zombie)
-                    self.zombie_list.remove(zombie)
-
-            self.zombie_list.draw(self.main.window)
-
-            for zombie in self.feeding_zombie_list:
-                self.zombie_list.add(zombie)
-                self.feeding_zombie_list.remove(zombie)
+        self.zombie_list.draw(self.main.window)
 
 
 class Obstacles(object):

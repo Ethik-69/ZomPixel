@@ -13,6 +13,8 @@ class Survival(object):
         self.window = main.window
         self.background = main.background
 
+        self.all_sprites = pygame.sprite.LayeredUpdates()
+
         self.game_images = main.game_images
         self.obstacles_images = main.obstacles_images
         self.character_images = main.character_images
@@ -36,6 +38,7 @@ class Survival(object):
         self.victims = 0
         self.run = None
         self.levels = None
+        self.player = None
         self.click_pos_x = None
         self.click_pos_y = None
         self.enemy_hit_list = None
@@ -104,10 +107,12 @@ class Survival(object):
     def create_player(self):
         """Creation du joueur"""
         print('[*] Player Init')
-        self.player_sprite = pygame.sprite.Group()
-        self.player = Player('player', self.character_images['player'], 512, 354, self.width, self.height)
+        self.player = Player('player',
+                             self.character_images['player'],
+                             self.all_sprites,
+                             512, 354,
+                             self.width, self.height)
         self.time.add_rebour('player')
-        self.player_sprite.add(self.player)
         print('     - Ok')
 
     def click_motion(self):
@@ -235,7 +240,7 @@ class Survival(object):
             self.click_motion()
             self.time.update()
             self.player.update(self.levels.current_level.obstacles.objects_list)
-            self.levels.current_level.update(self.levels.current_level.obstacles.objects_list)
+            self.levels.current_level.update()
 
             if self.player.dying:
                 self.display_game_over('game_over')
@@ -247,9 +252,8 @@ class Survival(object):
             self.levels.current_level.pnj.draw()
 
             self.levels.current_level.obstacles.objects_list.draw(self.window)
-            # Si le joueur mange, ne l'affiche pas
-            if not self.player.is_feeding:
-                self.player_sprite.draw(self.window)
+
+            self.all_sprites.draw(self.window)
 
             pygame.display.flip()
             self.clock.tick(100)
