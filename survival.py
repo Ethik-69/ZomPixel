@@ -14,6 +14,9 @@ class Survival(object):
         self.background = main.background
 
         self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.pnj_sprites = pygame.sprite.LayeredUpdates()
+        self.enemy_sprites = pygame.sprite.LayeredUpdates()
+        self.zombie_sprites = pygame.sprite.LayeredUpdates()
 
         self.game_images = main.game_images
         self.obstacles_images = main.obstacles_images
@@ -239,6 +242,7 @@ class Survival(object):
 
             self.click_motion()
             self.time.update()
+            self.pnj_sprites.update(self.levels.current_level.obstacles.objects_list)
             self.player.update(self.levels.current_level.obstacles.objects_list)
             self.levels.current_level.update()
 
@@ -249,7 +253,6 @@ class Survival(object):
 
             self.window.blit(self.background, (0, 0))
             self.display_hud()
-            self.levels.current_level.pnj.draw()
 
             self.levels.current_level.obstacles.objects_list.draw(self.window)
 

@@ -6,10 +6,6 @@ import constants
 
 class PNJ(object):
     def __init__(self, main, start_enemy_list, level):
-        self.enemy_list = pygame.sprite.Group()
-        self.zombie_list = pygame.sprite.Group()
-        self.feeding_zombie_list = pygame.sprite.Group()
-
         self.main = main
         self.level = level
         self.pnj_num = 0  # compteur pour différencier les pnj
@@ -19,33 +15,32 @@ class PNJ(object):
         """Initialise les Personnages Non Joueur"""
         print('     - PNJ Init in Progress')
         for pos in enemy_data.keys():
-            new_enemy = Humain(self.main, enemy_data[pos], pos, self.pnj_num)
-            self.enemy_list.add(new_enemy)
+            Humain(self.main, enemy_data[pos], pos, self.pnj_num)
             self.pnj_num += 1
             print('.'),
 
     def add_zombie(self, main, name, pos, num):
         """Ajoute un nouveau zombie a la liste des zombie en 'vie' """
         print('[*] ' + name + ' Going Zombie')
-        zombie = Zombie(main, name, pos, num)
-        self.zombie_list.add(zombie)
+        Zombie(main, name, pos, num)
         print('[*] New Zombie')
 
     def add_enemy(self, pos):
-        new_enemy = Humain(self.main, 'citizen', pos, self.pnj_num)
-        self.enemy_list.add(new_enemy)
+        Humain(self.main, 'citizen', pos, self.pnj_num)
         self.pnj_num += 1
 
     def remove_zombie(self):
         """Supprime tout les zombie restant en fin de niveau"""
         print('[*] Remove Remaining Zombies')
-        for zombie in self.zombie_list:
-            self.zombie_list.remove(zombie)
+        for zombie in self.main.zombie_sprites:
+            self.main.zombie_sprites.remove(zombie)
+            self.main.pnj_sprites.remove(zombie)
+            self.main.all_sprites.remove(zombie)
         print('     - Ok')
 
     def player_circle_collide(self):
         """Test circle collision"""
-        for enemy in self.enemy_list:
+        for enemy in self.main.enemy_sprites:
             if not enemy.is_under_attack and pygame.sprite.collide_circle(self.main.player, enemy):
                 if not enemy.is_circle_collide:
                     print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
@@ -60,7 +55,7 @@ class PNJ(object):
     def player_collide(self):
         """Collision avec le joueur"""
         if not self.main.player.is_feeding:
-            enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.enemy_list, False)
+            enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.main.enemy_sprites, False)
             for enemy in enemy_hit_list:
                 if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not self.main.player.is_feeding:
                         print('[*] Hitbox Collide - Player')
@@ -69,41 +64,35 @@ class PNJ(object):
 
     def zombie_collide(self):
         """Collsision avec les autres zombies"""
-        for zombie in self.zombie_list:
+        for zombie in self.main.zombie_sprites:
             if not zombie.is_feeding:
-                enemy_hit_list = pygame.sprite.spritecollide(zombie, self.enemy_list, False)
+                enemy_hit_list = pygame.sprite.spritecollide(zombie, self.main.enemy_sprites, False)
                 for enemy in enemy_hit_list:
                     if zombie.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not zombie.is_feeding:
                             print('[*] Mask Collide - Zombie')
                             enemy.under_attack(zombie)
                             zombie.is_feeding = True
 
-    def update(self, obsctacles_list):
+    def update(self):
         """met les pnj a jour"""
-        for enemy in self.enemy_list:
-            if not enemy.is_alive:
-                print('[*] Remove Humain')
-                self.enemy_list.remove(enemy)
+        for pnj in self.main.pnj_sprites:
+            if not pnj.is_alive:
+                self.main.pnj_sprites.remove(pnj)
+                self.main.all_sprites.remove(pnj)
+                if pnj.is_human:
+                    print('[*] Remove Human')
+                    self.main.enemy_sprites.remove(pnj)
+                else:
+                    print('[*] Remove Human')
+                    self.main.zombie_sprites.remove(pnj)
 
-        for zombie in self.zombie_list:
-            if not zombie.is_alive:
-                print('[*] Remove Zombie')
-                self.zombie_list.remove(zombie)
-
-        if len(self.enemy_list) == 0 and self.level.is_started:
+        if len(self.main.enemy_sprites) == 0 and self.level.is_started:
             print('[*] Change Lvl => True')
             self.level.is_change_level = True
 
         self.player_collide()
         self.zombie_collide()
         self.player_circle_collide()
-        self.enemy_list.update(obsctacles_list)
-        self.zombie_list.update(obsctacles_list)
-
-    def draw(self):
-        """dessine les pnj"""
-        self.enemy_list.draw(self.main.window)
-        self.zombie_list.draw(self.main.window)
 
 
 class Obstacles(object):

@@ -6,7 +6,9 @@ from sprites import *
 
 class Character(pygame.sprite.Sprite):
     def __init__(self, main, name, pos, num):
-        pygame.sprite.Sprite.__init__(self)
+        self._layer = 0
+        self.groups_sprites = main.all_sprites, main.pnj_sprites
+        pygame.sprite.Sprite.__init__(self, self.groups_sprites)
         self.main = main
         self.num = num
         self.name = name
@@ -123,6 +125,7 @@ class Humain(Character):
     def __init__(self, main, name, pos, num):
         Character.__init__(self, main, name, pos, num)
         self.tick = 0
+        self.is_human = True
         self.allDyingFrames = {'player': main.character_images[name]['attack']['by_player'],
                                'z_citizen': main.character_images[name]['attack']['by_citizen'],
                                'z_punk': main.character_images[name]['attack']['by_punk']}
@@ -133,6 +136,7 @@ class Humain(Character):
                                3: 'left',
                                4: 'right',
                                5: ''}
+        main.enemy_sprites.add(self)
 
     def become_crazy(self):
         print('[*] ' + self.name + str(self.num) + ' Become Crazy')
@@ -227,6 +231,7 @@ class Zombie(Character):
     def __init__(self, main, name, pos, num):
         Character.__init__(self, main, name, pos, num)
         self.tick = 0
+        self.is_human = False
         self.is_feeding = False
         self.main.time.rebours[self.id_name].start([00, 10, 00])  # x temp de vie (H:M:S)
         self.iaActionSwitch = {1: 'up',
@@ -235,6 +240,7 @@ class Zombie(Character):
                                4: 'right',
                                5: ''}
         self.radius = 200
+        main.zombie_sprites.add(self)
 
     def dying(self):
         """Déclare le zombie mort"""

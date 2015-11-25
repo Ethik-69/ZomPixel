@@ -13,6 +13,11 @@ class Campagne(object):
         self.window = main.window
         self.background = main.background
 
+        self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.pnj_sprites = pygame.sprite.LayeredUpdates()
+        self.enemy_sprites = pygame.sprite.LayeredUpdates()
+        self.zombie_sprites = pygame.sprite.LayeredUpdates()
+
         self.game_images = main.game_images
         self.obstacles_images = main.obstacles_images
         self.character_images = main.character_images
@@ -57,10 +62,12 @@ class Campagne(object):
     def create_player(self):
         """Creation du joueur"""
         print('[*] Player Init')
-        self.player_sprite = pygame.sprite.Group()
-        self.player = Player('player', self.character_images['player'], 512, 354, self.width, self.height)
+        self.player = Player('player',
+                             self.character_images['player'],
+                             self.all_sprites,
+                             512, 354,
+                             self.width, self.height)
         self.time.add_rebour('player')
-        self.player_sprite.add(self.player)
         print('     - Ok')
 
     #########################################
@@ -247,16 +254,16 @@ class Campagne(object):
         self.text_blit(self.final_score_font, "Rejoignez nous sur Facebook: ZompiGame !",
                        (100, 20, 20), (constants.GAME_WIDTH/2, 300))
 
-        self.text_blit(self.final_score_font, "Developper par:",
+        self.text_blit(self.final_score_font, "Crée par:",
                        (100, 20, 20), (constants.GAME_WIDTH/2, 400))
 
         self.text_blit(self.final_score_font, "Ethan CHAMIK",
                        (100, 20, 20), (constants.GAME_WIDTH/5, 500))
 
-        self.text_blit(self.final_score_font, "Romain GUILLOT",
+        self.text_blit(self.final_score_font, "Thibault DESCAMPS",
                        (100, 20, 20), (constants.GAME_WIDTH/2, 500))
 
-        self.text_blit(self.final_score_font, "Thibault DESCAMPS",
+        self.text_blit(self.final_score_font, "Romain GUILLOT",
                        (100, 20, 20), (constants.GAME_WIDTH/1.2, 500))
 
         self.text_blit(self.final_score_font, "Faites tournez ;)",
@@ -315,13 +322,13 @@ class Campagne(object):
         self.window.blit(time, (878, 14))
 
     def test(self):
-        for pnj in self.levels.current_level.pnj.enemy_list:
+        for pnj in self.enemy_sprites:
             if pnj.is_crazy:
                 pygame.draw.rect(self.window, (255, 255, 255), pnj.hitbox_rect)
             else:
                 pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
-        for pnj in self.levels.current_level.pnj.zombie_list:
+        for pnj in self.zombie_sprites:
             pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
 
         for object in self.levels.current_level.obstacles.objects_list:
@@ -353,6 +360,7 @@ class Campagne(object):
 
             self.click_motion()
             self.time.update()
+            self.pnj_sprites.update(self.levels.current_level.obstacles.objects_list)
             self.player.update(self.levels.current_level.obstacles.objects_list)
             self.levels.current_level.update()
 
@@ -363,10 +371,10 @@ class Campagne(object):
 
             self.window.blit(self.background, (0, 0))
             self.display_hud()
-            self.levels.current_level.pnj.draw()
 
             self.levels.current_level.obstacles.objects_list.draw(self.window)
-            self.player_sprite.draw(self.window)
+
+            self.all_sprites.draw(self.window)
 
             self.test()
 
