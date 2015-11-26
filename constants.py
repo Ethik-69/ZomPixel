@@ -12,6 +12,9 @@ Les constants utilisées pour le jeu:
 GAME_WIDTH = 1024
 GAME_HEIGHT = 768
 
+LAYER_POS = {'front': 1,
+             'back': -1}
+
 character_images = {'player': {'walkingFramesUp': [],
                                'walkingFramesDown': [],
                                'walkingFramesLeft': [],
@@ -82,7 +85,7 @@ OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (0, 0), (0, 0)],  # 0 ca
              'yellow_car': ["data/img/objets/yellow_car.png", (-10, -10), (113, 57)],
              'cone': ["data/img/objets/cone.png", (-10, -30), (20, 35)],
              'fence': ["data/img/objets/fence.png", (0, -37), (47, 41)],
-             'tree': ["data/img/objets/tree.png", (-120, -120), (70, 140)],
+             'tree': ["data/img/objets/tree.png", (-120, -147), (69, 156)],
              'working_fence_v': ["data/img/objets/working_fence_v.png", (-3, -4), (13, 47)],
              'working_fence_h': ["data/img/objets/working_fence_h.png", (-3, -4), (47, 13)],
              'bin': ["data/img/objets/bin.png", (-7, -30), (17, 40)],

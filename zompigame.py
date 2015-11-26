@@ -269,8 +269,8 @@ if __name__ == '__main__':
         game = TitleScreen()
         game.start()
 
-    # TODO: if coli_rect.top > coli_rect_pnj.top: pnj.layer += 1
-    # TODO: Passer devant et derriere les objets et les pnjs (layer) http://thepythongamebook.com/en:pygame:step016
+    # gestion layer tout les perso
+    # un peu de fignolage
     # TODO: Modification du menu (img)
     # pygame book example:
     #   homing missiles / targeting (les zombie alliés suivent les citoyen)

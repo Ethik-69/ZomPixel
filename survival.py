@@ -216,6 +216,31 @@ class Survival(object):
         self.window.blit(score, (492, 14))
         self.window.blit(time, (878, 14))
 
+    def layer_change(self):
+        if self.player.is_layer_change:
+            print('[*] Change Player Layer')
+            self.all_sprites.change_layer(self.player, constants.LAYER_POS[self.player.pos_on_layer])
+            self.player.is_layer_change = False
+        for pnj in self.pnj_sprites:
+            if pnj.is_layer_change:
+                print('[*] Change ' + pnj.name + ' Layer')
+                self.all_sprites.change_layer(pnj, constants.LAYER_POS[pnj.pos_on_layer])
+
+    def test(self):
+        for pnj in self.enemy_sprites:
+            if pnj.is_crazy:
+                pygame.draw.rect(self.window, (255, 255, 255), pnj.hitbox_rect)
+            else:
+                pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
+
+        for pnj in self.zombie_sprites:
+            pygame.draw.rect(self.window, (0, 0, 0), pnj.hitbox_rect)
+
+        for object in self.levels.current_level.obstacles.objects_list:
+            pygame.draw.rect(self.window, (0, 0, 0), object.collision_rect)
+
+        pygame.draw.rect(self.window, (100, 10, 10), self.player.collision_rect)
+
     def main(self, map_pos):
         print('[*] Launch Survival')
         self.levels = Levels(self)
@@ -249,12 +274,14 @@ class Survival(object):
             if self.player.dying:
                 self.display_game_over('game_over')
 
+            self.layer_change()
+
             # ------------------------Display------------------------
 
             self.window.blit(self.background, (0, 0))
             self.display_hud()
 
             self.all_sprites.draw(self.window)
-
+            self.test()
             pygame.display.flip()
             self.clock.tick(100)

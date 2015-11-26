@@ -6,6 +6,8 @@ from sprites import *
 class Player(pygame.sprite.Sprite):
     def __init__(self, name, images, all_sprites, x, y, width, height):
         self._layer = 1
+        self.pos_on_layer = None  # pour effectuer le changement de layer
+        self.is_layer_change = False
         pygame.sprite.Sprite.__init__(self, all_sprites)
         self.game_width = width
         self.game_height = height
@@ -96,6 +98,15 @@ class Player(pygame.sprite.Sprite):
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
+
+                if self.collision_rect.top < obstacle.collision_rect.bottom - 2:
+                    if self.pos_on_layer != 'back':
+                        self.is_layer_change = True
+                        self.pos_on_layer = 'back'
+                elif self.pos_on_layer != 'front':
+                    self.is_layer_change = True
+                    self.pos_on_layer = 'front'
+
                 print('[*] Player Collide Object')
                 if obstacle.name == 'manhole':
                     if pygame.sprite.collide_mask(self, obstacle):

@@ -7,6 +7,8 @@ from sprites import *
 class Character(pygame.sprite.Sprite):
     def __init__(self, main, name, pos, num):
         self._layer = 1
+        self.pos_on_layer = None  # pour effectuer le changement de layer
+        self.is_layer_change = False
         self.groups_sprites = main.all_sprites, main.pnj_sprites
         pygame.sprite.Sprite.__init__(self, self.groups_sprites)
         self.main = main
@@ -196,6 +198,15 @@ class Humain(Character):
         if not self.is_under_attack:
             obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
             for obstacle in obstacles_collided:
+
+                if self.collision_rect.top < obstacle.collision_rect.bottom - 2:
+                    if self.pos_on_layer != 'back':
+                        self.is_layer_change = True
+                        self.pos_on_layer = 'back'
+                elif self.pos_on_layer != 'front':
+                    self.is_layer_change = True
+                    self.pos_on_layer = 'front'
+
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Enemy Collide Object')
                     if self.collision_rect.x <= obstacle.collision_rect.x and self.moveX > 0:  # vas vers la gauche
@@ -251,6 +262,15 @@ class Zombie(Character):
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
             for obstacle in obstacles_collided:
+
+                if self.collision_rect.top < obstacle.collision_rect.bottom - 2:
+                    if self.pos_on_layer != 'back':
+                        self.is_layer_change = True
+                        self.pos_on_layer = 'back'
+                elif self.pos_on_layer != 'front':
+                    self.is_layer_change = True
+                    self.pos_on_layer = 'front'
+
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Zombie Collide Object')
                     if self.rect.x <= obstacle.collision_rect.x and self.moveX > 0:  # vas vers la gauche

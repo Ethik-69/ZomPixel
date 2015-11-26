@@ -321,6 +321,16 @@ class Campagne(object):
         self.window.blit(score, (492, 14))
         self.window.blit(time, (878, 14))
 
+    def layer_change(self):
+        if self.player.is_layer_change:
+            print('[*] Change Player Layer')
+            self.all_sprites.change_layer(self.player, constants.LAYER_POS[self.player.pos_on_layer])
+            self.player.is_layer_change = False
+        for pnj in self.pnj_sprites:
+            if pnj.is_layer_change:
+                print('[*] Change ' + pnj.name + ' Layer')
+                self.all_sprites.change_layer(pnj, constants.LAYER_POS[pnj.pos_on_layer])
+
     def test(self):
         for pnj in self.enemy_sprites:
             if pnj.is_crazy:
@@ -366,6 +376,8 @@ class Campagne(object):
 
             if self.player.dying:
                 self.display_game_over('game_over')
+
+            self.layer_change()
 
             # ------------------------Display------------------------
 
