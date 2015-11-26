@@ -330,6 +330,7 @@ class Campagne(object):
             if pnj.is_layer_change:
                 print('[*] Change ' + pnj.name + ' Layer')
                 self.all_sprites.change_layer(pnj, constants.LAYER_POS[pnj.pos_on_layer])
+                pnj.is_layer_change = False
 
     def test(self):
         for pnj in self.enemy_sprites:
@@ -388,7 +389,7 @@ class Campagne(object):
 
             self.all_sprites.draw(self.window)
 
-            self.test()
+            # self.test()
 
             # -----------------------Change Lvl------------------------
 

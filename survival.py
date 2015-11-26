@@ -225,6 +225,7 @@ class Survival(object):
             if pnj.is_layer_change:
                 print('[*] Change ' + pnj.name + ' Layer')
                 self.all_sprites.change_layer(pnj, constants.LAYER_POS[pnj.pos_on_layer])
+                pnj.is_layer_change = False
 
     def test(self):
         for pnj in self.enemy_sprites:
@@ -282,6 +283,6 @@ class Survival(object):
             self.display_hud()
 
             self.all_sprites.draw(self.window)
-            self.test()
+            # self.test()
             pygame.display.flip()
             self.clock.tick(100)

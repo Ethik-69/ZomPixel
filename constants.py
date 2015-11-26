@@ -78,7 +78,7 @@ npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
 # [1] = inflatexy pour modifier la taille du rect
 # [2] = .center pour modifier sont emplacement dans l'image
 
-OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (0, 0), (0, 0)],  # 0 car inutile -> collision pixel perfect
+OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (-5, -5), (28, 28)],  # 0 car inutile -> collision pixel perfect
              'bush': ["data/img/objets/bush.png", (-13, -13), (32, 32)],
              'blue_car': ["data/img/objets/blue_car.png", (-10, -10), (113, 57)],
              'police_car': ["data/img/objets/police_car.png", (-10, -10), (113, 57)],

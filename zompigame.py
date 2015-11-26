@@ -269,7 +269,6 @@ if __name__ == '__main__':
         game = TitleScreen()
         game.start()
 
-    # gestion layer tout les perso
     # un peu de fignolage
     # TODO: Modification du menu (img)
     # pygame book example:

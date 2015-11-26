@@ -178,9 +178,12 @@ class Humain(Character):
         else:
             self.main.player.score += 1
             self.main.player.final_score += 1
+        try:  # pour le survival uniquement
+            self.main.victims += 1
+        except:
+            pass
         try:
             self.attacker.is_feeding = False
-            self.attacker.image = self.attacker.stopFrame
         except:
             pass
 
@@ -262,7 +265,6 @@ class Zombie(Character):
         if not self.is_feeding:
             obstacles_collided = pygame.sprite.spritecollide(self, obsctacles_list, False)
             for obstacle in obstacles_collided:
-
                 if self.collision_rect.top < obstacle.collision_rect.bottom - 2:
                     if self.pos_on_layer != 'back':
                         self.is_layer_change = True

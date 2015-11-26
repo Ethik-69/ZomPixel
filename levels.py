@@ -133,12 +133,10 @@ class SurvivalLevel(Levels):
     def update(self):
         if self.main.time.rebours['increase_pnj_number'].isFinish:
             self.max_pnj += 1
-            self.main.victims -= 1 # hack pour que l'enemy en plus ne compte pas
             self.main.time.rebours['increase_pnj_number'].start([00, 20, 00])
 
         if len(self.main.enemy_sprites) < self.max_pnj:
             self.pnj.add_enemy(self.random_pos())
-            self.main.victims += 1
         self.pnj.update()
         if self.main.time.chronos['survival'].Time == [01, 00, 00]:
             print('[*] Time Out')
