@@ -101,9 +101,11 @@ class Survival(object):
                     print('[*] Leaving Suvival Mode')
                     break
                 elif event.type == pygame.MOUSEBUTTONDOWN and is_park:
+                    self.is_map_choice_screen = False
                     print('[*] Park Choice')
                     self.main('park')
                 elif event.type == pygame.MOUSEBUTTONDOWN and is_street:
+                    self.is_map_choice_screen = False
                     print('[*] Street Choice')
                     self.main('street')
 
@@ -183,6 +185,8 @@ class Survival(object):
 
         if end_type == 'game_over':
             self.init_game_over()
+        elif end_type == 'Time Out':
+            self.init_game_over()
 
         while self.is_game_over:
             self.display_hud()
@@ -201,7 +205,7 @@ class Survival(object):
             pygame.display.flip()
 
     def end_game(self):
-        print('[*] Start New Game')
+        print('[*] Survival End')
         self.run = False
 
     def display_hud(self):
@@ -281,8 +285,10 @@ class Survival(object):
 
             self.window.blit(self.background, (0, 0))
             self.display_hud()
-
             self.all_sprites.draw(self.window)
+
             # self.test()
+
             pygame.display.flip()
             self.clock.tick(100)
+        print('[*] Fin de la boucle survival')

@@ -254,7 +254,7 @@ class Campagne(object):
         self.text_blit(self.final_score_font, "Rejoignez nous sur Facebook: ZompiGame !",
                        (100, 20, 20), (constants.GAME_WIDTH/2, 300))
 
-        self.text_blit(self.final_score_font, "Crée par:",
+        self.text_blit(self.final_score_font, "Cree par:",
                        (100, 20, 20), (constants.GAME_WIDTH/2, 400))
 
         self.text_blit(self.final_score_font, "Ethan CHAMIK",
@@ -281,10 +281,12 @@ class Campagne(object):
         self.is_credit = True
         self.background.fill((0, 0, 0))
 
-        button_back = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/2.7, 609, 280, 106])
         self.init_credit()
 
         self.window.blit(self.background, (0, 0))
+
+        button_back = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.55, 675, 215, 50], 2)
+
         pygame.display.flip()
 
         while self.is_credit:
@@ -302,7 +304,7 @@ class Campagne(object):
                     self.end_game()
 
     def end_game(self):
-        print('[*] Start New Game')
+        print('[*] Campagne End')
         self.run = False
 
     #########################################
@@ -390,7 +392,7 @@ class Campagne(object):
             self.all_sprites.draw(self.window)
 
             # self.test()
-
+            self.display_credit()
             # -----------------------Change Lvl------------------------
 
             if self.levels.current_level.is_change_level:
@@ -410,3 +412,4 @@ class Campagne(object):
 
             pygame.display.flip()
             self.clock.tick(100)
+        print('[*] Fin de la boucle Campagne')

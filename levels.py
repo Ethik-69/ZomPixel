@@ -138,6 +138,6 @@ class SurvivalLevel(Levels):
         if len(self.main.enemy_sprites) < self.max_pnj:
             self.pnj.add_enemy(self.random_pos())
         self.pnj.update()
-        if self.main.time.chronos['survival'].Time == [01, 00, 00]:
+        if self.main.time.chronos['survival'].Time == [02, 00, 00]:
             print('[*] Time Out')
             self.main.display_game_over('Time Out')

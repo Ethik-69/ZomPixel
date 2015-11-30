@@ -52,22 +52,22 @@ class TitleScreen(object):
     def title_screen_text(self):
         """Initialise et pose sur le fond les texts de l'ecran d'accueil"""
         self.text_blit(self.welcome_font0, "z.o.m.p.i.g.a.m.e", (100, 20, 20), (self.background.get_width()/2, 120))
-        self.text_blit(self.welcome_font1, "Campagne", (0, 0, 0), (self.background.get_width()/1.975, 400))
-        self.text_blit(self.welcome_font1, "Survie", (0, 0, 0), (self.background.get_width()/1.975, 600))
-        self.text_blit(self.welcome_font1, "?", (0, 0, 0), (self.background.get_width()/1.095, 660))
+        self.text_blit(self.welcome_font1, "Campagne", (100, 20, 20), (self.background.get_width()/1.975, 300))
+        self.text_blit(self.welcome_font1, "Survie", (100, 20, 20), (self.background.get_width()/1.975, 400))
+        self.text_blit(self.welcome_font1, "Info", (100, 20, 20), (self.background.get_width()/2, 500))
 
     def title_screen(self):
         """Boucle de l'ecran d'accueil"""
         print('[*] Title Screen Init')
         title_screen = True
-        self.background.blit(self.game_images['welcome_background_image'], (0, 0))
-        button_campagne = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.7, 380, 280, 50])
-        button_survival = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/2.7, 580, 280, 50])
-        button_question_mark = pygame.draw.rect(self.window, [0, 0, 0], [self.background.get_width()/1.14, 625, 75, 75])
-
+        self.background.fill((0, 0, 0))
         self.title_screen_text()
 
         self.window.blit(self.background, (0, 0))
+
+        button_campagne = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.72, 275, 280, 50], 2)
+        button_survival = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.43, 375, 190, 50], 2)
+        button_question_mark = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.34, 473, 145, 50], 2)
 
         pygame.display.flip()
         print('     - Ok')
@@ -142,10 +142,12 @@ class TitleScreen(object):
         help_screen = True
         self.background.fill((0, 0, 0))
 
-        button_back = pygame.draw.rect(self.window, [255, 255, 255], [self.background.get_width()/2.7, 609, 280, 106])
         self.help_screen_text()
 
         self.window.blit(self.background, (0, 0))
+
+        button_back = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.55, 675, 215, 50], 2)
+
         pygame.display.flip()
 
         while help_screen:
@@ -269,7 +271,7 @@ if __name__ == '__main__':
         game = TitleScreen()
         game.start()
 
-    # un peu de fignolage
+    # TODO: Refacto
     # TODO: Modification du menu (img)
     # pygame book example:
     #   homing missiles / targeting (les zombie alliés suivent les citoyen)
