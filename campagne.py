@@ -392,7 +392,7 @@ class Campagne(object):
             self.all_sprites.draw(self.window)
 
             # self.test()
-            self.display_credit()
+
             # -----------------------Change Lvl------------------------
 
             if self.levels.current_level.is_change_level:

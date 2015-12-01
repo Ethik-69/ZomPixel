@@ -225,8 +225,8 @@ TEST_LEVEL = {'number': 'T',
               'pos_player': [512, 354]}
 
 
-LEVELS_LIST = [LEVEL2]
-# LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
+# LEVELS_LIST = [LEVEL2]
+LEVELS_LIST = [LEVEL0, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5, LEVEL6]
 
 
 SURVIVAL = {'park': {'enemy': {(150, 120): 'citizen',

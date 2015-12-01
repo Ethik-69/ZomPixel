@@ -41,6 +41,7 @@ class Levels(object):
         if self.current_level_number >= len(constants.LEVELS_LIST):
             return False
         self.main.background.fill((0, 0, 0))
+        self.obstacles.reset()
         self.init_campagne_level()
         print('[*] Return levels ', self)
         return self  # pour que le current lvl du main change
@@ -72,7 +73,7 @@ class Level(Levels):
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
         self.main.background.blit(self.hud_image, (-5, -2))
         self.skull_image = pygame.transform.scale(self.skull_image, (30, 35))
-        self.main.background.blit(self.skull_image, (constants.GAME_WIDTH/1.99, 7))
+        self.main.background.blit(self.skull_image, (constants.GAME_WIDTH/2.3, 7))
 
         self.obstacles.create_all(self.objects_pos)
 
@@ -114,7 +115,7 @@ class SurvivalLevel(Levels):
         self.main.background.blit(self.game_background_image, (self.pos_x, self.pos_y))
         self.main.background.blit(self.hud_image, (-5, -2))
         self.skull_image = pygame.transform.scale(self.skull_image, (30, 35))
-        self.main.background.blit(self.skull_image, (constants.GAME_WIDTH/1.99, 7))
+        self.main.background.blit(self.skull_image, (constants.GAME_WIDTH/2.3, 7))
 
         self.obstacles.create_all(self.objects_pos)
 
@@ -127,7 +128,7 @@ class SurvivalLevel(Levels):
             x = 0
         else:
             x = 990
-        y = randint(0, 600)
+        y = randint(50, 600)
         return x, y
 
     def update(self):

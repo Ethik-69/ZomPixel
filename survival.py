@@ -210,13 +210,13 @@ class Survival(object):
 
     def display_hud(self):
         """Affichage Tête Haute (score - temps.....)"""
-        current_lvl = self.hud_font.render('%s %s' % ('Mort: ', self.victims), True, (0, 0, 0))  # a remplacer par le nm d'eneme tués
+        nb_victims = self.hud_font.render('%s %s' % ('Mort: ', self.victims), True, (0, 0, 0))  # a remplacer par le nm d'enemi tués
         score = self.hud_font.render('%s' % self.player.score, True, (0, 0, 0))  # player.score
         time = self.hud_font.render('%s:%s:%s' % (self.time.chronos['survival'].Time[0],
                                                   self.time.chronos['survival'].Time[1],
                                                   self.time.chronos['survival'].Time[2]), True, (0, 0, 0))  # time
 
-        self.window.blit(current_lvl, (50, 14))
+        self.window.blit(nb_victims, (50, 14))
         self.window.blit(score, (492, 14))
         self.window.blit(time, (878, 14))
 
@@ -287,7 +287,7 @@ class Survival(object):
             self.display_hud()
             self.all_sprites.draw(self.window)
 
-            # self.test()
+            self.test()
 
             pygame.display.flip()
             self.clock.tick(100)

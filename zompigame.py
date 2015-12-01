@@ -272,12 +272,8 @@ if __name__ == '__main__':
         game.start()
 
     # TODO: Refacto
-    # TODO: Modification du menu (img)
     # pygame book example:
     #   homing missiles / targeting (les zombie alliés suivent les citoyen)
-    #
-    # TODO: boutons -> vrai boutons
-    # TODO: Refacto !
     # TODO: Recherche 'IA'
 
     # RETOUR: - Plus nerveux

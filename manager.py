@@ -120,6 +120,11 @@ class Obstacles(object):
                 self.objects_list.add(obstacle)
         print('[*] Create Objects Ok')
 
+    def reset(self):
+        for object in self.objects_list:
+            self.objects_list.remove(object)
+            self.main.all_sprites.remove(object)
+
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, main, name, pos):

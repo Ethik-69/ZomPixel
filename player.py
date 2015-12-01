@@ -109,7 +109,7 @@ class Player(pygame.sprite.Sprite):
 
                 print('[*] Player Collide Object')
                 if obstacle.name == 'manhole':
-                    if pygame.sprite.collide_mask(self, obstacle):
+                    if self.collision_rect.colliderect(obstacle.collision_rect):
                         self.dying = True
                         print('[*] Launch Game Over')
 

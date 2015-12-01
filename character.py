@@ -273,6 +273,10 @@ class Zombie(Character):
                     self.is_layer_change = True
                     self.pos_on_layer = 'front'
 
+                if obstacle.name == 'manhole':
+                    if self.collision_rect.colliderect(obstacle.collision_rect):
+                        self.is_alive = False
+
                 if self.collision_rect.colliderect(obstacle.collision_rect):
                     print('[*] Zombie Collide Object')
                     if self.rect.x <= obstacle.collision_rect.x and self.moveX > 0:  # vas vers la gauche
