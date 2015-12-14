@@ -13,6 +13,7 @@ class Levels(object):
         self.current_level_number = 0
 
         self.is_started = False
+        self.is_change_level = False
         self.main = main
         self.main.time.add_chrono('current_level')
 
@@ -35,6 +36,7 @@ class Levels(object):
         """Passe au niveau suivant"""
         print('[*] Next Level')
         self.is_started = False
+        self.is_change_level = False
         print('[*] Current Level Number ' + str(self.current_level_number))
         self.current_level_number += 1
         print('[*] Next Level Number ' + str(self.current_level_number))
@@ -57,7 +59,6 @@ class Level(Levels):
         self.pos_x, self.pos_y = lvl['pos_level'][0], lvl['pos_level'][1]
         self.pos_player_x, self.pos_player_y = lvl['pos_player'][0], lvl['pos_player'][1]
 
-        self.is_change_level = False
         self.game_over = False
         self.main.time.chronos['current_level'].start()
 

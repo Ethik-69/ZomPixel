@@ -31,6 +31,7 @@ class TitleScreen(object):
         self.welcome_font0 = None
         self.welcome_font1 = None
         self.final_score_font = None
+        self.final_score_font1 = None
 
         self.obstacles_images = {}
         self.game_images = {}
@@ -182,6 +183,7 @@ class TitleScreen(object):
         self.welcome_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 55)
         # Font pour le résultat en fin de niveau
         self.final_score_font = pygame.font.Font('data/fonts/visitor1.ttf', 30)
+        self.final_score_font1 = pygame.font.Font('data/fonts/visitor1.ttf', 40)
         # Font affichage hud/ath
         self.hud_font = pygame.font.Font('data/fonts/visitor1.ttf', 25)
         # Font de test
@@ -271,10 +273,33 @@ if __name__ == '__main__':
         game = TitleScreen()
         game.start()
 
+    # TODO: Site web
+        # -Page
+            # -Accueil (présentation du jeu ajouter text)
+            # -Download Ok
+            # -Rating Ok
+            # -Contact Ok
+        # -Sécurisé le site
+        # -Hebergement : digital ocean
+            # -Install + config srv Ok (Flask Ok Lamp Ok)
+            # -acces admin rethinkdb Ok
+            # -acces rethinkdb app En cours
+            # -Integration site A faire
+    # TODO: DB
+        # -db_manager Ok
+        # -Integration survival (db Ok img Ok gestion input nom joueur)
+        # -Integration page web Ok
+    # TODO: TP:
+        # -readme
+        # -Doc
+        # -Cahier des charges
+        # -Diagramme objets
+        # -+?
     # TODO: Refacto
     # pygame book example:
-    #   homing missiles / targeting (les zombie alliés suivent les citoyen)
+    #   homing missiles / targeting (les zombies suivent les citoyens)
     # TODO: Recherche 'IA'
 
     # RETOUR: - Plus nerveux
         #     - Amélioration collision
+        #     - Ajouter des personnages féminin

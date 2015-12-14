@@ -111,30 +111,31 @@ class Campagne(object):
         time = self.time.chronos['current_level'].Time  # temp qu'a mis le joueur pour terminer le niveau
 
         # Pose l'image destinée au score
-        self.background.blit(self.game_images['score_image'], (self.width/3, self.height/13))
+        self.background.blit(self.game_images['score_image'], (self.width/6.5, self.height/4))
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font,
                        str(self.player.score) + " Points",
-                       (255, 255, 255), (self.width/2, self.height/1.8))
+                       (255, 255, 255), (self.width/2, self.height/2))
 
         self.text_blit(self.final_score_font,
                        "Termine en",
-                       (255, 255, 255), (self.width/2, self.height/1.6))
+                       (255, 255, 255), (self.width/2, self.height/1.8))
 
         self.text_blit(self.final_score_font,
                        str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]),
-                       (255, 255, 255), (self.width/2, self.height/1.5))
+                       (255, 255, 255), (self.width/2, self.height/1.7))
 
         self.text_blit(self.final_score_font,
                        "Niveau suivant",
-                       (255, 255, 255), (self.width/2, self.height/1.3))
-
-        # Pose le bouton niveau suivant
-        self.button_next_level = pygame.draw.rect(self.window, [0, 0, 0],
-                                                  [self.background.get_width()/2.6, self.height/1.4, 250, 50])
+                       (255, 255, 255), (self.width/2, self.height/1.5))
 
         self.window.blit(self.background, (0, 0))
+
+        # Pose le bouton niveau suivant
+        self.button_next_level = pygame.draw.rect(self.window, [255, 255, 255],
+                                                  [self.background.get_width()/2.64, self.height/1.555, 245, 35], 2)
+
         pygame.display.flip()
         print('     - Ok')
 
@@ -172,22 +173,23 @@ class Campagne(object):
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font, "Vous etes definitivement",
-                       (255, 255, 255), (self.width/2, self.height/2.4))
+                       (255, 255, 255), (self.width/2, self.height/2.3))
 
         self.text_blit(self.welcome_font1, "M.O.R.T",
-                       (255, 255, 255), (self.width/2, self.height/2.1))
+                       (255, 255, 255), (self.width/2, self.height/1.95))
 
         self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score),
-                       (255, 255, 255), (self.width/2, self.height/1.8))
+                       (255, 255, 255), (self.width/2, self.height/1.7))
 
         self.text_blit(self.final_score_font, 'Accueil',
-                       (255, 255, 255), (self.width/2, self.height/1.435))
-
-        # Pose le bouton retour accueil
-        self.button_accueil = pygame.draw.rect(self.window, [0, 0, 0],
-                                               [self.background.get_width()/2.35, self.height/1.5, 145, 45])
+                       (255, 255, 255), (self.width/2, self.height/1.55))
 
         self.window.blit(self.background, (0, 0))
+
+        # Pose le bouton retour accueil
+        self.button_accueil = pygame.draw.rect(self.window, [255, 255, 255],
+                                               [self.background.get_width()/2.3, self.height/1.6, 130, 30], 2)
+
         pygame.display.flip()
         print('     - Ok')
 
@@ -195,24 +197,25 @@ class Campagne(object):
         print('[*] Init Time Out')
         # Pose l'image
         self.background.blit(self.game_images['game_over_image'], (self.width/6.6, self.height/3.5))
-        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/2.1))
-        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/2.1))
+        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/1.9))
+        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/1.9))
 
         # Définit et pose les texts
         self.text_blit(self.welcome_font1, "Temps ecoule",
-                       (255, 255, 255), (self.width/2, self.height/2.3))
+                       (255, 255, 255), (self.width/2, self.height/2.2))
 
         self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score),
-                       (255, 255, 255), (self.width/2, self.height/1.95))
+                       (255, 255, 255), (self.width/2, self.height/1.8))
 
         self.text_blit(self.final_score_font, 'Accueil',
-                       (255, 255, 255), (self.width/2, self.height/1.435))
-
-        # Pose le bouton retour accueil
-        self.button_accueil = pygame.draw.rect(self.window, [0, 0, 0],
-                                               [self.background.get_width()/2.35, self.height/1.5, 145, 45])
+                       (255, 255, 255), (self.width/2, self.height/1.55))
 
         self.window.blit(self.background, (0, 0))
+
+        # Pose le bouton retour accueil
+        self.button_accueil = pygame.draw.rect(self.window, [255, 255, 255],
+                                               [self.background.get_width()/2.3, self.height/1.6, 130, 30], 2)
+
         pygame.display.flip()
         print('     - Ok')
 
@@ -376,11 +379,10 @@ class Campagne(object):
             self.pnj_sprites.update(self.levels.current_level.obstacles.objects_list)
             self.player.update(self.levels.current_level.obstacles.objects_list)
             self.levels.current_level.update()
+            self.layer_change()
 
             if self.player.dying:
                 self.display_game_over('game_over')
-
-            self.layer_change()
 
             # ------------------------Display------------------------
 
@@ -398,8 +400,9 @@ class Campagne(object):
             if self.levels.current_level.is_change_level:
                 print('[*] Level End')
                 self.levels.current_level.pnj.remove_zombie()
-                self.levels.current_level.is_change_level = False
                 self.display_score()
+                self.click_pos_x = None
+                self.click_pos_y = None
                 self.levels = self.levels.current_level.next_level()
                 if not self.levels:
                     print('[*] Game End')

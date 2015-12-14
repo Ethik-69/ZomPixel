@@ -3,6 +3,7 @@
 from time_made_home import *
 from player import *
 from levels import *
+from db_manager import *
 
 
 class Survival(object):
@@ -28,9 +29,11 @@ class Survival(object):
         self.welcome_font0 = main.welcome_font0
         self.welcome_font1 = main.welcome_font1
         self.final_score_font = main.final_score_font
+        self.final_score_font1 = main.final_score_font1
 
-        self.button_accueil = None
-        self.button_next_level = None
+        self.button_welcome = None
+        self.button_share = None
+        self.button_send = None
 
         self.time = Times()
         self.clock = pygame.time.Clock()
@@ -49,6 +52,7 @@ class Survival(object):
         self.is_map_choice_screen = None
 
         self.is_game_over = False
+        self.is_display_send_db = False
 
         self.create_player()
 
@@ -170,13 +174,23 @@ class Survival(object):
                        (255, 255, 255), (self.width/2, self.height/1.92))
 
         self.text_blit(self.final_score_font, 'Accueil',
-                       (255, 255, 255), (self.width/2, self.height/1.435))
+                       (255, 255, 255), (self.width/2.7, self.height/1.6))
+
+        self.text_blit(self.final_score_font, 'Partager',
+                       (255, 255, 255), (self.width/1.7, self.height/1.65))
+
+        self.text_blit(self.final_score_font, 'mon score',
+                       (255, 255, 255), (self.width/1.7, self.height/1.55))
 
         # Pose le bouton retour accueil
-        self.button_accueil = pygame.draw.rect(self.window, [0, 0, 0],
-                                               [self.background.get_width()/2.35, self.height/1.5, 145, 45])
-
         self.window.blit(self.background, (0, 0))
+
+        self.button_welcome = pygame.draw.rect(self.window, [255, 255, 255],
+                                               [self.background.get_width()/3.4, self.height/1.68, 145, 45], 2)
+
+        self.button_share = pygame.draw.rect(self.window, [255, 255, 255],
+                                             [self.background.get_width()/2.02, self.height/1.73, 185, 75], 2)
+
         pygame.display.flip()
         print('     - Ok')
 
@@ -191,18 +205,84 @@ class Survival(object):
         while self.is_game_over:
             self.display_hud()
             mouse_xy = pygame.mouse.get_pos()
-            is_accueil = self.button_accueil.collidepoint(mouse_xy)
+            is_welcome = self.button_welcome.collidepoint(mouse_xy)
+            is_share = self.button_share.collidepoint(mouse_xy)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     quit()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         quit()
-                elif event.type == pygame.MOUSEBUTTONDOWN and is_accueil:
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_welcome:
                     self.is_game_over = False
                     self.end_game()
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_share:
+                    self.is_game_over = False
+                    self.is_display_send_db = True
+                    self.display_send_to_db()
 
             pygame.display.flip()
+
+    def draw_send_to_db(self, current_string):
+        self.background.fill((0, 0, 0))
+
+        self.text_blit(self.welcome_font1, 'Entrez votre nom',
+                       (100, 20, 20), (self.width/2, self.height/3.5))
+
+        self.text_blit(self.final_score_font, 'Envoyer',
+                       (100, 20, 20), (self.width/2, self.height/1.5))
+
+        if len(current_string) != 0:
+            self.text_blit(self.final_score_font1, current_string,
+                           (255, 255, 255), (self.width/2, self.height/2.3))
+
+        self.window.blit(self.background, (0, 0))
+
+        self.button_send = pygame.draw.rect(self.window, [100, 20, 20],
+                                            [self.background.get_width()/2.34, self.height/1.548, 145, 30], 2)
+
+    def display_send_to_db(self):
+        current_string = []
+        self.draw_send_to_db(current_string)
+
+        while self.is_display_send_db:
+            mouse_xy = pygame.mouse.get_pos()
+            is_send = self.button_send.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        quit()
+                    elif event.key == pygame.K_BACKSPACE:
+                        current_string = current_string[0:-1]
+                    elif event.key == pygame.K_RETURN:
+                        self.is_display_send_db = False
+                        self.final_send_to_db(''.join(current_string))
+                    elif event.key == pygame.K_MINUS:
+                        current_string.append("_")
+                    elif event.key <= 127:
+                        current_string.append(chr(event.key))
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_send:
+                    self.is_display_send_db = False
+                    self.final_send_to_db(''.join(current_string))
+
+            self.draw_send_to_db(''.join(current_string))
+            pygame.display.flip()
+
+    def final_send_to_db(self, player_name):
+        print('[*] Send to DB')
+        data_base = DataBase()
+        data_base.create_connection()
+        if data_base.connection is not None:
+            data_base.make_full_insert(player_name,
+                                       self.player.final_score,
+                                       '%s:%s:%s' % (self.time.chronos['survival'].Time[0],
+                                                     self.time.chronos['survival'].Time[1],
+                                                     self.time.chronos['survival'].Time[2]),
+                                       self.victims)
+            data_base.close_connection()
+        self.end_game()
 
     def end_game(self):
         print('[*] Survival End')
@@ -287,7 +367,7 @@ class Survival(object):
             self.display_hud()
             self.all_sprites.draw(self.window)
 
-            self.test()
+            # self.test()
 
             pygame.display.flip()
             self.clock.tick(100)
