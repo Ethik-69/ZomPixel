@@ -52,6 +52,7 @@ class Survival(object):
         self.is_map_choice_screen = None
 
         self.is_game_over = False
+        self.is_result_db = False
         self.is_display_send_db = False
 
         self.create_player()
@@ -282,7 +283,41 @@ class Survival(object):
                                                      self.time.chronos['survival'].Time[2]),
                                        self.victims)
             data_base.close_connection()
-        self.end_game()
+            self.send_result('Envoi reussi')
+        else:
+            self.send_result('Envoi echoue')
+
+    def send_result(self, text):
+        self.is_result_db = True
+        self.background.fill((0, 0, 0))
+
+        self.text_blit(self.welcome_font1, text,
+                       (100, 20, 20), (self.width/2, self.height/2.5))
+
+        self.text_blit(self.final_score_font, 'Accueil',
+                       (100, 20, 20), (self.width/2, self.height/1.5))
+
+        self.window.blit(self.background, (0, 0))
+
+        self.button_welcome = pygame.draw.rect(self.window, [100, 20, 20],
+                                               [self.background.get_width()/2.34, self.height/1.548, 145, 30], 2)
+
+        pygame.display.flip()
+
+        while self.is_result_db:
+            mouse_xy = pygame.mouse.get_pos()
+            is_welcome = self.button_welcome.collidepoint(mouse_xy)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        quit()
+                elif event.type == pygame.MOUSEBUTTONDOWN and is_welcome:
+                    self.is_result_db = False
+                    self.end_game()
+
+            pygame.display.flip()
 
     def end_game(self):
         print('[*] Survival End')
