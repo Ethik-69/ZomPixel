@@ -7,7 +7,7 @@ from rethinkdb.errors import RqlRuntimeError, RqlDriverError
 
 class DataBase(object):
     def __init__(self):
-        self.RDB_HOST = 'localhost'
+        self.RDB_HOST = 'zompigame.net'
         self.RDB_PORT = 28015
         self.DB_NAME = 'zompigame'
         self.TABLE_NAME = 'rating'
@@ -69,10 +69,11 @@ class DataBase(object):
         else:
             self.insert(player_name, player_point, player_time, victims)
 
-db = DataBase()
-db.create_connection()
-if db.connection is not None:
-    for i in range(5):
-        name = 'test' + str(i)
-        db.make_full_insert(name, i+2, '20:00', i)
-    db.close_connection()
+if __name__ == '__main__':
+    db = DataBase()
+    db.create_connection()
+    if db.connection is not None:
+        for i in range(10):
+            name = 'Joueur ' + str(i)
+            db.make_full_insert(name, i+2, '1:2:'+str(i*10), i)
+        db.close_connection()

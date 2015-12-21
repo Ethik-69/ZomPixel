@@ -128,7 +128,7 @@ class SurvivalLevel(Levels):
         if rand == 1:
             x = 0
         else:
-            x = 990
+            x = 900
         y = randint(50, 600)
         return x, y
 

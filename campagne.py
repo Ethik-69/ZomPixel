@@ -3,6 +3,7 @@
 from levels import *
 from time_made_home import *
 from player import *
+import sys
 
 
 class Campagne(object):
@@ -150,10 +151,10 @@ class Campagne(object):
             is_lvl_change = self.button_next_level.collidepoint(mouse_xy)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit()
+                    sys.exit(0)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        quit()
+                        sys.exit(0)
                 elif event.type == pygame.MOUSEBUTTONDOWN and is_lvl_change:
                     self.player.score = 0
                     self.click_pos_x = 0
@@ -233,10 +234,10 @@ class Campagne(object):
             is_accueil = self.button_accueil.collidepoint(mouse_xy)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit()
+                    sys.exit(0)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        quit()
+                        sys.exit(0)
                 elif event.type == pygame.MOUSEBUTTONDOWN and is_accueil:
                     self.is_game_over = False
                     self.end_game()
@@ -297,10 +298,10 @@ class Campagne(object):
             is_back = button_back.collidepoint(mouse_xy)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit()
+                    sys.exit(0)
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        quit()
+                        sys.exit(0)
                 elif event.type == pygame.MOUSEBUTTONDOWN and is_back:
                     self.is_credit = False
                     print('[*] Leaving Credit')
@@ -362,7 +363,7 @@ class Campagne(object):
             mouse_xy = pygame.mouse.get_pos()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    quit()
+                    sys.exit(0)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     self.is_mouse_button_down = True
                 elif event.type == pygame.MOUSEBUTTONUP:

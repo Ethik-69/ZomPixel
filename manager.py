@@ -108,13 +108,6 @@ class Obstacles(object):
     def create_all(self, objects_pos):
         """Créer tout les obstacles"""
         for key in objects_pos.keys():
-            #if key == 'fence' and not self.tree:
-            #    pass
-            #if key == 'tree':
-            #    obstacle = Object(self.main, 'fence', objects_pos['fence'])
-            #    obstacle.display()
-            #    self.objects_list.add(obstacle)
-
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, pos)
                 self.objects_list.add(obstacle)

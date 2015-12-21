@@ -274,16 +274,19 @@ class Survival(object):
     def final_send_to_db(self, player_name):
         print('[*] Send to DB')
         data_base = DataBase()
-        data_base.create_connection()
-        if data_base.connection is not None:
-            data_base.make_full_insert(player_name,
-                                       self.player.final_score,
-                                       '%s:%s:%s' % (self.time.chronos['survival'].Time[0],
-                                                     self.time.chronos['survival'].Time[1],
-                                                     self.time.chronos['survival'].Time[2]),
-                                       self.victims)
-            data_base.close_connection()
-            self.send_result('Envoi reussi')
+        if player_name is not None:
+            data_base.create_connection()
+            if data_base.connection is not None:
+                data_base.make_full_insert(player_name,
+                                           self.player.final_score,
+                                           '%s:%s:%s' % (self.time.chronos['survival'].Time[0],
+                                                         self.time.chronos['survival'].Time[1],
+                                                         self.time.chronos['survival'].Time[2]),
+                                           self.victims)
+                data_base.close_connection()
+                self.send_result('Envoi reussi')
+            else:
+                self.send_result('Envoi echoue')
         else:
             self.send_result('Envoi echoue')
 
@@ -325,14 +328,14 @@ class Survival(object):
 
     def display_hud(self):
         """Affichage Tête Haute (score - temps.....)"""
-        nb_victims = self.hud_font.render('%s %s' % ('Mort: ', self.victims), True, (0, 0, 0))  # a remplacer par le nm d'enemi tués
+        nb_victims = self.hud_font.render('%s %s' % ('Mort:', self.victims), True, (0, 0, 0))
         score = self.hud_font.render('%s' % self.player.score, True, (0, 0, 0))  # player.score
         time = self.hud_font.render('%s:%s:%s' % (self.time.chronos['survival'].Time[0],
                                                   self.time.chronos['survival'].Time[1],
                                                   self.time.chronos['survival'].Time[2]), True, (0, 0, 0))  # time
 
         self.window.blit(nb_victims, (50, 14))
-        self.window.blit(score, (492, 14))
+        self.window.blit(score, (490, 14))
         self.window.blit(time, (878, 14))
 
     def layer_change(self):
