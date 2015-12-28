@@ -8,9 +8,6 @@ import sys
 
 class Campagne(object):
     def __init__(self, main):
-        self.width = main.width
-        self.height = main.height
-
         self.window = main.window
         self.background = main.background
 
@@ -40,6 +37,7 @@ class Campagne(object):
         self.frameCount = 0
 
         self.run = None
+        self.player = None
         self.click_pos_x = None
         self.click_pos_y = None
         self.enemy_hit_list = None
@@ -61,13 +59,13 @@ class Campagne(object):
         self.background.blit(text_to_blit, text_to_blit_pos)
 
     def create_player(self):
-        """Creation du joueur"""
+        """Création du joueur"""
         print('[*] Player Init')
         self.player = Player('player',
                              self.character_images['player'],
                              self.all_sprites,
                              512, 354,
-                             self.width, self.height)
+                             constants.GAME_WIDTH, constants.GAME_HEIGHT)
         self.time.add_rebour('player')
         print('     - Ok')
 
@@ -111,31 +109,33 @@ class Campagne(object):
         print('[*] Init Display Score')
         time = self.time.chronos['current_level'].Time  # temp qu'a mis le joueur pour terminer le niveau
 
-        # Pose l'image destinée au score
-        self.background.blit(self.game_images['score_image'], (self.width/6.5, self.height/4))
+        # Pose l'image
+        self.background.blit(self.game_images['score_image'], (constants.GAME_WIDTH/6.5, constants.GAME_HEIGHT/4))
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font,
                        str(self.player.score) + " Points",
-                       (255, 255, 255), (self.width/2, self.height/2))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/2))
 
         self.text_blit(self.final_score_font,
                        "Termine en",
-                       (255, 255, 255), (self.width/2, self.height/1.8))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.8))
 
         self.text_blit(self.final_score_font,
                        str(time[0]) + ':' + str(time[1]) + ':' + str(time[2]),
-                       (255, 255, 255), (self.width/2, self.height/1.7))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.7))
 
         self.text_blit(self.final_score_font,
                        "Niveau suivant",
-                       (255, 255, 255), (self.width/2, self.height/1.5))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.5))
 
         self.window.blit(self.background, (0, 0))
 
-        # Pose le bouton niveau suivant
+        # Pose le bouton changement de niveau
         self.button_next_level = pygame.draw.rect(self.window, [255, 255, 255],
-                                                  [self.background.get_width()/2.64, self.height/1.555, 245, 35], 2)
+                                                  [constants.GAME_WIDTH/2.64,
+                                                   constants.GAME_HEIGHT/1.555, 245, 35],
+                                                  2)
 
         pygame.display.flip()
         print('     - Ok')
@@ -166,61 +166,64 @@ class Campagne(object):
     # --------------Mort Joueur--------------
 
     def init_game_over(self):
+        """Initiasile le game_over"""
         print('[*] Init Game Over')
-        # Pose l'image
-        self.background.blit(self.game_images['game_over_image'], (self.width/6.6, self.height/3.5))
-        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/2.1))
-        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/2.1))
+        # Pose les images
+        self.background.blit(self.game_images['game_over_image'], (constants.GAME_WIDTH/6.6, constants.GAME_HEIGHT/3.5))
+        self.background.blit(self.game_images['skull_image'], (constants.GAME_WIDTH/3.15, constants.GAME_HEIGHT/2.1))
+        self.background.blit(self.game_images['skull_image'], (constants.GAME_WIDTH/1.55, constants.GAME_HEIGHT/2.1))
 
         # Définit et pose les texts
         self.text_blit(self.final_score_font, "Vous etes definitivement",
-                       (255, 255, 255), (self.width/2, self.height/2.3))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/2.3))
 
         self.text_blit(self.welcome_font1, "M.O.R.T",
-                       (255, 255, 255), (self.width/2, self.height/1.95))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.95))
 
         self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score),
-                       (255, 255, 255), (self.width/2, self.height/1.7))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.7))
 
         self.text_blit(self.final_score_font, 'Accueil',
-                       (255, 255, 255), (self.width/2, self.height/1.55))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.55))
 
         self.window.blit(self.background, (0, 0))
 
-        # Pose le bouton retour accueil
+        # Pose le bouton de retour à l'accueil
         self.button_accueil = pygame.draw.rect(self.window, [255, 255, 255],
-                                               [self.background.get_width()/2.3, self.height/1.6, 130, 30], 2)
+                                               [constants.GAME_WIDTH/2.3, constants.GAME_HEIGHT/1.6, 130, 30], 2)
 
         pygame.display.flip()
         print('     - Ok')
 
     def init_time_out(self):
+        """Initialise le time out"""
         print('[*] Init Time Out')
-        # Pose l'image
-        self.background.blit(self.game_images['game_over_image'], (self.width/6.6, self.height/3.5))
-        self.background.blit(self.game_images['skull_image'], (self.width/3.15, self.height/1.9))
-        self.background.blit(self.game_images['skull_image'], (self.width/1.55, self.height/1.9))
+        # Pose les images
+        self.background.blit(self.game_images['game_over_image'], (constants.GAME_WIDTH/6.6, constants.GAME_HEIGHT/3.5))
+        self.background.blit(self.game_images['skull_image'], (constants.GAME_WIDTH/3.15, constants.GAME_HEIGHT/1.9))
+        self.background.blit(self.game_images['skull_image'], (constants.GAME_WIDTH/1.55, constants.GAME_HEIGHT/1.9))
 
         # Définit et pose les texts
         self.text_blit(self.welcome_font1, "Temps ecoule",
-                       (255, 255, 255), (self.width/2, self.height/2.2))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/2.2))
 
         self.text_blit(self.final_score_font, 'Score final: ' + str(self.player.final_score),
-                       (255, 255, 255), (self.width/2, self.height/1.8))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.8))
 
         self.text_blit(self.final_score_font, 'Accueil',
-                       (255, 255, 255), (self.width/2, self.height/1.55))
+                       (255, 255, 255), (constants.GAME_WIDTH/2, constants.GAME_HEIGHT/1.55))
 
         self.window.blit(self.background, (0, 0))
 
-        # Pose le bouton retour accueil
+        # Pose le bouton de retour à l'accueil
         self.button_accueil = pygame.draw.rect(self.window, [255, 255, 255],
-                                               [self.background.get_width()/2.3, self.height/1.6, 130, 30], 2)
+                                               [constants.GAME_WIDTH/2.3, constants.GAME_HEIGHT/1.6, 130, 30], 2)
 
         pygame.display.flip()
         print('     - Ok')
 
     def display_game_over(self, end_type):
+        """Boucle du game over"""
         self.is_game_over = True
 
         if end_type == 'game_over':
@@ -245,6 +248,8 @@ class Campagne(object):
             pygame.display.flip()
 
     def init_credit(self):
+        """Initialise les crédits"""
+        # TODO: modifier les crédit
         print('[*] Init Game Over')
         self.background.fill((0, 0, 0))
 
@@ -281,6 +286,7 @@ class Campagne(object):
         print('     - Ok')
 
     def display_credit(self):
+        """Boucle des crédits"""
         print('[*] Credit')
         self.is_credit = True
         self.background.fill((0, 0, 0))
@@ -289,7 +295,7 @@ class Campagne(object):
 
         self.window.blit(self.background, (0, 0))
 
-        button_back = pygame.draw.rect(self.window, [100, 20, 20], [self.background.get_width()/2.55, 675, 215, 50], 2)
+        button_back = pygame.draw.rect(self.window, [100, 20, 20], [constants.GAME_WIDTH/2.55, 675, 215, 50], 2)
 
         pygame.display.flip()
 
@@ -316,7 +322,7 @@ class Campagne(object):
     #########################################
 
     def display_hud(self):
-        """Affichage Tête Haute (score - temps.....)"""
+        """Pose l'ATH (affichage tête haute) (score - temps.....)"""
         current_lvl = self.hud_font.render('%s %s' % ('Niveau', self.levels.current_level_number), True, (0, 0, 0))
         score = self.hud_font.render('%s' % self.player.score, True, (0, 0, 0))  # player.score
         time = self.hud_font.render('%s:%s:%s' % (self.time.chronos['current_level'].Time[0],
@@ -328,6 +334,7 @@ class Campagne(object):
         self.window.blit(time, (878, 14))
 
     def layer_change(self):
+        """Change le joueur et les pnjs de layer"""
         if self.player.is_layer_change:
             print('[*] Change Player Layer')
             self.all_sprites.change_layer(self.player, constants.LAYER_POS[self.player.pos_on_layer])
@@ -339,6 +346,7 @@ class Campagne(object):
                 pnj.is_layer_change = False
 
     def test(self):
+        """Test"""
         for pnj in self.enemy_sprites:
             if pnj.is_crazy:
                 pygame.draw.rect(self.window, (255, 255, 255), pnj.hitbox_rect)
@@ -354,6 +362,7 @@ class Campagne(object):
         pygame.draw.rect(self.window, (100, 10, 10), self.player.collision_rect)
 
     def main(self):
+        """Boucle principal de la campagne"""
         print('[*] Launch Campagne')
         self.run = True
         self.levels.current_level.start()
@@ -400,10 +409,9 @@ class Campagne(object):
 
             if self.levels.current_level.is_change_level:
                 print('[*] Level End')
-                self.levels.current_level.pnj.remove_zombie()
-                self.display_score()
                 self.click_pos_x = None
                 self.click_pos_y = None
+                self.display_score()
                 self.levels = self.levels.current_level.next_level()
                 if not self.levels:
                     print('[*] Game End')

@@ -73,7 +73,5 @@ if __name__ == '__main__':
     db = DataBase()
     db.create_connection()
     if db.connection is not None:
-        for i in range(10):
-            name = 'Joueur ' + str(i)
-            db.make_full_insert(name, i+2, '1:2:'+str(i*10), i)
+        db.make_full_insert('thesystem69', 60, '10:0:0', 50)
         db.close_connection()

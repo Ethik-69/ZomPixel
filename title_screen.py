@@ -6,7 +6,7 @@ from survival import *
 
 
 class TitleScreen(object):
-    """Class principal"""
+    """Menu principal"""
     def __init__(self):
         pygame.init()
         self.width = constants.GAME_WIDTH
@@ -34,6 +34,7 @@ class TitleScreen(object):
         return self.width
 
     def text_blit(self, font, text, text_color, pos):
+        """Pose du text sur l'arrière plan"""
         text_to_blit = font.render(text, 1, text_color)
         text_to_blit_pos = text_to_blit.get_rect(centerx=pos[0], centery=pos[1])
         self.background.blit(text_to_blit, text_to_blit_pos)
@@ -43,13 +44,14 @@ class TitleScreen(object):
     #########################################
 
     def start(self):
-        """Fini d'initialiser le jeu et le démarre"""
+        """Initialiser le jeu et le démarre"""
         self.font_init()
         self.loading_screen()
         self.load_all_images()
         self.title_screen()
 
     def font_init(self):
+        """Initialise les polices du jeu"""
         print('[*] Load Font')
         # Font pour l'acceuil
         self.welcome_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 110)
@@ -63,6 +65,7 @@ class TitleScreen(object):
         self.test_font0 = pygame.font.Font('data/fonts/visitor1.ttf', 15)
 
     def loading_screen(self):
+        """Affiche l'écran de chargement"""
         self.text_blit(self.welcome_font0,
                        "Loading",
                        (100, 20, 20),
@@ -72,6 +75,7 @@ class TitleScreen(object):
         pygame.display.flip()
 
     def load_all_images(self):
+        """Charge toutes les images du jeu"""
         # Game images
         print('[*] Load Game Images')
         self.game_images['map'] = pygame.image.load('data/img/map.png').convert()
@@ -106,25 +110,25 @@ class TitleScreen(object):
             self.obstacles_images[obstacle] = pygame.image.load(constants.OBSTACLES[obstacle][0])
 
     def get_frames(self, character, name):
-        character['walkingFramesLeft'] = self.sprite_sheet.get_character_frames(character['walkingFramesLeft'],
+        character['walking_frames_left'] = self.sprite_sheet.get_character_frames(character['walking_frames_left'],
+                                                                                  constants.MOVING_SPRITE_X,
+                                                                                  0, 75, 125)
+
+        character['walking_frames_right'] = self.sprite_sheet.get_character_frames(character['walking_frames_right'],
+                                                                                   constants.MOVING_SPRITE_X,
+                                                                                   0, 75, 125, True)
+
+        character['walking_frames_up'] = self.sprite_sheet.get_character_frames(character['walking_frames_up'],
                                                                                 constants.MOVING_SPRITE_X,
-                                                                                0, 75, 125)
+                                                                                125, 75, 125)
 
-        character['walkingFramesRight'] = self.sprite_sheet.get_character_frames(character['walkingFramesRight'],
-                                                                                 constants.MOVING_SPRITE_X,
-                                                                                 0, 75, 125, True)
+        character['walking_frames_down'] = self.sprite_sheet.get_character_frames(character['walking_frames_down'],
+                                                                                  constants.MOVING_SPRITE_X,
+                                                                                  250, 75, 125)
 
-        character['walkingFramesUp'] = self.sprite_sheet.get_character_frames(character['walkingFramesUp'],
-                                                                              constants.MOVING_SPRITE_X,
-                                                                              125, 75, 125)
+        character['stop_frame'] = self.sprite_sheet.get_image(0, 375, 75, 125, self.sprite_sheet.sheet)
 
-        character['walkingFramesDown'] = self.sprite_sheet.get_character_frames(character['walkingFramesDown'],
-                                                                                constants.MOVING_SPRITE_X,
-                                                                                250, 75, 125)
-
-        character['stopFrame'] = self.sprite_sheet.get_image(0, 375, 75, 125, self.sprite_sheet.sheet)
-
-        if name != 'player' and 'z_' not in name:
+        if name != 'player' and 'z_' not in name:  # si le personnage est un citoyen (!player/!zombie)
             character['attack']['by_player'] = self.get_action_frames(constants.npc[name]['attack_by_player'])
             character['attack']['by_citizen'] = self.get_action_frames(constants.npc[name]['attack_by_citizen'])
             character['attack']['by_punk'] = self.get_action_frames(constants.npc[name]['attack_by_punk'])
@@ -189,7 +193,7 @@ class TitleScreen(object):
                     self.help_screen()
 
     def help_screen_text(self):
-        """Initialise et pose sur le fond les texts de l'ecran d'aide"""
+        """Initialise et pose sur le fond les texts de l'ecran d'info"""
         self.text_blit(self.final_score_font1,
                        "Campagne:",
                        (100, 20, 20), (self.background.get_width()/2, 50))

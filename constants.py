@@ -15,45 +15,45 @@ GAME_HEIGHT = 768
 LAYER_POS = {'front': 1,
              'back': -1}
 
-character_images = {'player': {'walkingFramesUp': [],
-                               'walkingFramesDown': [],
-                               'walkingFramesLeft': [],
-                               'walkingFramesRight': [],
-                               'stopFrame': []},
-                    'citizen': {'walkingFramesUp': [],
-                                'walkingFramesDown': [],
-                                'walkingFramesLeft': [],
-                                'walkingFramesRight': [],
-                                'stopFrame': [],
+character_images = {'player': {'walking_frames_up': [],
+                               'walking_frames_down': [],
+                               'walking_frames_left': [],
+                               'walking_frames_right': [],
+                               'stop_frame': []},
+                    'citizen': {'walking_frames_up': [],
+                                'walking_frames_down': [],
+                                'walking_frames_left': [],
+                                'walking_frames_right': [],
+                                'stop_frame': [],
                                 'attack': {'by_player': [],
                                            'by_citizen': [],
                                            'by_punk': []}},
-                    'punk': {'walkingFramesUp': [],
-                             'walkingFramesDown': [],
-                             'walkingFramesLeft': [],
-                             'walkingFramesRight': [],
-                             'stopFrame': [],
+                    'punk': {'walking_frames_up': [],
+                             'walking_frames_down': [],
+                             'walking_frames_left': [],
+                             'walking_frames_right': [],
+                             'stop_frame': [],
                              'attack': {'by_player': [],
                                         'by_citizen': [],
                                         'by_punk': []}},
-                    'z_citizen': {'walkingFramesUp': [],
-                                  'walkingFramesDown': [],
-                                  'walkingFramesLeft': [],
-                                  'walkingFramesRight': [],
-                                  'stopFrame': [],
+                    'z_citizen': {'walking_frames_up': [],
+                                  'walking_frames_down': [],
+                                  'walking_frames_left': [],
+                                  'walking_frames_right': [],
+                                  'stop_frame': [],
                                   'attack': {'by_player': [],
                                              'by_citizen': [],
                                              'by_punk': []}},
-                    'z_punk': {'walkingFramesUp': [],
-                               'walkingFramesDown': [],
-                               'walkingFramesLeft': [],
-                               'walkingFramesRight': [],
-                               'stopFrame': [],
+                    'z_punk': {'walking_frames_up': [],
+                               'walking_frames_down': [],
+                               'walking_frames_left': [],
+                               'walking_frames_right': [],
+                               'stop_frame': [],
                                'attack': {'by_player': [],
                                           'by_citizen': [],
                                           'by_punk': []}}}
 
-
+# Position x des frames sur les feuilles de sprites
 MOVING_SPRITE_X = [0, 75, 150, 225, 300, 375, 450, 525, 600, 675, 750, 825]
 DYING_SPRITE_X = [0, 125, 250, 375, 500, 625, 750, 875, 1000, 1125, 1250, 1375]
 
@@ -73,10 +73,10 @@ npc = {'citizen': {'img': 'character/citizen/citizen_sprite_sheet.png',
                 'attack_by_punk': 'character/punk/punk_attack_by_punk.png',
                 'zombie_img': 'character/punk/zombie_punk_sprite_sheet.png'}}
 
-# Liste des objets
+# Dictionnaire des objets
 # [0] = path
 # [1] = inflatexy pour modifier la taille du rect
-# [2] = .center pour modifier sont emplacement dans l'image
+# [2] = .center pour modifier son emplacement dans l'image
 
 OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (-5, -5), (28, 28)],
              'bush': ["data/img/objets/bush.png", (-13, -13), (32, 32)],
@@ -89,21 +89,21 @@ OBSTACLES = {'manhole': ["data/img/objets/manhole.png", (-5, -5), (28, 28)],
              'working_fence_v': ["data/img/objets/working_fence_v.png", (-3, -4), (13, 47)],
              'working_fence_h': ["data/img/objets/working_fence_h.png", (-3, -4), (47, 13)],
              'bin': ["data/img/objets/bin.png", (-7, -30), (17, 40)],
-             'skull': ["data/img/objets/skull.png", (0, 0), (0, 0)],  # 0 car collision inutile
+             'skull': ["data/img/objets/skull.png", (0, 0), (0, 0)],  # 0 car pas de collision
              'bench': ["data/img/objets/bench.png", (-5, -5), (49, 15)],
              'phone_box': ["data/img/objets/phone_box.png", (-5, -75), (30, 90)]}
 
 
-LEVEL0 = {'number': 0,
-          'enemy': {(200, 350): 'citizen'},
-          'objects': {'manhole': [(300, 230)],
+LEVEL0 = {'number': 0,  # Numéro du niveaux
+          'enemy': {(200, 350): 'citizen'},  # Dictionnaire des enemis
+          'objects': {'manhole': [(300, 230)],  # Dictionnaire des objets
                       'blue_car': [(660, 220)],
                       'yellow_car': [(150, 510)],
                       'tree': [(500, 50)],
                       'bin': [(800, 650)],
                       'bench': [(100, 200)]},
-          'pos_level': [0, -1536],
-          'pos_player': [512, 354]}
+          'pos_level': [0, -1536],  # Position du niveaux sur la carte
+          'pos_player': [512, 354]}  # Position de départ du joueur
 
 
 LEVEL1 = {'number': 1,
@@ -233,10 +233,10 @@ SURVIVAL = {'park': {'enemy': {(150, 120): 'citizen',
                                (800, 468): 'citizen',
                                (750, 650): 'citizen',
                                (150, 630): 'citizen'},
-                     'objects': {'bush': [(500, 350), (480, 450), (480, 550), (50, 700)],
+                     'objects': {'bush': [(500, 350), (480, 450), (480, 550), (5, 700), (75, 700), (5, 630)],
                                  'tree': [(150, 300), (480, 140), (850, 650)],
                                  'bench': [(750, 320)],
-                                 'manhole': [(50, 640), (580, 300), (430, 350)]},
+                                 'manhole': [(85, 630), (580, 300), (430, 350)]},
                      'pos_map': [0, -768],
                      'pos_player': [150, 120]},
 

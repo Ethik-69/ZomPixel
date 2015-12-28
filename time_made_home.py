@@ -8,14 +8,14 @@ class Times(object):
         self.chronos = {}
 
     def __getitem__(self, name, chrono=False):
-        """Renvoi se qui est demander"""
+        """Renvoi se qui est demander rebour ou chrono"""
         if not chrono:
             return self.rebours[name]
         else:
             return self.chronos[name]
 
     def add_rebour(self, name):
-        """Instancie un rebour et l'ajoute a la liste des chronos 'actif' """
+        """Instancie un rebour et l'ajoute a la liste des rebours 'actif' """
         self.rebours[name] = Rebour(name)
 
     def add_chrono(self, name):
@@ -23,7 +23,7 @@ class Times(object):
         self.chronos[name] = Chrono(name)
 
     def update(self):
-        """met à jour les chronos"""
+        """met à jour les chronos et les rebours"""
         for rebour in self.rebours:
             if self.rebours[rebour].is_started:
                 self.rebours[rebour].update()
@@ -56,7 +56,7 @@ class Rebour(object):
         self.isFinish = True
 
     def update(self):
-        """Met a jour le rebour"""
+        """Met à jour le rebour"""
         self.Time[2] -= 1
         if self.Time[2] < 0:
             self.Time[2] = 99
@@ -91,7 +91,7 @@ class Chrono(object):
         return self.Time
 
     def update(self):
-        """Met a jour le chrono"""
+        """Met à jour le chrono"""
         self.Time[2] += 1
         if self.Time[2] > 99:
             self.Time[2] = 0

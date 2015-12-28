@@ -8,7 +8,7 @@ class PNJ(object):
     def __init__(self, main, start_enemy_list, level):
         self.main = main
         self.level = level
-        self.pnj_num = 0  # compteur pour différencier les pnj
+        self.pnj_num = 0  # compteur pour différencier les pnjs
         self.init_pnj(start_enemy_list)
 
     def init_pnj(self, enemy_data):
@@ -20,17 +20,19 @@ class PNJ(object):
             print('.'),
 
     def add_zombie(self, main, name, pos, num):
-        """Ajoute un nouveau zombie a la liste des zombie en 'vie' """
+        """Instancie un zombie"""
         print('[*] ' + name + ' Going Zombie')
         Zombie(main, name, pos, num)
         print('[*] New Zombie')
 
     def add_enemy(self, pos):
+        """Instancie un enemi"""
+        print('[*] Add citizen' + str(self.pnj_num))
         Humain(self.main, 'citizen', pos, self.pnj_num)
         self.pnj_num += 1
 
-    def remove_zombie(self):
-        """Supprime tout les zombie restant en fin de niveau"""
+    def remove_all_zombie(self):
+        """Supprime tout les zombies"""
         print('[*] Remove Remaining Zombies')
         for zombie in self.main.zombie_sprites:
             self.main.zombie_sprites.remove(zombie)
@@ -39,7 +41,8 @@ class PNJ(object):
         print('     - Ok')
 
     def player_circle_collide(self):
-        """Test circle collision"""
+        # TODO: a mettre dans l'objet player
+        """Collision circulaire enemis/joueur"""
         for enemy in self.main.enemy_sprites:
             if not enemy.is_under_attack and pygame.sprite.collide_circle(self.main.player, enemy):
                 if not enemy.is_circle_collide:
@@ -53,28 +56,35 @@ class PNJ(object):
                 enemy.is_circle_collide = False
 
     def player_collide(self):
-        """Collision avec le joueur"""
+        # TODO: a mettre dans l'objet player
+        """Collision enemis/joueur"""
         if not self.main.player.is_feeding:
-            enemy_hit_list = pygame.sprite.spritecollide(self.main.player, self.main.enemy_sprites, False)
+            enemy_hit_list = pygame.sprite.spritecollide(self.main.player,
+                                                         self.main.enemy_sprites,
+                                                         False)
             for enemy in enemy_hit_list:
-                if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not self.main.player.is_feeding:
-                        print('[*] Hitbox Collide - Player')
-                        enemy.under_attack(self.main.player)
-                        self.main.player.is_feeding = True
+                if not self.main.player.is_feeding and not enemy.is_under_attack:
+                    if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect):
+                            print('[*] Hitbox Collide - Player')
+                            enemy.under_attack(self.main.player)
+                            self.main.player.is_feeding = True
 
     def zombie_collide(self):
-        """Collsision avec les autres zombies"""
+        # TODO: a eventuellement mettre dans l'objet zombie
+        """Collsision enemis/zombies"""
         for zombie in self.main.zombie_sprites:
             if not zombie.is_feeding:
                 enemy_hit_list = pygame.sprite.spritecollide(zombie, self.main.enemy_sprites, False)
                 for enemy in enemy_hit_list:
-                    if zombie.hitbox_rect.colliderect(enemy.hitbox_rect) and not enemy.is_under_attack and not zombie.is_feeding:
-                            print('[*] Mask Collide - Zombie')
-                            enemy.under_attack(zombie)
-                            zombie.is_feeding = True
+                    if not enemy.is_under_attack:
+                        if zombie.hitbox_rect.colliderect(enemy.hitbox_rect):
+                                print('[*] Mask Collide - Zombie')
+                                enemy.under_attack(zombie)
+                                zombie.is_feeding = True
 
     def update(self):
-        """met les pnj a jour"""
+        """Met les pnj à jour"""
+        # Supprime les pnjs si ils sont 'mort'
         for pnj in self.main.pnj_sprites:
             if not pnj.is_alive:
                 self.main.pnj_sprites.remove(pnj)
@@ -86,6 +96,7 @@ class PNJ(object):
                     print('[*] Remove Human')
                     self.main.zombie_sprites.remove(pnj)
 
+        # TODO: a mettre dans le main
         if len(self.main.enemy_sprites) == 0 and self.level.is_started:
             print('[*] Change Lvl => True')
             self.level.is_change_level = True
@@ -97,16 +108,13 @@ class PNJ(object):
 
 class Obstacles(object):
     def __init__(self, main):
-        """
-        Obstacle initialiser avec les position des objets sur la feuille de sprite
-        Remplacés par [image, rect] correspondantent juste en dessous
-        """
+        """Gère les différent obstacles"""
         self.main = main
         self.tree = False
         self.objects_list = pygame.sprite.Group()
 
     def create_all(self, objects_pos):
-        """Créer tout les obstacles"""
+        """Instancie tout les obstacles"""
         for key in objects_pos.keys():
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, pos)
@@ -114,9 +122,10 @@ class Obstacles(object):
         print('[*] Create Objects Ok')
 
     def reset(self):
+        """Supprime tout les objets instanciés"""
         for object in self.objects_list:
-            self.objects_list.remove(object)
             self.main.all_sprites.remove(object)
+            self.objects_list.remove(object)
 
 
 class Object(pygame.sprite.Sprite):
@@ -137,7 +146,9 @@ class Object(pygame.sprite.Sprite):
         self.collision_rect = self.image.get_rect()
         self.collision_rect.x = self.rect.x
         self.collision_rect.y = self.rect.y
-        self.collision_rect.inflate_ip(constants.OBSTACLES[name][1][0], constants.OBSTACLES[name][1][1])
-        self.collision_rect.center = (self.rect.x + constants.OBSTACLES[name][2][0], self.rect.y + constants.OBSTACLES[name][2][1])
+        self.collision_rect.inflate_ip(constants.OBSTACLES[name][1][0],
+                                       constants.OBSTACLES[name][1][1])
+        self.collision_rect.center = (self.rect.x + constants.OBSTACLES[name][2][0],
+                                      self.rect.y + constants.OBSTACLES[name][2][1])
 
         self.mask = pygame.mask.from_surface(self.image)
