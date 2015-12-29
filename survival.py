@@ -248,7 +248,7 @@ class Survival(object):
         self.window.blit(self.background, (0, 0))
 
         self.button_send = pygame.draw.rect(self.window, [100, 20, 20],
-                                            [constants.GAME_WIDTH()/2.34, constants.GAME_HEIGHT/1.548, 145, 30], 2)
+                                            [constants.GAME_WIDTH/2.34, constants.GAME_HEIGHT/1.548, 145, 30], 2)
 
     def display_send_to_db(self):
         """Boucle de l'écran d'envoi du score à la DB"""
@@ -412,8 +412,11 @@ class Survival(object):
 
             self.click_motion()
             self.time.update()
-            self.pnj_sprites.update(self.levels.current_level.obstacles.objects_list)
-            self.player.update(self.levels.current_level.obstacles.objects_list)
+            self.enemy_sprites.update(self.levels.current_level.obstacles.objects_list)
+            self.zombie_sprites.update(self.levels.current_level.obstacles.objects_list,
+                                       self.enemy_sprites)
+            self.player.update(self.levels.current_level.obstacles.objects_list,
+                               self.enemy_sprites)
             self.levels.current_level.update()
 
             if self.player.dying:
@@ -427,7 +430,7 @@ class Survival(object):
             self.display_hud()
             self.all_sprites.draw(self.window)
 
-            # self.test('collide, objects')
+            self.test('hitbox')
 
             pygame.display.flip()
             self.clock.tick(100)

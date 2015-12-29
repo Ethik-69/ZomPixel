@@ -162,6 +162,7 @@ class Humain(Character):
         self.max_tick = 20
 
     def set_opposite_action(self):
+        # TODO: not opposite action but away from player
         """Inverse l'action du pnj (up/down, left/right)"""
         print('[*] Set Opposite Action For ' + self.id_name)
         if self.action == 'up':
@@ -303,7 +304,18 @@ class Zombie(Character):
                         self.action = 'up'
                         self.action_switch[self.action]()
 
-    def update(self, obstacles_list):
+    def collide(self, enemy_sprites):
+        """Collsision enemis/zombies"""
+        if not self.is_feeding:
+            enemy_hit_list = pygame.sprite.spritecollide(self, enemy_sprites, False)
+            for enemy in enemy_hit_list:
+                if not enemy.is_under_attack:
+                    if self.hitbox_rect.colliderect(enemy.hitbox_rect):
+                            print('[*] Mask Collide - Zombie')
+                            enemy.under_attack(self)
+                            self.is_feeding = True
+
+    def update(self, obstacles_list, enemy_sprites):
         """Met à jour le pnj"""
         if self.main.time.rebours[self.id_name].isFinish:  # si le rebour principal est fini le zombie meur
             self.dying()
@@ -322,5 +334,7 @@ class Zombie(Character):
 
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
+            self.collide(enemy_sprites)
+
             self.update_current_image()
             self.select_frame()

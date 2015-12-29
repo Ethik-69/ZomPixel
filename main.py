@@ -11,7 +11,7 @@ except ImportError, errmsg:
     print(errmsg)
     sys.exit(1)
 
-__author__ = "The-System-69 (Ethan CHAMIK)"
+__author__ = "The_System69 (Ethan CHAMIK)"
 
 if __name__ == '__main__':
     while True:
@@ -19,6 +19,7 @@ if __name__ == '__main__':
         game = TitleScreen()
         game.start()
 
+    # TODO: zombie alliés traverse les barriere ???
     # TODO: Changer layer zombie/player
     # TODO: ajouter layer objet pour le niveau 4 arbre/barriere
     # TODO: Site web
@@ -26,11 +27,11 @@ if __name__ == '__main__':
         # -Responsive
     # TODO: TP:
         # -readme En cours
-        # -Doc En cours
+        # -Doc Ok
         # -Cahier des charges En cours
         # -Diagramme objets
         # -Remplir ECF.odt
-    # TODO: Refacto
+    # TODO: Refacto (2em passage à faire)
     # pygame book example:
     #   homing missiles / targeting (les zombies suivent les citoyens)
     # TODO: Recherche 'IA'
@@ -40,6 +41,5 @@ if __name__ == '__main__':
         #     - Ajouter des personnages féminin
 
     # TODO at :
-        # manager : 44-59-70-95
         # campagne : 252
-        # character : 220-281
+        # character : 220-281-165

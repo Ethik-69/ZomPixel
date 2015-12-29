@@ -386,8 +386,11 @@ class Campagne(object):
 
             self.click_motion()
             self.time.update()
-            self.pnj_sprites.update(self.levels.current_level.obstacles.objects_list)
-            self.player.update(self.levels.current_level.obstacles.objects_list)
+            self.enemy_sprites.update(self.levels.current_level.obstacles.objects_list)
+            self.zombie_sprites.update(self.levels.current_level.obstacles.objects_list,
+                                       self.enemy_sprites)
+            self.player.update(self.levels.current_level.obstacles.objects_list,
+                               self.enemy_sprites)
             self.levels.current_level.update()
             self.layer_change()
 
@@ -406,6 +409,9 @@ class Campagne(object):
             # self.test()
 
             # -----------------------Change Lvl------------------------
+            if len(self.enemy_sprites) == 0 and self.levels.current_level.is_started:
+                print('[*] Change Lvl => True')
+                self.levels.current_level.is_change_level = True
 
             if self.levels.current_level.is_change_level:
                 print('[*] Level End')

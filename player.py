@@ -129,7 +129,34 @@ class Player(pygame.sprite.Sprite):
                     if self.collision_rect.y >= obstacle.collision_rect.y and self.moveY < 0:
                         self.moveY = 0
 
-    def update(self, obstacles_list):
+    def circle_collide(self, enemy_sprites):
+        """Collision circulaire enemis/joueur"""
+        for enemy in enemy_sprites:
+            if not enemy.is_under_attack and pygame.sprite.collide_circle(self, enemy):
+                if not enemy.is_circle_collide:
+                    print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+                    enemy.set_opposite_action()
+                    enemy.is_circle_collide = True
+                if not enemy.is_crazy:
+                    enemy.become_crazy()
+
+            elif enemy.is_circle_collide:
+                enemy.is_circle_collide = False
+
+    def collide(self, enemy_sprites):
+        """Collision enemis/joueur"""
+        if not self.is_feeding:
+            enemy_hit_list = pygame.sprite.spritecollide(self,
+                                                         enemy_sprites,
+                                                         False)
+            for enemy in enemy_hit_list:
+                if not self.is_feeding and not enemy.is_under_attack:
+                    if self.hitbox_rect.colliderect(enemy.hitbox_rect):
+                            print('[*] Hitbox Collide - Player')
+                            enemy.under_attack(self)
+                            self.is_feeding = True
+
+    def update(self, obstacles_list, enemy_sprites):
         """Met à jour le joueur"""
         if self.is_feeding:  # si le joueur est en train de manger, ne l'affiche pas
             self.rect.x = -100  # Hors de l'écran
@@ -139,6 +166,8 @@ class Player(pygame.sprite.Sprite):
         else:
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
+            self.circle_collide(enemy_sprites)
+            self.collide(enemy_sprites)
 
             # Déplace le joueur
             self.rect = self.rect.move([self.moveX, self.moveY])

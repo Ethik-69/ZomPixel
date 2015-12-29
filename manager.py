@@ -40,48 +40,6 @@ class PNJ(object):
             self.main.all_sprites.remove(zombie)
         print('     - Ok')
 
-    def player_circle_collide(self):
-        # TODO: a mettre dans l'objet player
-        """Collision circulaire enemis/joueur"""
-        for enemy in self.main.enemy_sprites:
-            if not enemy.is_under_attack and pygame.sprite.collide_circle(self.main.player, enemy):
-                if not enemy.is_circle_collide:
-                    print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
-                    enemy.set_opposite_action()
-                    enemy.is_circle_collide = True
-                if not enemy.is_crazy:
-                    enemy.become_crazy()
-
-            elif enemy.is_circle_collide:
-                enemy.is_circle_collide = False
-
-    def player_collide(self):
-        # TODO: a mettre dans l'objet player
-        """Collision enemis/joueur"""
-        if not self.main.player.is_feeding:
-            enemy_hit_list = pygame.sprite.spritecollide(self.main.player,
-                                                         self.main.enemy_sprites,
-                                                         False)
-            for enemy in enemy_hit_list:
-                if not self.main.player.is_feeding and not enemy.is_under_attack:
-                    if self.main.player.hitbox_rect.colliderect(enemy.hitbox_rect):
-                            print('[*] Hitbox Collide - Player')
-                            enemy.under_attack(self.main.player)
-                            self.main.player.is_feeding = True
-
-    def zombie_collide(self):
-        # TODO: a eventuellement mettre dans l'objet zombie
-        """Collsision enemis/zombies"""
-        for zombie in self.main.zombie_sprites:
-            if not zombie.is_feeding:
-                enemy_hit_list = pygame.sprite.spritecollide(zombie, self.main.enemy_sprites, False)
-                for enemy in enemy_hit_list:
-                    if not enemy.is_under_attack:
-                        if zombie.hitbox_rect.colliderect(enemy.hitbox_rect):
-                                print('[*] Mask Collide - Zombie')
-                                enemy.under_attack(zombie)
-                                zombie.is_feeding = True
-
     def update(self):
         """Met les pnj à jour"""
         # Supprime les pnjs si ils sont 'mort'
@@ -95,15 +53,6 @@ class PNJ(object):
                 else:
                     print('[*] Remove Human')
                     self.main.zombie_sprites.remove(pnj)
-
-        # TODO: a mettre dans le main
-        if len(self.main.enemy_sprites) == 0 and self.level.is_started:
-            print('[*] Change Lvl => True')
-            self.level.is_change_level = True
-
-        self.player_collide()
-        self.zombie_collide()
-        self.player_circle_collide()
 
 
 class Obstacles(object):
