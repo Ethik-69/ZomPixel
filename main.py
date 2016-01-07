@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # TODO: ajouter layer objet pour le niveau 4 arbre/barriere
     # TODO: Site web
         # -Sécurisé le site
-        # -Responsive
+        # -Responsive Presque
     # TODO: TP:
         # -readme En cours
         # -Doc Ok
