@@ -15,6 +15,9 @@ Le jeu dans lequel VOUS etes le zombie (Pour une fois...)
 1. Aller dans le dossier du jeu et avec le terminal lancer rethinkdb (commande: rethinkdb)
 2. Lancer main.py (commande: python main.py)
 
+Le jeu ne fonctionnera pas simplement avec les sources, ils vous faudra les images qui vont avec, 
+que vous trouverez sur le site dans le zip contenant le jeu en .exe (lien plus bas))
+
 
 ## Implementation
 
