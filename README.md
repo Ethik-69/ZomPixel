@@ -5,9 +5,9 @@ Le jeu dans lequel VOUS etes le zombie (Pour une fois...)
 
 ## Installation
 
-1. Installer Python (2.7)
-2. Installer Pygame
-3. Installer Rethinkdb
+1. Installer [Python (2.7)](https://www.python.org/)
+2. Installer [Pygame](http://www.pygame.org/download.shtml)
+3. Installer [Rethinkdb](https://www.rethinkdb.com/)
 
 
 ## Lancement
@@ -47,4 +47,4 @@ Le jeu dans lequel VOUS etes le zombie (Pour une fois...)
 
 ## Site web
 
-- [ZompiGame](http://zompigame.net)
+[ZompiGame](http://zompigame.net)
