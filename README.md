@@ -47,7 +47,3 @@ que vous trouverez sur le site dans le zip contenant le jeu en .exe (lien plus b
 - `db_setup.py`: Configuration de la base de donnée (rethinkdb)
 
 - `db_manager.py`: Gestion de la base de donnée (Insert, delete, modif...)
-
-## Site web
-
-[ZompiGame](http://zompigame.net)
