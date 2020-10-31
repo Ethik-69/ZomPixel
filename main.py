@@ -1,21 +1,14 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from zompixel.title_screen import TitleScreen
+from zompixel.utils.log_config import LoggerManager
 
-import sys
-from title_screen import *
+LOGGER = LoggerManager.getLogger('root')
 
-try:
-    from pygame.locals import *
-except ImportError, errmsg:
-    print('Requires PyGame')
-    print(errmsg)
-    sys.exit(1)
 
-__author__ = "The_System69 (Ethan CHAMIK)"
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     while True:
-        print('[*] Game Object Init')
+        LOGGER.info("[*] Game Object Init")
         game = TitleScreen()
         game.start()
 
@@ -23,23 +16,23 @@ if __name__ == '__main__':
     # TODO: Changer layer zombie/player
     # TODO: ajouter layer objet pour le niveau 4 arbre/barriere
     # TODO: Site web
-        # -Sécurisé le site
-        # -Responsive Presque
-    # TODO: TP:
-        # -readme En cours
-        # -Doc Ok
-        # -Cahier des charges En cours
-        # -Diagramme objets
-        # -Remplir ECF.odt
+    # -Page
+    # -Accueil (présentation du jeu ajouter text)
+    # -Download Ok
+    # -Rating Ok
+    # -Contact Ok
+    # -Sécurisé le site
+    # -Hebergement : digital ocean
+    # -Install + config srv Ok (Flask Ok Lamp Ok)
+    # -acces admin rethinkdb Ok
+    # -acces rethinkdb app En cours
+    # -Integration site A faire
+    # -Responsive Presque
     # TODO: Refacto (2em passage à faire)
     # pygame book example:
     #   homing missiles / targeting (les zombies suivent les citoyens)
     # TODO: Recherche 'IA'
 
     # RETOUR: - Plus nerveux
-        #     - Amélioration collision
-        #     - Ajouter des personnages féminin
-
-    # TODO at :
-        # campagne : 252
-        # character : 220-281-165
+    #     - Amélioration collision
+    #     - Ajouter des personnages féminin

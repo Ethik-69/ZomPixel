@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from character import *
-import constants
+import pygame
+import zompixel.constants as constants
+from zompixel.character import Humain, Zombie
+from zompixel.utils.log_config import LoggerManager
+
+LOGGER = LoggerManager.getLogger("root")
 
 
 class PNJ(object):
@@ -13,32 +17,33 @@ class PNJ(object):
 
     def init_pnj(self, enemy_data):
         """Initialise les Personnages Non Joueur"""
-        print('     - PNJ Init in Progress')
+        LOGGER.info("     - PNJ Init in Progress")
         for pos in enemy_data.keys():
             Humain(self.main, enemy_data[pos], pos, self.pnj_num)
             self.pnj_num += 1
-            print('.'),
+            LOGGER.info("."),
 
     def add_zombie(self, main, name, pos, num):
         """Instancie un zombie"""
-        print('[*] ' + name + ' Going Zombie')
+        LOGGER.info("[*] " + name + " Going Zombie")
         Zombie(main, name, pos, num)
-        print('[*] New Zombie')
+        LOGGER.info("[*] New Zombie")
 
     def add_enemy(self, pos):
         """Instancie un enemi"""
-        print('[*] Add citizen' + str(self.pnj_num))
-        Humain(self.main, 'citizen', pos, self.pnj_num)
+        LOGGER.info("[*] Add citizen" + str(self.pnj_num))
+        Humain(self.main, "citizen", pos, self.pnj_num)
         self.pnj_num += 1
 
     def remove_all_zombie(self):
         """Supprime tout les zombies"""
-        print('[*] Remove Remaining Zombies')
+        LOGGER.info("[*] Remove Remaining Zombies")
         for zombie in self.main.zombie_sprites:
             self.main.zombie_sprites.remove(zombie)
             self.main.pnj_sprites.remove(zombie)
             self.main.all_sprites.remove(zombie)
-        print('     - Ok')
+
+        LOGGER.info("     - Ok")
 
     def update(self):
         """Met les pnj à jour"""
@@ -47,11 +52,13 @@ class PNJ(object):
             if not pnj.is_alive:
                 self.main.pnj_sprites.remove(pnj)
                 self.main.all_sprites.remove(pnj)
+
                 if pnj.is_human:
-                    print('[*] Remove Human')
+                    LOGGER.info("[*] Remove Human")
                     self.main.enemy_sprites.remove(pnj)
+
                 else:
-                    print('[*] Remove Human')
+                    LOGGER.info("[*] Remove Human")
                     self.main.zombie_sprites.remove(pnj)
 
 
@@ -68,7 +75,8 @@ class Obstacles(object):
             for pos in objects_pos[key]:
                 obstacle = Object(self.main, key, pos)
                 self.objects_list.add(obstacle)
-        print('[*] Create Objects Ok')
+
+        LOGGER.info("[*] Create Objects Ok")
 
     def reset(self):
         """Supprime tout les objets instanciés"""
@@ -95,9 +103,12 @@ class Object(pygame.sprite.Sprite):
         self.collision_rect = self.image.get_rect()
         self.collision_rect.x = self.rect.x
         self.collision_rect.y = self.rect.y
-        self.collision_rect.inflate_ip(constants.OBSTACLES[name][1][0],
-                                       constants.OBSTACLES[name][1][1])
-        self.collision_rect.center = (self.rect.x + constants.OBSTACLES[name][2][0],
-                                      self.rect.y + constants.OBSTACLES[name][2][1])
+        self.collision_rect.inflate_ip(
+            constants.OBSTACLES[name][1][0], constants.OBSTACLES[name][1][1]
+        )
+        self.collision_rect.center = (
+            self.rect.x + constants.OBSTACLES[name][2][0],
+            self.rect.y + constants.OBSTACLES[name][2][1],
+        )
 
         self.mask = pygame.mask.from_surface(self.image)

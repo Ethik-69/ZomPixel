@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from zompixel.utils.log_config import LoggerManager
+
+LOGGER = LoggerManager.getLogger("root")
 
 
 class Times(object):
@@ -11,6 +14,7 @@ class Times(object):
         """Renvoi se qui est demander rebour ou chrono"""
         if not chrono:
             return self.rebours[name]
+
         else:
             return self.chronos[name]
 
@@ -35,7 +39,7 @@ class Times(object):
 
 class Rebour(object):
     def __init__(self, name):
-        self. name = name
+        self.name = name
         self.Time = None
         self.is_started = False
         self.isFinish = None
@@ -45,7 +49,7 @@ class Rebour(object):
 
     def start(self, init_value):
         """Lance le rebour"""
-        print('[*] Rebour Start ' + self.name)
+        LOGGER.info("[*] Rebour Start " + self.name)
         self.Time = init_value
         self.is_started = True
         self.isFinish = False
@@ -61,9 +65,11 @@ class Rebour(object):
         if self.Time[2] < 0:
             self.Time[2] = 99
             self.Time[1] -= 1
+
             if self.Time[1] < 0:
                 self.Time[1] = 59
                 self.Time[0] -= 1
+
                 if self.Time[0] < 0:
                     self.Time = [0, 0, 0]
                     self.stop()
@@ -71,13 +77,13 @@ class Rebour(object):
 
 class Chrono(object):
     def __init__(self, name):
-        self. name = name
+        self.name = name
         self.Time = None
         self.is_started = False
 
     def start(self):
         """Lance le chrono"""
-        print('[*] Chrono Start ' + self.name)
+        LOGGER.info("[*] Chrono Start " + self.name)
         self.is_started = True
         self.Time = [0, 0, 0]
 
@@ -96,9 +102,11 @@ class Chrono(object):
         if self.Time[2] > 99:
             self.Time[2] = 0
             self.Time[1] += 1
+
             if self.Time[1] > 59:
                 self.Time[1] = 0
                 self.Time[0] += 1
+
                 if self.Time[0] > 99:
                     self.Time = [0, 0, 0]
                     self.stop()

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-from sprites import *
+import pygame
+from zompixel.utils.log_config import LoggerManager
+
+LOGGER = LoggerManager.getLogger("root")
 
 
 class Player(pygame.sprite.Sprite):
@@ -23,22 +26,26 @@ class Player(pygame.sprite.Sprite):
         self.dying = False
         self.is_feeding = False
 
-        self.action = ''
-        self.action_switch = {'up': self.move_up,
-                              'down': self.move_down,
-                              'left': self.move_left,
-                              'right': self.move_right}
+        self.action = ""
+        self.action_switch = {
+            "up": self.move_up,
+            "down": self.move_down,
+            "left": self.move_left,
+            "right": self.move_right,
+        }
 
         # Gestion des frames
         self.time_target = 40
         self.time_num = 0
         self.current_image = 0
-        self.stop_frame = images['stop_frame']
+        self.stop_frame = images["stop_frame"]
         self.image = self.stop_frame
-        self.frames_switch = {'up': images['walking_frames_up'],
-                              'down': images['walking_frames_down'],
-                              'left': images['walking_frames_left'],
-                              'right': images['walking_frames_right']}
+        self.frames_switch = {
+            "up": images["walking_frames_up"],
+            "down": images["walking_frames_down"],
+            "left": images["walking_frames_left"],
+            "right": images["walking_frames_right"],
+        }
 
         # Rect de base
         self.rect = self.image.get_rect()
@@ -86,47 +93,68 @@ class Player(pygame.sprite.Sprite):
 
     def collide_window_side(self):
         """Test de collision avec les bords de la fenêtre"""
-        if self.rect.x <= self.width/2 and self.moveX < 0:
+        if self.rect.x <= self.width / 2 and self.moveX < 0:
             self.moveX = 0
-        if self.rect.x > self.game_width - self.width/2 and self.moveX > 0:
+
+        if self.rect.x > self.game_width - self.width / 2 and self.moveX > 0:
             self.moveX = 0
-        if self.rect.y <= self.height/3 and self.moveY < 0:
+
+        if self.rect.y <= self.height / 3 and self.moveY < 0:
             self.moveY = 0
+
         if self.rect.y > self.game_height - self.height and self.moveY > 0:
             self.moveY = 0
 
     def change_layer_test(self, obstacle):
         """Gère le changement de layer"""
         if self.collision_rect.top < obstacle.collision_rect.bottom - 2:
-            if self.pos_on_layer != 'back':
+            if self.pos_on_layer != "back":
                 self.is_layer_change = True
-                self.pos_on_layer = 'back'
-        elif self.pos_on_layer != 'front':
+                self.pos_on_layer = "back"
+
+        elif self.pos_on_layer != "front":
             self.is_layer_change = True
-            self.pos_on_layer = 'front'
+            self.pos_on_layer = "front"
 
     def obstacle_collide(self, obstacles_list):
         """Collision joueur-objets"""
         if not self.is_feeding:
-            obstacles_collided = pygame.sprite.spritecollide(self, obstacles_list, False)
+            obstacles_collided = pygame.sprite.spritecollide(
+                self, obstacles_list, False
+            )
 
             for obstacle in obstacles_collided:
                 self.change_layer_test(obstacle)
 
-                print('[*] Player Collide Object')
-                if obstacle.name == 'manhole':
+                LOGGER.info("[*] Player Collide Object")
+                if obstacle.name == "manhole":
                     if self.collision_rect.colliderect(obstacle.collision_rect):
                         self.dying = True
-                        print('[*] Launch Game Over')
+                        LOGGER.info("[*] Launch Game Over")
 
                 elif self.collision_rect.colliderect(obstacle.collision_rect):
-                    if self.collision_rect.x <= obstacle.collision_rect.x and self.moveX > 0:
+                    if (
+                        self.collision_rect.x <= obstacle.collision_rect.x
+                        and self.moveX > 0
+                    ):
                         self.moveX = 0
-                    if self.collision_rect.x >= obstacle.collision_rect.x and self.moveX < 0:
+
+                    if (
+                        self.collision_rect.x >= obstacle.collision_rect.x
+                        and self.moveX < 0
+                    ):
                         self.moveX = 0
-                    if self.collision_rect.y <= obstacle.collision_rect.y and self.moveY > 0:
+
+                    if (
+                        self.collision_rect.y <= obstacle.collision_rect.y
+                        and self.moveY > 0
+                    ):
                         self.moveY = 0
-                    if self.collision_rect.y >= obstacle.collision_rect.y and self.moveY < 0:
+
+                    if (
+                        self.collision_rect.y >= obstacle.collision_rect.y
+                        and self.moveY < 0
+                    ):
                         self.moveY = 0
 
     def circle_collide(self, enemy_sprites):
@@ -134,9 +162,12 @@ class Player(pygame.sprite.Sprite):
         for enemy in enemy_sprites:
             if not enemy.is_under_attack and pygame.sprite.collide_circle(self, enemy):
                 if not enemy.is_circle_collide:
-                    print('[*] ' + enemy.name + str(enemy.num) + ' Collide Circle')
+                    LOGGER.info(
+                        "[*] " + enemy.name + str(enemy.num) + " Collide Circle"
+                    )
                     enemy.set_opposite_action()
                     enemy.is_circle_collide = True
+
                 if not enemy.is_crazy:
                     enemy.become_crazy()
 
@@ -146,23 +177,24 @@ class Player(pygame.sprite.Sprite):
     def collide(self, enemy_sprites):
         """Collision enemis/joueur"""
         if not self.is_feeding:
-            enemy_hit_list = pygame.sprite.spritecollide(self,
-                                                         enemy_sprites,
-                                                         False)
+            enemy_hit_list = pygame.sprite.spritecollide(self, enemy_sprites, False)
+
             for enemy in enemy_hit_list:
                 if not self.is_feeding and not enemy.is_under_attack:
                     if self.hitbox_rect.colliderect(enemy.hitbox_rect):
-                            print('[*] Hitbox Collide - Player')
-                            enemy.under_attack(self)
-                            self.is_feeding = True
+                        LOGGER.info("[*] Hitbox Collide - Player")
+                        enemy.under_attack(self)
+                        self.is_feeding = True
 
     def update(self, obstacles_list, enemy_sprites):
         """Met à jour le joueur"""
         if self.is_feeding:  # si le joueur est en train de manger, ne l'affiche pas
             self.rect.x = -100  # Hors de l'écran
             self.rect.y = -100
+
         elif self.rect.x == -100:
             self.rect.x, self.rect.y = self.x, self.y
+
         else:
             self.collide_window_side()
             self.obstacle_collide(obstacles_list)
@@ -180,9 +212,12 @@ class Player(pygame.sprite.Sprite):
             if self.time_num == self.time_target:
                 self.time_num = 0
                 self.current_image += 1
+
                 if self.current_image == 4:
                     self.current_image = 0
-            if self.action != '':
+
+            if self.action != "":
                 self.image = self.frames_switch[self.action][self.current_image]
+
             else:
                 self.image = self.stop_frame
